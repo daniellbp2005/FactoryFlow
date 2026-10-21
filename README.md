@@ -2,6 +2,32 @@
 
 Template para alunos criarem forks com a mesma stack de frontend, backend e banco de dados.
 
+## Puxar a branch do GitHub
+
+- Clona o repositório: 
+```bash 
+git clone https:LINK-DO-REPOSITÓRIO
+```
+- Entre na pasta: 
+```bash
+cd FactoryFlow
+```
+
+- Atualize as referências:
+```bash
+git fetch origin
+```
+
+- Para trabalhar no backend:
+```bash
+git switch --track origin/backend
+```
+
+- Para trabalhar no frontend: 
+```bash
+git switch --track origin/frontend
+```
+
 ## Stack Padrao
 
 - Frontend: Next.js `16.2.10` com JavaScript, sem Tailwind e sem Bootstrap por padrao.
