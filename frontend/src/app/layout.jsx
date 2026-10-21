@@ -1,4 +1,4 @@
-import "./globals.css";
+import "./globals.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClientBootstrap from "@/components/ClientBootstrap";
 

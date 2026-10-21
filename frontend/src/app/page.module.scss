@@ -1,9 +1,12 @@
+@use "../styles/variables" as *;
+@use '../styles/mixins';
+
 .page {
   display: flex;
   min-height: 100vh;
   justify-content: center;
   background: #f6f7f9;
-  color: #172033;
+  color: $cr-vip;
   padding: 48px 24px;
 }
 
@@ -59,6 +62,7 @@
   border-radius: 8px;
   background: #ffffff;
   padding: 20px;
+  @include mixins.hoverDefault();
 }
 
 .grid span {
@@ -84,7 +88,6 @@
   font-size: 14px;
   overflow-wrap: anywhere;
 }
-
 @media (max-width: 760px) {
   .page {
     padding: 32px 20px;
