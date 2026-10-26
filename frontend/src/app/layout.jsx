@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
       <ClientBootstrap />
-      <body>{children}</body>
+      <body className="bg-dark flex">{children}</body>
     </html>
   );
 }
