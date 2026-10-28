@@ -4,6 +4,7 @@ import helmet from "helmet";
 
 import { errorHandler } from "./middlewares/errorHandler.js";
 import healthRoutes from "./routes/healthRoutes.js";
+import { maqRouter } from "./routes/maqRoutes.js"
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get("/", (request, response) => {
 });
 
 app.use("/api/health", healthRoutes);
+app.use("/api/maquinas", maqRouter)
 
 app.use(errorHandler);
 
