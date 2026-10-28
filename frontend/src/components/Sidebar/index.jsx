@@ -1,15 +1,15 @@
-import {Globe} from "lucide-react"
+import {Globe, LayoutGrid} from "lucide-react"
 
 export default function Sidebar() {
     return (
         <>
             <div
-                className="d-flex flex-column flex-shrink-0 p-3 bg-light vh-100"
+                className="d-flex flex-column flex-shrink-0 p-3 vh-100 bg-dark border-end bg-border "
                 style={{ width: 280 }}
             >
                 <a
                     href="/"
-                    className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
+                    className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-light text-decoration-none"
                 >
                     <svg className="bi me-2" width={40} height={32}>
                         <use xlinkHref="#bootstrap" />
@@ -31,13 +31,13 @@ export default function Sidebar() {
                             </svg>
                             <font dir="auto" style={{ verticalAlign: "inherit" }}>
                                 <font dir="auto" style={{ verticalAlign: "inherit" }}>
-                                <Globe size={20} />Lar
+                                <LayoutGrid size={22} />Lar
                                 </font>
                             </font>
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="nav-link link-dark">
+                        <a href="#" className="nav-link link-light">
                             <svg className="bi me-2" width={16} height={16}>
                                 <use xlinkHref="#speedometer2" />
                             </svg>
@@ -49,7 +49,7 @@ export default function Sidebar() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="nav-link link-dark">
+                        <a href="#" className="nav-link link-light">
                             <svg className="bi me-2" width={16} height={16}>
                                 <use xlinkHref="#table" />
                             </svg>
@@ -61,7 +61,7 @@ export default function Sidebar() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="nav-link link-dark">
+                        <a href="#" className="nav-link link-light ">
                             <svg className="bi me-2" width={16} height={16}>
                                 <use xlinkHref="#grid" />
                             </svg>
@@ -73,7 +73,7 @@ export default function Sidebar() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="nav-link link-dark">
+                        <a href="#" className="nav-link link-dark ">
                             <svg className="bi me-2" width={16} height={16}>
                                 <use xlinkHref="#people-circle" />
                             </svg>
@@ -89,7 +89,7 @@ export default function Sidebar() {
                 <div className="dropdown">
                     <a
                         href="#"
-                        className="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                        className="d-flex align-items-center link-light text-decoration-none dropdown-toggle"
                         id="dropdownUser2"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
@@ -104,7 +104,7 @@ export default function Sidebar() {
                         <strong>
                             <font dir="auto" style={{ verticalAlign: "inherit" }}>
                                 <font dir="auto" style={{ verticalAlign: "inherit" }}>
-                                    mdo
+                                    User
                                 </font>
                             </font>
                         </strong>

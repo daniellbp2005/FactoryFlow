@@ -6,7 +6,19 @@ export default function Home() {
 
   return (
     <main>
-        <Globe size={24}/>
+        <div className="topbar">
+          <div className="caixa-cargo">Gerente</div>
+        </div>
+
+        <div className="conteudo-all">
+          <div className="conteudo-base"></div>
+          <div className="conteudo-base"></div>
+          <div className="conteudo-base"></div>
+          <div className="conteudo-base"></div>
+        </div>
+
+
     </main>
   );
 }
+
