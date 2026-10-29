@@ -32,3 +32,29 @@ export async function buscarPorId(req, res, next) {
   }
 }
 
+export async function criar(req, res, next) {
+  try {
+    const produto = await MaquinasService.criar(req.body);
+    return res.status(201).json({ sucesso: true, dados: produto });
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}
+
+export async function atualizar(req, res, next) {
+  try {
+    const produto = await MaquinasService.atualizar(req.params.id, req.body);
+    return res.status(200).json({ sucesso: true, dados: produto });
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}
+
+export async function excluir(req, res, next) {
+  try {
+    await MaquinasService.excluir(req.params.id);
+    return res.status(204).send();
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}

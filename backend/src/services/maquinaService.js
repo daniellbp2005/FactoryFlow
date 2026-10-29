@@ -42,3 +42,26 @@ function validarId(idRecebido) {
   }
   return id;
 }
+
+export async function criar(dados) {
+  const produtoDominio = new Maquinas({ id: 1, ...dados });
+  return await MaquinaModel.criar(produtoDominio);
+}
+
+export async function atualizar(idRecebido, dados) {
+  const id = validarId(idRecebido);
+  const produtoDominio = new Maquinas({ id, ...dados });
+  const atualizou = await MaquinaModel.atualizar(id, produtoDominio);
+  if (!atualizou) {
+    throw new Error(`Produto ${id} não encontrado.`);
+  }
+  return await MaquinaModel.buscarPorId(id);
+}
+
+export async function excluir(idRecebido) {
+  const id = validarId(idRecebido);
+  const removeu = await MaquinaModel.excluir(id);
+  if (!removeu) {
+    throw new Error(`Produto ${id} não encontrado.`);
+  }
+}

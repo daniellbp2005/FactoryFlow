@@ -31,3 +31,22 @@ export async function buscarPorId(id) {
   if (linhas.length === 0) return null;
   return hidratarMaquina(linhas[0]);
 }
+
+export async function criar(produto) {
+  const sql = 'INSERT INTO maquinas (nome, estado) VALUES (?, ?)';
+  const valores = [produto.nome, produto.estado];
+  const [resultado] = await pool.query(sql, valores);
+  return { ...produto, id: resultado.insertId};
+}
+
+export async function atualizar(id, produto) {
+  const sql = 'UPDATE maquinas SET nome = ?, estado = ? WHERE id = ?';
+  const valores = [produto.nome, produto.estado, id];
+  const [resultado] = await pool.query(sql, valores);
+  return resultado.affectedRows > 0;
+}
+
+export async function excluir(id) {
+  const [resultado] = await pool.query('DELETE FROM maquinas WHERE id = ?', [id]);
+  return resultado.affectedRows > 0;
+}
