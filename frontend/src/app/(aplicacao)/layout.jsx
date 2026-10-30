@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function AplicacaoLayout({ children }) {
   return (
-    <div className="d-flex flex-grow-1 w-100 bg-cinza">
+    <div className="d-flex flex-grow-1 vh-100 bg-cinza">
       <Sidebar />
       {children}
     </div>

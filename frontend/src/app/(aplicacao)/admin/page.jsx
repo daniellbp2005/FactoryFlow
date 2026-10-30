@@ -19,6 +19,11 @@ export default function Home() {
           <p className="text-cinza">Programação, equipamentos e produtividade em uma única visão</p>
         </div>
 
+        <div className="container-cal-calen">
+          <button type="button"></button>
+          <button type="button"></button>
+        </div>
+
       </div>
 
       <div className="conteudo-all">

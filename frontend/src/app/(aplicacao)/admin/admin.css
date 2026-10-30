@@ -7,6 +7,17 @@ div {
     overflow-wrap: break-word;
 }
 
+main {
+    min-width: 100%;
+    min-width: 100%;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 .topbar {
     background-color: #212529;
     display: flex;
@@ -154,9 +165,13 @@ div {
 }
 
 .container-text-top {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
     color: #10b8a8;
     width: 100%;
-    margin: 30px;   
+    margin: 30px;
+    background-color: blue;
 }
 
 .container-text {
@@ -168,8 +183,16 @@ div {
 .text-azul {
     color: #10b8a8;
     font-weight: bold;
+    
 }
 
 .text-cinza {
     color: #a1a1a1;
+}
+
+.container-cal-calen {
+    width: 150px;
+    height: 150px;
+    background-color: violet;
+    margin-left: 45%
 }
