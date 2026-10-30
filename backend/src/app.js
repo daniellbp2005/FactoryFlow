@@ -8,6 +8,7 @@ import { maqRouter } from "./routes/maqRoutes.js";
 import { tarefasRouter } from "./routes/tarefasRoutes.js";
 import { equipamentoRouter } from "./routes/equipamentoRouter.js"
 import { relatoriosRouter } from "./routes/relatoriosRouter.js"
+import { usuariosRouter } from "./routes/usuarioRouter.js"
 
 const app = express();
 
@@ -29,7 +30,8 @@ app.use("/api/health", healthRoutes);
 app.use("/api/maquinas", maqRouter);
 app.use("/api/tarefas", tarefasRouter);
 app.use("/api/equipamentos", equipamentoRouter);
-// app.use("/api/relatorios", relatoriosRouter);
+app.use("/api/relatorios", relatoriosRouter);
+app.use("/usuarios", usuariosRouter)
 
 app.use(errorHandler);
 
