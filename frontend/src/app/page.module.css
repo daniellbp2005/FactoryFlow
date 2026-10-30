@@ -4,13 +4,29 @@
   align-items: center;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(225deg, #090b0e 0%, #0d1014 100%);
+  background: url('/images/background.png') no-repeat center center;
+  background-size: cover;
   width: 100%;
   color-scheme: light;
 }
 
+.main::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.67);
+  z-index: 1;
+}
+
+.main > * {
+  position: relative;
+  z-index: 2;
+}
+
 .main .loginDiv {
-  gap: 300px;
+  margin-left: -12.5%;
+  gap: 25%;
   display: grid;
   grid-template-columns:repeat(2,1fr);
 }
@@ -121,6 +137,7 @@
   border: 0.5px solid #222222;
   border-radius: 16px;
   padding: 8px 8px;
+  margin-bottom: 2%;
   gap: 4px;
   background-color: #2a2a2a;
   color: #ffffff;
@@ -137,6 +154,8 @@
 
 .main .containerLogin .bodyLogin .inputContent svg {
   margin: 0 auto;
+  margin-left: 3%;
+  margin-right: 5%;
   stroke: #ffffff;
 }
 
@@ -151,6 +170,14 @@
 .main .containerLogin .bodyLogin .inputContent .input::placeholder {
   color: #f0f8ff;
   opacity: 1;
+}
+
+.togglePassword {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  margin-right: 3%;
 }
 
 .main .containerLogin .bodyLogin .rowCad {
@@ -190,17 +217,53 @@
 
 .main .containerLogin .bodyLogin .btnL:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(26, 112, 240, 0.438);
+  box-shadow: 0 8px 24px rgba(26, 175, 118, 0.438);
 }
-@media (max-width: 768px) {
+@media (max-width: 1300px) {
+  .main .loginDiv {
+    gap: 10%;
+    margin-left: -7.5%;
+  }
+}
+
+@media (max-width: 1075px) {
+  .main .loginDiv {
+    gap: 0;
+    grid-template-columns: 1fr;
+    margin-left: 0;
+  }
+
+  .main .containerTitle {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main .containerTitle img {
+    width: 150px;
+    height: 150px;
+  }
+  .main .textTitle h1 {
+    font-size: 67px;
+    margin-top: -7.5%;
+  }
+  .main .containerText{
+    display: none;
+  }
+
+  .main .containerLogin {
+    margin-top: 5%;
+  }
+}
+
+@media (max-width: 500px) {
   .main .loginDiv {
     gap: 0px;
+    margin-left: 0;
     padding: 12px  !important;
 
   }
   .main .containerTitle {
     display: none;
-    /* padding: 12px; */
   }
   .main .containerText {
     display: none;
@@ -208,7 +271,7 @@
 
   .main .containerLogin {
     width: 100% !important;
-    padding: 15px !important;
+    padding: 16px !important;
   }
 
   .bodyLogin{

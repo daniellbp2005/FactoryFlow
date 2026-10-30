@@ -1,6 +1,6 @@
 'use client';
 import styles from "./page.module.css";
-import { SnowflakeIcon, AtSign, LockKeyhole, User } from "lucide-react";
+import { AtSign, LockKeyhole, Eye, EyeOff, User } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation"
 
@@ -11,6 +11,7 @@ export default function Login() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [msgErro, setErro] = useState("");
   const router = useRouter();
 
@@ -22,6 +23,9 @@ export default function Login() {
   }
   function lerSenha(e) {
     setSenha(e.target.value);
+  }
+  function alternarVisibilidadeSenha() {
+    setSenhaVisivel(!senhaVisivel);
   }
 
   function entrarLogin(e) {
@@ -58,9 +62,9 @@ export default function Login() {
           <div className={styles.textDiv}>
             <div className={styles.containerTitle}>
               <img src="./images/logotype/logotype.png"/>
-              <div>
+              <div className={styles.textTitle}>
                 <h1><b>FactoryFlow</b></h1>
-                <p>Desenvolvido por Tech System</p>
+                <p>Uma aplicação Tech System</p>
               </div>
             </div>
             <div className={styles.containerText}>
@@ -91,12 +95,19 @@ export default function Login() {
                   <label className="label" htmlFor="senha">Senha</label>
                   <div className={styles.inputContent}>
                     <LockKeyhole size={19} />
-                    <input className={styles.input} type="password" name="senha" id="senha" placeholder="Digite aqui"
-                      required
+                    <input className={styles.input} type={senhaVisivel ? "text" : "password"} name="senha" id="senha" placeholder="Digite aqui" required
                       minLength={3}
                       maxLength={12}
                       value={senha}
-                      onChange={lerSenha} />
+                      onChange={lerSenha}
+                    />
+                    <button
+                      type="button"
+                      onClick={alternarVisibilidadeSenha}
+                      className={styles.togglePassword}
+                    >
+                      {senhaVisivel ? <Eye size={19}/> : <EyeOff size={19}/> }
+                    </button>
                   </div>
                   <div className={styles.rowCad}>
                     <p onClick={() => setModo("cadastro")}
@@ -131,12 +142,19 @@ export default function Login() {
                   <label className="label" htmlFor="senha">Senha</label>
                   <div className={styles.inputContent}>
                     <LockKeyhole size={19} />
-                    <input className={styles.input} type="password" name="senha" id="senha" placeholder="Digite aqui"
-                      required
+                    <input className={styles.input} type={senhaVisivel ? "text" : "password"} name="senha" id="senha" placeholder="Digite aqui" required
                       minLength={3}
                       maxLength={12}
                       value={senha}
-                      onChange={lerSenha} />
+                      onChange={lerSenha}
+                    />
+                    <button
+                      type="button"
+                      onClick={alternarVisibilidadeSenha}
+                      className={styles.togglePassword}
+                    >
+                      {senhaVisivel ? <Eye size={19}/> : <EyeOff size={19}/> }
+                    </button>
                   </div>
                   <div className={styles.rowCad}>
                     <p onClick={() => setModo("login")}
