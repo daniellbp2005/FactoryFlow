@@ -1,5 +1,6 @@
 import "../globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "@/components/Sidebar/sidebar.css";
 import Sidebar from "@/components/Sidebar";
 import ClientBootstrap from "@/components/ClientBootstrap";
 
@@ -10,7 +11,7 @@ export const metadata = {
 
 export default function AplicacaoLayout({ children }) {
   return (
-    <div className="d-flex flex-grow-1 vh-100 bg-cinza">
+    <div className="d-flex flex-grow-1 vh-100 app-layout">
       <Sidebar />
       {children}
     </div>

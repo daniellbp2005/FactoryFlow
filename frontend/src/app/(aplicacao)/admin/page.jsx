@@ -1,58 +1,47 @@
-import "./admin.css"
-import { Globe } from "lucide-react"
+import "./admin.css";
+import AdminHeader from "@/components/AdminHeader";
+import OverviewCards from "@/components/OverviewCards";
+import ProductionSchedule from "@/components/ProductionSchedule";
+import AvailabilityPanel from "@/components/AvailabilityPanel";
+import AdminPageHeading from "@/components/AdminPageHeading";
 
-export default function Home() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
-
+export default function AdminPage() {
   return (
-    <main>
-      <div className="topbar">
-        <div className="caixa-cargo">Gerente</div>
-        <p>Visão Geral</p>
-      </div>
+    <main className="admin-page">
+      <AdminHeader />
+      <section className="admin-content">
+        <AdminPageHeading
+          eyebrow="FACTORYFLOW / MÊS"
+          title="Planejamento de Produção"
+          description="Programação, equipamentos e produtividade em uma única visão."
+          actions={
+            <>
+            <button type="button" className="button button-outline">
+              Ver calendário
+            </button>
+            <button type="button" className="button button-primary">
+              Calcular produção
+            </button>
+            </>
+          }
+        />
 
-      <div className="container-text-top ">
-        
-        <div className="container-text">
-          <p className="text-azul">FACTORYFLOW / MÊS</p>
-          <h1 className="text-light">Planejamento de produção</h1>
-          <p className="text-cinza">Programação, equipamentos e produtividade em uma única visão</p>
+        <section className="overview-section" aria-labelledby="overview-title">
+          <h2 id="overview-title">Visão geral</h2>
+          <OverviewCards />
+        </section>
+
+        <div className="dashboard-grid">
+          <ProductionSchedule />
+          <aside className="dashboard-aside">
+            <AvailabilityPanel />
+          </aside>
         </div>
 
-        <div className="container-cal-calen">
-          <button type="button"></button>
-          <button type="button"></button>
-        </div>
-
-      </div>
-
-      <div className="conteudo-all">
-        <div className="conteudo-base"></div>
-        <div className="conteudo-base"></div>
-        <div className="conteudo-base"></div>
-        <div className="conteudo-base"></div>
-      </div>
-
-      <div className="container-producao">
-        <div className="producao-cima">
-
-          <div className="text-producao">
-            <h2>Programação da produção</h2>
-            <p>Tarefas e ordens de serviços</p>
-          </div>
-
-          <div className="btn-conjunto">
-            <button className="btn-active" type="button">Dia</button>
-            <button className="btn-inative" type="button">Semana</button>
-            <button className="btn-inative-p" type="button">Mês</button>
-          </div>
-
-        </div>
-
-      </div>
-
-
+        <footer className="admin-footer">
+          FactoryFlow · Desenvolvido por Tech System
+        </footer>
+      </section>
     </main>
   );
 }
-
