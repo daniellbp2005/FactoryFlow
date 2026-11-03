@@ -34,7 +34,7 @@ export async function buscarPorId(id) {
 
 export async function criar(produto) {
   const sql = 'INSERT INTO tarefas (titulo, descricao, status, prazo, tempo_estimado) VALUES ( ?, ?, ?, ?, ?)';
-  const valores = [produto.titulo, produto.descricao, produto.status, produto.prazo, produto.tempo_estimido];
+  const valores = [produto.titulo, produto.descricao, produto.status, produto.prazo, produto.tempo_estimado];
   const [resultado] = await pool.query(sql, valores);
   return { ...produto, id: resultado.insertId};
 }
