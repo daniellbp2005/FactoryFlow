@@ -21,6 +21,11 @@ export default function AdminPlanningPage() {
             <AvailabilityPanel />
           </aside>
         </div>
+
+        <footer className="admin-footer">
+          FactoryFlow · Desenvolvido por Tech System
+        </footer>
+
       </section>
     </main>
   );

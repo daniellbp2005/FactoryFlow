@@ -12,7 +12,7 @@
   min-height: 100vh;
   color: var(--text);
   background: #090b0d;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .admin-topbar {
@@ -24,7 +24,7 @@
   border-bottom: 1px solid var(--border);
   background: #0c0f11;
   color: #b6c0c6;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .topbar-context,
@@ -63,7 +63,7 @@
 .eyebrow {
   margin-bottom: 5px;
   color: var(--accent);
-  font-size: 11px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.13em;
 }
@@ -71,7 +71,7 @@
 .page-heading h1 {
   margin: 0;
   color: var(--text);
-  font-size: clamp(22px, 2vw, 29px);
+  font-size: clamp(35px, 2vw, 38px);
   font-weight: 700;
 }
 
@@ -79,7 +79,7 @@
 .panel-heading p {
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 18px;
 }
 
 .heading-actions {
@@ -94,7 +94,7 @@
   padding: 0 12px;
   cursor: pointer;
   font: inherit;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -121,7 +121,7 @@
 .overview-section h2 {
   margin: 0 0 12px;
   color: var(--text);
-  font-size: 17px;
+  font-size: 22px;
 }
 
 .overview-cards {
@@ -160,7 +160,7 @@
 .metric-label {
   margin: 0 0 3px;
   color: #b3bdc4;
-  font-size: 11px;
+  font-size: 15px;
 }
 
 .metric-value {
@@ -170,7 +170,7 @@
 
 .metric-detail {
   margin-top: 5px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .teal,
@@ -204,13 +204,13 @@
 
 .panel-heading h2 {
   margin: 0;
-  font-size: 16px;
+  font-size: 23px;
 }
 
 .schedule-period {
   margin: 15px 0 9px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 15px;
 }
 
 .period-switch {
@@ -227,7 +227,7 @@
   color: #aeb8bf;
   cursor: pointer;
   font: inherit;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .period-switch button.selected {
@@ -250,7 +250,7 @@
   flex-direction: column;
   gap: 5px;
   color: #bac3c9;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .schedule-filters input,
@@ -264,7 +264,7 @@
   background: #111518;
   color: var(--text);
   font: inherit;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .schedule-filters input::placeholder {
@@ -299,12 +299,12 @@
 .task-time span,
 .task-info > span {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 16px;
 }
 
 .task-time strong,
 .task-tags strong {
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .task-tags {
@@ -317,7 +317,7 @@
 .tag {
   border-radius: 3px;
   padding: 3px 5px;
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1;
 }
 
@@ -355,7 +355,7 @@
 .task-details {
   min-height: 28px;
   padding: 0 8px;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .priority-button {
@@ -386,7 +386,7 @@
   display: grid;
   gap: 5px;
   color: #bac3c9;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .employee-form input,
@@ -400,7 +400,7 @@
   background: #111518;
   color: var(--text);
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .employee-form input::placeholder,
@@ -474,7 +474,7 @@
 .employee-role strong {
   overflow: hidden;
   color: var(--text);
-  font-size: 11px;
+  font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -483,7 +483,7 @@
 .employee-role span {
   overflow: hidden;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -493,7 +493,7 @@
   padding: 4px 7px;
   background: #123a35;
   color: #55d7bd;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .employee-empty {
@@ -502,7 +502,7 @@
   border-radius: 6px;
   padding: 22px 14px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 15px;
   text-align: center;
 }
 
@@ -546,7 +546,7 @@
   background: #111518;
   color: var(--text);
   font: inherit;
-  font-size: 11px;
+  font-size: 15px;
 }
 
 .report-search input::placeholder {
@@ -592,7 +592,7 @@
 
 .report-card-heading strong {
   color: var(--text);
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .report-card-heading > div {
@@ -607,19 +607,19 @@
   border-radius: 4px;
   padding: 3px 6px;
   color: var(--accent);
-  font-size: 9px;
+  font-size: 16px;
 }
 
 .report-card-heading time {
   flex: 0 0 auto;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .report-card-content > p {
   margin: 8px 0;
   color: #d3dadd;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.5;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
@@ -644,13 +644,13 @@
   border-radius: 4px;
   padding: 4px 6px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .report-status {
   border-radius: 4px;
   padding: 4px 7px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .report-status.complete {
@@ -692,7 +692,7 @@
 .machine-fleet-toolbar p {
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .machine-fleet-filters {
@@ -715,13 +715,13 @@
 .machine-create-heading h3 {
   margin: 0;
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .machine-create-heading p {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .machine-create-fields {
@@ -737,7 +737,7 @@
   min-width: 0;
   gap: 5px;
   color: #bac3c9;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .machine-create-fields input,
@@ -750,7 +750,7 @@
   background: #111518;
   color: var(--text);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .machine-search {
@@ -899,7 +899,7 @@
 .machine-card-heading p {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .machine-type-icon {
@@ -926,12 +926,12 @@
 .machine-order span,
 .machine-progress > div:first-child span {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .machine-order strong {
   color: #dce4e5;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .machine-progress {
@@ -946,7 +946,7 @@
 
 .machine-progress > div:first-child strong {
   color: var(--accent);
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .machine-progress-track {
@@ -982,7 +982,7 @@
 
 .machine-assignment > label {
   color: #bac3c9;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .machine-assignment p {
@@ -991,7 +991,7 @@
   gap: 5px;
   margin: 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .machine-assignment p svg {
@@ -1019,7 +1019,7 @@
   display: flex;
   justify-content: space-between;
   gap: 6px;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .machine-heading span {
@@ -1046,7 +1046,7 @@
 .machine-card p {
   margin: 0;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .impact-form {
@@ -1070,7 +1070,7 @@
 .impact-result span,
 .impact-result small {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .impact-result strong {
@@ -1082,7 +1082,7 @@
 .admin-footer {
   margin-top: 28px;
   color: #7f8a91;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 @media (max-width: 900px) {
