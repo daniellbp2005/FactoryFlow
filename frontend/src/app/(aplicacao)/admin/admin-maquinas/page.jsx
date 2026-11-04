@@ -12,16 +12,6 @@ export default function AdminMachinesPage() {
           eyebrow="FACTORYFLOW / OPERAÇÃO"
           title="Planejamento de Produção"
           description="Programação, equipamentos e produtividade em uma única visão."
-          actions={
-            <>
-            <button type="button" className="button button-outline">
-              Ver calendário
-            </button>
-            <button type="button" className="button button-primary">
-              Calcular produção
-            </button>
-            </>
-          }
         />
 
         <MachineFleet />

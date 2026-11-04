@@ -14,16 +14,6 @@ export default function AdminPage() {
           eyebrow="FACTORYFLOW / MÊS"
           title="Planejamento de Produção"
           description="Programação, equipamentos e produtividade em uma única visão."
-          actions={
-            <>
-            <button type="button" className="button button-outline">
-              Ver calendário
-            </button>
-            <button type="button" className="button button-primary">
-              Calcular produção
-            </button>
-            </>
-          }
         />
 
         <section className="overview-section" aria-labelledby="overview-title">

@@ -15,7 +15,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { label: "Painel", icon: LayoutDashboard, href: "/admin" },
+  { label: "Painel" , icon: LayoutDashboard, href: "/admin" },
   { label: "Planejamento", icon: ClipboardList, href: "/admin/admin-planejamento" },
   { label: "Operadores", icon: UsersRound, href: "/admin/admin-operadores" },
   { label: "Máquinas", icon: Factory, href: "/admin/admin-maquinas" },
@@ -51,7 +51,7 @@ export default function Sidebar() {
               href={href}
               key={label}
             >
-              <Icon size={15} aria-hidden="true" />
+              <Icon size={25} aria-hidden="true" />
               <span>{label}</span>
             </Link>
           );
@@ -60,7 +60,7 @@ export default function Sidebar() {
 
       <footer className="sidebar-footer">
         <Link className="sidebar-logout" href="/" aria-label="Sair e voltar ao início">
-          <LogOut size={15} aria-hidden="true" />
+          <LogOut size={20} aria-hidden="true" />
           <span>Sair</span>
         </Link>
       </footer>

@@ -4,12 +4,11 @@ export default function AdminHeader() {
   return (
     <header className="admin-topbar">
       <div className="topbar-context">
-        <span className="topbar-pill">Produção</span>
-        <span>Visão operacional</span>
+        <span className="topbar-pill">Bem-vindo</span>
+        <span>Nome do Usuário</span>
       </div>
       <div className="topbar-user">
         <span>Equipe Tech System</span>
-        <CircleUserRound size={18} aria-hidden="true" />
       </div>
     </header>
   );

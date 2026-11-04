@@ -192,7 +192,7 @@
 
 .panel {
   min-width: 0;
-  padding: 14px;
+  padding: 12px;
 }
 
 .panel-heading {
@@ -356,6 +356,39 @@
   min-height: 28px;
   padding: 0 8px;
   font-size: 14px;
+}
+
+.task-modal-overlay {
+  position: fixed;
+  z-index: 1100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 65%);
+}
+
+.task-modal {
+  width: min(100%, 400px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.task-modal h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.task-modal p {
+  margin: 7px 0;
+  color: #bac3c9;
+}
+
+.task-modal .button {
+  margin-top: 12px;
 }
 
 .priority-button {

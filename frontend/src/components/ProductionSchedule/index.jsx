@@ -17,6 +17,7 @@ export default function ProductionSchedule() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("Todos");
   const [sorted, setSorted] = useState(false);
+  const [modal, setModal] = useState(null);
 
   const tasks = useMemo(() => {
     const filtered = initialTasks.filter((task) => {
@@ -100,13 +101,46 @@ export default function ProductionSchedule() {
               </div>
               <span>{task.machine} · {task.operator}</span>
             </div>
-            <button className="button button-outline task-details" type="button">
+
+
+
+            <button
+              id="open-details"
+              className="button button-outline task-details"
+              onClick={() => setModal(task)}
+              type="button"
+            >
               Detalhes
             </button>
+
+
           </article>
         ))}
         {tasks.length === 0 && <p className="empty-state">Nenhuma tarefa encontrada.</p>}
       </div>
+
+      {modal && (
+        <div className="task-modal-overlay" onClick={() => setModal(null)}>
+          <div
+            aria-modal="true"
+            className="task-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <h2>Detalhes da tarefa</h2>
+            <p>OP {modal.order}</p>
+            <p>{modal.time} · {modal.status}</p>
+            <p>{modal.machine} · {modal.operator}</p>
+            <button
+              className="button button-outline"
+              onClick={() => setModal(null)}
+              type="button"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
 
       <button
         className="button button-primary priority-button"
