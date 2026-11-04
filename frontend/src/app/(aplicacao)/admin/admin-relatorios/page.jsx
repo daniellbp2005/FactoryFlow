@@ -2,10 +2,12 @@ import "../admin.css";
 import AdminHeader from "@/components/AdminHeader";
 import OperatorReports from "@/components/OperatorReports";
 import AdminPageHeading from "@/components/AdminPageHeading";
+import Sidebar from "@/components/Sidebar";
 
 export default function AdminReportsPage() {
   return (
     <main className="admin-page">
+      <Sidebar />
       <AdminHeader />
       <section className="admin-content">
         <AdminPageHeading
