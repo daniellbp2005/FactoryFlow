@@ -34,3 +34,15 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.bg-cinza {
+  background-color: #df0000;
+}
+
+.bg-cinza:has(.app-layout) {
+  background-color: #090b0d;
+}
+
+.nav-link.active {  
+  background-color: aqua;
+}

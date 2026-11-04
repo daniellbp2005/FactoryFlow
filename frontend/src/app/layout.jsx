@@ -1,4 +1,6 @@
 import "./globals.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ClientBootstrap from "@/components/ClientBootstrap";
 
 export const metadata = {
   title: "Projeto Base",
@@ -8,7 +10,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <ClientBootstrap />
+      <body className="flex bg-cinza">
+        {children}</body>
     </html>
   );
 }
