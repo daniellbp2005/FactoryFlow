@@ -40,7 +40,6 @@ function normalizarResultado(resultado) {
     return RESULTADOS_RELATORIO.PENDENTE;
   }
 
-  // Tolerância para dados legados ou customizados já salvos no banco
   return limpo;
 }
 
@@ -51,17 +50,10 @@ export default class Relatorio {
    * - id: INT AUTO_INCREMENT PRIMARY KEY
    * - tarefa_id: INT NOT NULL (FK para tarefas)
    * - usuario_id: INT NOT NULL (FK para usuarios)
+   * - maquina_id: INT NULL (FK para maquinas)
    * - resultado: VARCHAR(30) NOT NULL
    * - observacoes: TEXT NULL
    * - criado_em: DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-   *
-   * @param {Object} dados
-   * @param {number} [dados.id] - Identificador único do relatório
-   * @param {number} dados.tarefa_id - ID da tarefa associada (aceita também tarefaId)
-   * @param {number} dados.usuario_id - ID do usuário responsável (aceita também usuarioId)
-   * @param {string} [dados.resultado='Aprovado'] - Resultado final da execução
-   * @param {string} [dados.observacoes] - Observações ou anotações técnicas
-   * @param {Date|string} [dados.criado_em] - Data/hora de geração do relatório
    */
   constructor({
     id,
@@ -69,6 +61,8 @@ export default class Relatorio {
     tarefaId,
     usuario_id,
     usuarioId,
+    maquina_id,
+    maquinaId,
     resultado = RESULTADOS_RELATORIO.APROVADO,
     observacoes = null,
     criado_em = null,
@@ -106,14 +100,26 @@ export default class Relatorio {
     }
     this.usuario_id = usuarioIdNum;
 
-    // 4. Validação e normalização do Resultado (VARCHAR 30 NOT NULL)
+    // 4. Validação do maquina_id (opcional: se informado, deve ser inteiro positivo)
+    const maquinaRecebida = maquina_id ?? maquinaId;
+    if (maquinaRecebida !== undefined && maquinaRecebida !== null && maquinaRecebida !== '') {
+      const maquinaIdNum = Number(maquinaRecebida);
+      if (!Number.isInteger(maquinaIdNum) || maquinaIdNum <= 0) {
+        throw new TypeError('maquina_id deve ser um inteiro positivo');
+      }
+      this.maquina_id = maquinaIdNum;
+    } else {
+      this.maquina_id = null;
+    }
+
+    // 5. Validação e normalização do Resultado (VARCHAR 30 NOT NULL)
     const resultadoNormalizado = normalizarResultado(resultado);
     if (resultadoNormalizado.length > 30) {
       throw new RangeError('Resultado não pode exceder 30 caracteres');
     }
     this.resultado = resultadoNormalizado;
 
-    // 5. Validação das Observações (TEXT NULL)
+    // 6. Validação das Observações (TEXT NULL)
     if (observacoes !== undefined && observacoes !== null && observacoes !== '') {
       if (typeof observacoes !== 'string') {
         throw new TypeError('Observações devem ser um texto');
@@ -123,7 +129,7 @@ export default class Relatorio {
       this.observacoes = null;
     }
 
-    // 6. Data de criação
+    // 7. Data de criação
     if (criado_em) {
       const dataCriacao = new Date(criado_em);
       this.criado_em = Number.isNaN(dataCriacao.getTime()) ? null : dataCriacao;
@@ -199,18 +205,15 @@ export default class Relatorio {
     return this;
   }
 
-  /**
-   * Retorna os dados puros para serialização JSON ou persistência.
-   */
   toJSON() {
     return {
       id: this.id,
       tarefa_id: this.tarefa_id,
       usuario_id: this.usuario_id,
+      maquina_id: this.maquina_id,
       resultado: this.resultado,
       observacoes: this.observacoes,
       criado_em: this.criado_em,
     };
   }
 }
-

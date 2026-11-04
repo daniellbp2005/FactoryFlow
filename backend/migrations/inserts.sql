@@ -1,3 +1,5 @@
+USE FactoryFlow;
+
 -- ==============================================================================
 -- FACTORYFLOW: INSERTS PARA TESTES
 -- Ordem de execução respeitando as chaves estrangeiras (FK):
@@ -7,7 +9,7 @@
 -- 4. equipamentos
 -- 5. tarefas_usuarios (tabela intermediária N:N)
 -- 6. tarefas_equipamentos (tabela intermediária N:N)
--- 7. relatorios (depende de tarefas e usuarios)
+-- 7. relatorios (depende de tarefas, usuarios e maquinas)
 -- ==============================================================================
 
 -- 1. MÁQUINAS
@@ -86,23 +88,26 @@ INSERT INTO tarefas_equipamentos (tarefa_id, equipamento_id) VALUES
 (4, 1), -- Chave de Impacto na Tarefa 4 (Compressor)
 (4, 3); -- Máquina de Solda na Tarefa 4 (Compressor)
 
--- 7. RELATÓRIOS (Prestação de contas das tarefas pelos técnicos)
-INSERT INTO relatorios (tarefa_id, usuario_id, resultado, observacoes) VALUES
+-- 7. RELATÓRIOS (Prestação de contas das tarefas pelos técnicos com a máquina vinculada)
+INSERT INTO relatorios (tarefa_id, usuario_id, maquina_id, resultado, observacoes) VALUES
 (
   1,
   1,
+  4, -- Máquina: Esteira Transportadora 01
   'Aprovado',
   'Esteira lubrificada, rolamentos revisados e alinhamento concluído com sucesso. Pronta para operar.'
 ),
 (
   2,
   2,
+  2, -- Máquina: Fresadora Industrial 01
   'Com Ressalvas',
   'Motor com aquecimento ligeiramente acima da média na fase B. Recomendada nova medição em 48h.'
 ),
 (
   4,
   1,
+  6, -- Máquina: Compressor de Ar 01
   'Aprovado',
   'Compressor com nova vedação instalada. Pressão estabilizada em 8.5 bar, teste de carga realizado.'
 );

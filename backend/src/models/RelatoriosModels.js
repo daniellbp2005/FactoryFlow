@@ -2,7 +2,7 @@ import * as dbModule from '../config/database.js';
 
 const pool = typeof dbModule.criarPool === 'function' ? dbModule.criarPool() : dbModule.pool;
 
-// 1. Listagem com paginação parametrizada e JOIN de tarefas e usuários
+// 1. Listagem com paginação e JOIN de tarefas, usuários e máquinas
 export async function listar({ limite, offset }) {
   const limiteNum = Number.parseInt(limite, 10);
   const offsetNum = Number.parseInt(offset, 10);
@@ -20,10 +20,15 @@ export async function listar({ limite, offset }) {
       
       u.id AS usuario_id,
       u.nome AS usuario_nome,
-      u.cargo AS usuario_cargo
+      u.cargo AS usuario_cargo,
+
+      m.id AS maquina_id,
+      m.nome AS maquina_nome,
+      m.estado AS maquina_estado
     FROM relatorios r
     LEFT JOIN tarefas t ON r.tarefa_id = t.id
     LEFT JOIN usuarios u ON r.usuario_id = u.id
+    LEFT JOIN maquinas m ON r.maquina_id = m.id
     ORDER BY r.id DESC
     LIMIT ? OFFSET ?`,
     [limiteNum, offsetNum]
@@ -46,6 +51,13 @@ export async function listar({ limite, offset }) {
       nome: linha.usuario_nome,
       cargo: linha.usuario_cargo,
     },
+    maquina: linha.maquina_id
+      ? {
+          id: linha.maquina_id,
+          nome: linha.maquina_nome,
+          estado: linha.maquina_estado,
+        }
+      : null,
   }));
 
   return {
@@ -54,7 +66,7 @@ export async function listar({ limite, offset }) {
   };
 }
 
-// 2. Buscar por ID trazendo tarefa, usuário e equipamentos da tabela intermediária
+// 2. Buscar por ID trazendo tarefa, usuário, máquina e equipamentos da intermediária
 export async function buscarPorId(id) {
   const sqlRelatorio = `
     SELECT 
@@ -62,17 +74,24 @@ export async function buscarPorId(id) {
       r.resultado,
       r.observacoes,
       r.criado_em,
-      r.tarefa_id,
+
+      t.id AS tarefa_id,
       t.titulo AS tarefa_titulo,
       t.descricao AS tarefa_descricao,
       t.status AS tarefa_status,
-      r.usuario_id,
+
+      u.id AS usuario_id,
       u.nome AS usuario_nome,
       u.cargo AS usuario_cargo,
-      u.email AS usuario_email
+      u.email AS usuario_email,
+
+      m.id AS maquina_id,
+      m.nome AS maquina_nome,
+      m.estado AS maquina_estado
     FROM relatorios r
     LEFT JOIN tarefas t ON r.tarefa_id = t.id
     LEFT JOIN usuarios u ON r.usuario_id = u.id
+    LEFT JOIN maquinas m ON r.maquina_id = m.id
     WHERE r.id = ?
   `;
   const [linhas] = await pool.query(sqlRelatorio, [id]);
@@ -111,11 +130,18 @@ export async function buscarPorId(id) {
       cargo: item.usuario_cargo,
       email: item.usuario_email,
     },
+    maquina: item.maquina_id
+      ? {
+          id: item.maquina_id,
+          nome: item.maquina_nome,
+          estado: item.maquina_estado,
+        }
+      : null,
     equipamentosUtilizados: equipamentos,
   };
 }
 
-// 3. Verifica se o usuário está escalado na tarefa (tabela intermediária tarefas_usuarios)
+// 3. Verifica se o usuário está escalado na tarefa (tarefas_usuarios)
 export async function verificarVinculoUsuarioTarefa(tarefaId, usuarioId) {
   const [linhas] = await pool.query(
     'SELECT 1 FROM tarefas_usuarios WHERE tarefa_id = ? AND usuario_id = ?',
@@ -133,28 +159,37 @@ export async function buscarPorTarefaEUsuario(tarefaId, usuarioId) {
   return linhas[0] || null;
 }
 
+// 5. Inserir novo relatório com maquina_id
 export async function criar(relatorio) {
   const sql = `
-    INSERT INTO relatorios (tarefa_id, usuario_id, resultado, observacoes)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO relatorios (tarefa_id, usuario_id, maquina_id, resultado, observacoes)
+    VALUES (?, ?, ?, ?, ?)
   `;
   const valores = [
     relatorio.tarefa_id,
     relatorio.usuario_id,
+    relatorio.maquina_id || null,
     relatorio.resultado,
     relatorio.observacoes,
   ];
 
   const [resultado] = await pool.query(sql, valores);
+  // Retorna o relatório completo já com a máquina preenchida
   return buscarPorId(resultado.insertId);
 }
 
-export async function atualizar(id, { resultado, observacoes }) {
-  const sql = 'UPDATE relatorios SET resultado = ?, observacoes = ? WHERE id = ?';
-  const [resultadoQuery] = await pool.query(sql, [resultado, observacoes, id]);
+// 6. Atualizar resultado, observações e opcionalmente maquina_id
+export async function atualizar(id, { resultado, observacoes, maquina_id }) {
+  const sql = `
+    UPDATE relatorios 
+    SET resultado = ?, observacoes = ?, maquina_id = COALESCE(?, maquina_id) 
+    WHERE id = ?
+  `;
+  const [resultadoQuery] = await pool.query(sql, [resultado, observacoes, maquina_id || null, id]);
   return resultadoQuery.affectedRows > 0;
 }
 
+// 7. Excluir relatório por ID
 export async function excluir(id) {
   const [resultado] = await pool.query('DELETE FROM relatorios WHERE id = ?', [id]);
   return resultado.affectedRows > 0;

@@ -4,10 +4,12 @@ import OverviewCards from "@/components/OverviewCards";
 import ProductionSchedule from "@/components/ProductionSchedule";
 import AvailabilityPanel from "@/components/AvailabilityPanel";
 import AdminPageHeading from "@/components/AdminPageHeading";
+import Sidebar from "@/components/Sidebar";
 
 export default function AdminPage() {
   return (
     <main className="admin-page">
+      <Sidebar />
       <AdminHeader />
       <section className="admin-content">
         <AdminPageHeading

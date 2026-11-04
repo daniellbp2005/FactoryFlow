@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS relatorios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tarefa_id INT NOT NULL,
     usuario_id INT NOT NULL,
+    maquina_id INT NULL,
     resultado VARCHAR(30) NOT NULL,
     observacoes TEXT,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -40,6 +41,10 @@ CREATE TABLE IF NOT EXISTS relatorios (
     CONSTRAINT fk_relatorio_usuario
         FOREIGN KEY (usuario_id)
         REFERENCES usuarios(id),
+
+    CONSTRAINT fk_relatorio_maquina
+        FOREIGN KEY (maquina_id)
+        REFERENCES maquinas(id),
 
     CONSTRAINT uq_relatorio_tarefa_usuario
         UNIQUE (tarefa_id, usuario_id)

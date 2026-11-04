@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 const initialTasks = [
   { time: "08:00–10:30", order: "3-2847", priority: "Alta", status: "Em andamento", machine: "CNC-01", operator: "Ana Costa" },
@@ -18,6 +18,7 @@ export default function ProductionSchedule() {
   const [status, setStatus] = useState("Todos");
   const [sorted, setSorted] = useState(false);
   const [modal, setModal] = useState(null);
+  const [data, useData] = useState([])
 
   const tasks = useMemo(() => {
     const filtered = initialTasks.filter((task) => {
@@ -31,6 +32,20 @@ export default function ProductionSchedule() {
       ? [...filtered].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
       : filtered;
   }, [query, sorted, status]);
+
+  useEffect(() => {
+  async function listarRelatorios() {
+    try {
+      const linkApi = await fetch("http://localhost:8080/api/relatorios");
+      const data = await  linkApi.json();
+      useData(data);
+    } catch (e) {
+      console.error("Erro ao consultar o backend");
+    }
+  }
+  listarRelatorios();
+},[])
+
 
   return (
     <section className="panel schedule-panel" aria-labelledby="schedule-title">
