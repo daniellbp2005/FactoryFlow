@@ -5,12 +5,16 @@ import * as UsuarioModel from '../models/UsuarioModel.js';
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const jwtSecret = process.env.JWT_SECRET || 'chave-padrao-desenvolvimento';
 
-export async function registrar({ nome, email, senha, cpf, cargo, perfil } = {}) {
+export async function registrar({ codigo, nome, cpf, cargo, turno, email, senha, perfil } = {}) {
   const nomeLimpo = typeof nome === 'string' ? nome.trim() : '';
   const emailLimpo = typeof email === 'string' ? email.trim().toLowerCase() : '';
   const cpfLimpo = typeof cpf === 'string' ? cpf.trim().toLowerCase() : '';
   const cargoLimpo = typeof cargo === 'string' ? cargo.trim().toLowerCase() : '';
+  const turnoLimpo = typeof turno === 'string' ? turno.trim() : '';
 
+  const codigoLimpo = (typeof codigo === 'string' && codigo.trim())
+    ? codigo.trim().toUpperCase()
+    : `FUNC-${Date.now().toString().slice(-4)}`;
 
   if (nomeLimpo.length < 3) {
     throw new TypeError('Nome deve ter no mínimo 3 caracteres.');
@@ -20,6 +24,9 @@ export async function registrar({ nome, email, senha, cpf, cargo, perfil } = {})
   }
   if (!cargoLimpo) {
     throw new TypeError('Cargo é obrigatório.');
+  }
+  if (!turnoLimpo) {
+    throw new TypeError('Turno é obrigatório.');
   }
   if (!REGEX_EMAIL.test(emailLimpo)) {
     throw new TypeError('Informe um e-mail válido.');
@@ -49,6 +56,8 @@ export async function registrar({ nome, email, senha, cpf, cargo, perfil } = {})
     senha: senhaHash,
     cpf: cpfLimpo,
     cargo: cargoLimpo,
+    turno: turnoLimpo,
+    codigo: codigoLimpo,
     perfil: perfil || 'funcionario'
   });
 }
@@ -74,6 +83,6 @@ export async function login({ email, senha } = {}) {
     token,
     tipo: 'Bearer',
     expiraEm: '2h',
-    usuario: { id: usuario.id, nome: usuario.nome, perfil: usuario.perfil}
+    usuario: { id: usuario.id, nome: usuario.nome, perfil: usuario.perfil }
   };
 }

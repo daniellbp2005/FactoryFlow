@@ -18,27 +18,27 @@ export default function ProductionSchedule() {
   const [status, setStatus] = useState("Todos");
   const [sorted, setSorted] = useState(false);
   const [modal, setModal] = useState(null);
-  const [data, useData] = useState([])
+  const [data, useData] = useState([]);
 
-  const tasks = useMemo(() => {
-    const filtered = initialTasks.filter((task) => {
-      const matchesQuery = `${task.order} ${task.machine} ${task.operator}`
-        .toLowerCase()
-        .includes(query.toLowerCase());
-      return matchesQuery && (status === "Todos" || task.status === status);
-    });
+  // data = useMemo(() => {
+  //   const filtered = data.filter((data) => {
+  //     const matchesQuery = `${data.criado_em} ${data.maquina.nome} ${data.usuario.nome}`
+  //       .toLowerCase()
+  //       .includes(query.toLowerCase());
+  //     return matchesQuery && (status === "Todos" || data.status === status);
+  //   });
 
-    return sorted
-      ? [...filtered].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
-      : filtered;
-  }, [query, sorted, status]);
+  //   return sorted
+  //     ? [...filtered].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
+  //     : filtered;
+  // }, [query, sorted, status]);
 
   useEffect(() => {
   async function listarRelatorios() {
     try {
       const linkApi = await fetch("http://localhost:8080/api/relatorios");
-      const data = await  linkApi.json();
-      useData(data);
+      const data = await linkApi.json();
+      useData(data.dados);
     } catch (e) {
       console.error("Erro ao consultar o backend");
     }
@@ -100,41 +100,37 @@ export default function ProductionSchedule() {
       </div>
 
       <div className="task-list">
-        {tasks.map((task) => (
-          <article className="task-row" key={task.order}>
+        {data && data.map((a) => (
+          <article className="task-row" key={a.id}>
             <div className="task-time">
               <span>Horário</span>
-              <strong>{task.time}</strong>
+              <strong>{a.criado_em}</strong>
             </div>
             <div className="task-info">
               <div className="task-tags">
-                <strong>OP {task.order}</strong>
-                <span className={`tag priority-${task.priority.toLowerCase()}`}>{task.priority}</span>
-                <span className={`tag status-${task.status.toLowerCase().replace(" ", "-")}`}>
-                  {task.status}
+                <strong>OP {a.tarefa.titulo}</strong>
+                <span className={`tag`}>{a.resultado}</span>
+                <span className={`tag `}>
+                  {a.status}
                 </span>
               </div>
-              <span>{task.machine} · {task.operator}</span>
+              <span>{a.maquina.nome} · {a.usuario.nome}</span>
             </div>
-
-
 
             <button
               id="open-details"
               className="button button-outline task-details"
-              onClick={() => setModal(task)}
+              onClick={() => setModal(null)}
               type="button"
             >
               Detalhes
             </button>
-
-
           </article>
         ))}
-        {tasks.length === 0 && <p className="empty-state">Nenhuma tarefa encontrada.</p>}
+        {data.length === 0 && <p className="empty-state">Nenhuma tarefa encontrada.</p>}
       </div>
 
-      {modal && (
+      {/* {modal && (
         <div className="task-modal-overlay" onClick={() => setModal(null)}>
           <div
             aria-modal="true"
@@ -155,7 +151,7 @@ export default function ProductionSchedule() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       <button
         className="button button-primary priority-button"
