@@ -1,0 +1,47 @@
+.requisicao-maquinas {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background-color: #0c0f11;
+    border-radius: 8px;
+    border: 1px solid #1f2937;
+}
+.requisicao-header {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-bottom: 20px;
+    background-color: #0573bd;
+}
+
+.requisicao-user {
+    display: flex;
+    background-color: #40d622;
+    flex-direction: column;
+}
+
+.requisicao-info {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin-left: 20px;
+    background-color: #10b8a8;
+}
+
+.container {
+    width: 100%;
+    height: 50px;
+    background-color: #ff0c0c;
+}
+
+.container-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: #550cff;
+}
