@@ -103,6 +103,7 @@
 .main .containerLogin .contentHeader img{
   width: 40px;
   height: 40px;
+  margin-bottom: 10px;
 }
 
 .main .containerLogin .contentHeader h1 {
@@ -205,20 +206,25 @@
   align-items: center;
 }
 
+
 .main .containerLogin .bodyLogin .btnL {
-  padding: 12px 20px;
-  color: #ffffff;
-  background-color: #000000;
-  border: none;
-  border-radius: 8px;
-  transition: 0.3s ease-in-out;
+  border: 1px solid var(--accent);
+  width: 25%;
+  background-color: #10b8a8;
+  color: #000000;
+  min-height: 34px;
+  border-radius: 5px;
+  padding: 0 12px;
   cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+.main .containerLogin .bodyLogin .btnL:hover {
+  background: #16c8b7;
 }
 
-.main .containerLogin .bodyLogin .btnL:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(26, 175, 118, 0.438);
-}
 @media (max-width: 1300px) {
   .main .loginDiv {
     gap: 10%;
@@ -239,8 +245,8 @@
   }
 
   .main .containerTitle img {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
   }
   .main .textTitle h1 {
     font-size: 67px;
@@ -270,19 +276,26 @@
   }
 
   .main .containerLogin {
-    width: 100% !important;
-    padding: 16px !important;
+    width: 85% !important;
+    padding: 8px !important;
+    margin-left: 7.5%;
   }
 
   .bodyLogin{
     gap: 8px;
+    margin-left: 17.5%;
   }
 
   .main .containerLogin .bodyLogin form .inputContent {
-    width: 100% !important;
+    width: 85% !important;
+    padding: 4px 4px;
   }
 
   .main .containerLogin .bodyLogin form .inputContent .input {
     width: 85vw !important;
+  }
+
+  .main .containerLogin .bodyLogin .rowBtn {
+    margin-left: -7.5%;
   }
 }
