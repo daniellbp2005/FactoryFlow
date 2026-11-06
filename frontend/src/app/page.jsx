@@ -1,23 +1,20 @@
 'use client';
 import styles from "./page.module.css";
 import { AtSign, LockKeyhole, Eye, EyeOff, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"
 
 export default function Login() {
   // Aqui a baixo jápega os dados do inputs, tanto do Login e Cadastro. Falta só jogar em lista e subir no banco
 
-  const [modo, setModo] = useState("login");
-  const [nome, setNome] = useState("");
+  const [perfil, setPerfil] = useState("usuario");
+  const [dado, setDado] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [msgErro, setErro] = useState("");
   const router = useRouter();
 
-  function lerNome(e) {
-    setNome(e.target.value);
-  }
   function lerEmail(e) {
     setEmail(e.target.value);
   }
@@ -38,21 +35,20 @@ export default function Login() {
     
     const dados = {email,senha};
     
-    console.log(dados);
-    router.push("/fridger");
-  }
-
-  function criarConta(e) {
-    e.preventDefault();
-
-    if (!email || !senha || !nome) {
-      setErro("Campos Inválidos");
-      return;
+    useEffect(() => {
+      async function loadPerfil() {
+        try {
+          const LinkAPI = await fetch(`ROTA`);
+          const data = await LinkAPI.json();
+          setDado(data.dados);
+        } catch (error) {
+          console.error("Erro ao buscar perfil:", error);
+        }
+      }
     }
-
-    const dados = {email,senha,nome};
+  )
     console.log(dados);
-    router.push("/home");
+      router.push("/admin");
   }
 
   return (
@@ -76,11 +72,10 @@ export default function Login() {
             <div className={styles.contentHeader}>
               <img src="./images/logotype/logotype-branco.png"/>
               <h1 className={styles.titulo}>
-                {modo === "login" ? <span>Olá de novo!</span> : <span>Bem vindo!</span>}
+                <span>Bem vindo!</span>
               </h1>
             </div>
             <div className={styles.bodyLogin}>
-              {modo === "login" ?
                 <form onSubmit={entrarLogin}>
                   <label className="label" htmlFor="email">E-mail</label>
                   <div className={styles.inputContent}>
@@ -109,63 +104,12 @@ export default function Login() {
                       {senhaVisivel ? <Eye size={19}/> : <EyeOff size={19}/> }
                     </button>
                   </div>
-                  <div className={styles.rowCad}>
-                    <p onClick={() => setModo("cadastro")}
-                    >Não tem conta?</p>
-                  </div>
                   <div className={styles.rowBtn}>
-                    <button className={styles.btnL}>Entrar</button>
+                    <button 
+                    className={styles.btnL}
+                    >Entrar</button>
                   </div>
                 </form>
-                :
-                <form onSubmit={criarConta}>
-                  <label className="label" htmlFor="nome">Nome</label>
-                  <div className={styles.inputContent}>
-                    <User size={19} />
-                    <input className={styles.input} type="text" name="nome" id="nome" placeholder="Digite aqui"
-                      required
-                      minLength={2}
-                      maxLength={44}
-                      value={nome}
-                      onChange={lerNome} />
-                  </div>
-                  <label className="label" htmlFor="email">E-mail</label>
-                  <div className={styles.inputContent}>
-                    <AtSign size={19} />
-                    <input className={styles.input} type="email" name="email" id="email" placeholder="SuaConta@email.com"
-                      required
-                      minLength={8}
-                      maxLength={25}
-                      value={email}
-                      onChange={lerEmail} />
-                  </div>
-                  <label className="label" htmlFor="senha">Senha</label>
-                  <div className={styles.inputContent}>
-                    <LockKeyhole size={19} />
-                    <input className={styles.input} type={senhaVisivel ? "text" : "password"} name="senha" id="senha" placeholder="Digite aqui" required
-                      minLength={3}
-                      maxLength={12}
-                      value={senha}
-                      onChange={lerSenha}
-                    />
-                    <button
-                      type="button"
-                      onClick={alternarVisibilidadeSenha}
-                      className={styles.togglePassword}
-                    >
-                      {senhaVisivel ? <Eye size={19}/> : <EyeOff size={19}/> }
-                    </button>
-                  </div>
-                  <div className={styles.rowCad}>
-                    <p onClick={() => setModo("login")}
-                    >Já tem uma conta ?</p>
-                  </div>
-                  <div className={styles.rowBtn}>
-                    <button className={styles.btnL}>Criar</button>
-                  </div>
-                </form>
-              }
-
               {msgErro != "" && <p>{msgErro}</p>}
             </div>
           </div>
