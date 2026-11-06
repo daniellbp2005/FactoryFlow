@@ -92,22 +92,35 @@ export async function atualizar(idRecebido, dados) {
     throw erro;
   }
 
-  // 2. Valida o novo resultado e observações usando o objeto de domínio
+
+  // 2. Valida os novos campos com o objeto de domínio Relatorio
   const relatorioAtualizado = new Relatorio({
     id,
-    tarefa_id: relatorioExistente.tarefa.id,
-    usuario_id: relatorioExistente.usuario.id,
+    codigo: dados.codigo || relatorioExistente.codigo,
+    categoria: dados.categoria || relatorioExistente.categoria,
+    status: dados.status || relatorioExistente.status,
+    motivo: dados.motivo !== undefined ? dados.motivo : relatorioExistente.motivo,
+    finalidade: dados.finalidade !== undefined ? dados.finalidade : relatorioExistente.finalidade,
     resultado: dados.resultado ?? relatorioExistente.resultado,
     observacoes: dados.observacoes !== undefined ? dados.observacoes : relatorioExistente.observacoes,
+    maquina_id: dados.maquina_id !== undefined ? dados.maquina_id : (relatorioExistente.maquina?.id ?? null),
+    tarefa_id: relatorioExistente.tarefa?.id || relatorioExistente.tarefa.id,
+    usuario_id: relatorioExistente.usuario?.id || relatorioExistente.usuario.id,
   });
 
-  // 3. Atualiza no banco
+  // 3. Repassa TODOS os campos atualizados para o Model
   await RelatoriosModel.atualizar(id, {
+    codigo: relatorioAtualizado.codigo,
+    categoria: relatorioAtualizado.categoria,
+    status: relatorioAtualizado.status,
+    motivo: relatorioAtualizado.motivo,
+    finalidade: relatorioAtualizado.finalidade,
     resultado: relatorioAtualizado.resultado,
     observacoes: relatorioAtualizado.observacoes,
+    maquina_id: relatorioAtualizado.maquina_id,
   });
 
-  // 4. Retorna o relatório com seus dados completos e atualizados
+  // 4. Retorna o relatório completo atualizado
   return await RelatoriosModel.buscarPorId(id);
 }
 
