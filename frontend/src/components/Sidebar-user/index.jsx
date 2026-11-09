@@ -1,0 +1,69 @@
+"use client";
+
+import {
+  ChartNoAxesColumnIncreasing,
+  ClipboardList,
+  Factory,
+  Gauge,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  UsersRound,
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+
+const links = [
+  { label: "Painel" , icon: LayoutDashboard, href: "/" },
+  { label: "Planejamento", icon: ClipboardList, href: "/" },
+  { label: "Operadores", icon: UsersRound, href: "/" },
+  { label: "Máquinas", icon: Factory, href: "/" },
+  { label: "Relatórios", icon: ChartNoAxesColumnIncreasing, href: "/" },
+];
+
+export default function SidebarUser() {
+  const pathname = usePathname();
+
+  return (
+    <aside className="app-sidebar">
+      <Link className="sidebar-brand" href="/" aria-label="FactoryFlow início">
+        <Image
+          alt=""
+          className="brand-logo"
+          height={80}
+          priority
+          src="/images/logotype/logotype.png"
+          width={80}
+        />
+        <span className="brand-copy">
+          <strong>FactoryFlow</strong>
+        </span>
+      </Link>
+
+      <nav className="sidebar-nav" aria-label="Navegação principal">
+        {links.map(({ label, icon: Icon, href }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              aria-current={active ? "page" : undefined}
+              className={`sidebar-link${active ? " active" : ""}`}
+              href={href}
+              key={label}
+            >
+              <Icon size={25} aria-hidden="true" />
+              <span>{label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      <footer className="sidebar-footer">
+        <Link className="sidebar-logout" href="/" aria-label="Sair e voltar ao início">
+          <LogOut size={20} aria-hidden="true" />
+          <span>Sair</span>
+        </Link>
+      </footer>
+    </aside>
+  );
+}
