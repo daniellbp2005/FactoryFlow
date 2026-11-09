@@ -32,24 +32,50 @@ export default function Login() {
       setErro("Campos Inválidos");
       return;
     }
-    
-    const dados = {email,senha};
-    
+
+    const dados = { email, senha };
+
+
+
     useEffect(() => {
-      async function loadPerfil() {
-        try {
-          const LinkAPI = await fetch(`ROTA`);
-          const data = await LinkAPI.json();
-          setDado(data.dados);
-        } catch (error) {
-          console.error("Erro ao buscar perfil:", error);
-        }
-      }
+
     }
-  )
-    console.log(dados);
-      router.push("/admin");
+    )
   }
+
+  async function loadPerfil(e) {
+    e.preventDefault();
+    try {
+      const LinkAPI = await fetch(`http://localhost:8080/usuarios/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          senha
+        })
+      });
+
+      const resultado = await LinkAPI.json();
+      console.log(resultado);
+
+      if (!resultado.ok) {
+        setErro("Erro no login")
+      }
+      const usuario = resultado.dados.usuario
+
+      if (usuario.perfil === "administrador") {
+        router.push("/admin");
+      } else {
+        router.push("/user");
+      }
+      setDado();
+    } catch (error) {
+      console.error("Erro ao buscar perfil:", error);
+    }
+  }
+
 
   return (
     <>
@@ -57,7 +83,7 @@ export default function Login() {
         <div className={styles.loginDiv}>
           <div className={styles.textDiv}>
             <div className={styles.containerTitle}>
-              <img src="./images/logotype/logotype.png"/>
+              <img src="./images/logotype/logotype.png" />
               <div className={styles.textTitle}>
                 <h1><b>FactoryFlow</b></h1>
                 <p>Uma aplicação Tech System</p>
@@ -70,46 +96,47 @@ export default function Login() {
           </div>
           <div className={styles.containerLogin}>
             <div className={styles.contentHeader}>
-              <img src="./images/logotype/logotype-branco.png"/>
+              <img src="./images/logotype/logotype-branco.png" />
               <h1 className={styles.titulo}>
                 <span>Bem vindo!</span>
               </h1>
             </div>
             <div className={styles.bodyLogin}>
-                <form onSubmit={entrarLogin}>
-                  <label className="label" htmlFor="email">E-mail</label>
-                  <div className={styles.inputContent}>
-                    <AtSign size={19} />
-                    <input className={styles.input} type="email" name="email" id="email" placeholder="SuaConta@email.com"
-                      required
-                      minLength={8}
-                      maxLength={25}
-                      value={email}
-                      onChange={lerEmail} />
-                  </div>
-                  <label className="label" htmlFor="senha">Senha</label>
-                  <div className={styles.inputContent}>
-                    <LockKeyhole size={19} />
-                    <input className={styles.input} type={senhaVisivel ? "text" : "password"} name="senha" id="senha" placeholder="Digite aqui" required
-                      minLength={3}
-                      maxLength={12}
-                      value={senha}
-                      onChange={lerSenha}
-                    />
-                    <button
-                      type="button"
-                      onClick={alternarVisibilidadeSenha}
-                      className={styles.togglePassword}
-                    >
-                      {senhaVisivel ? <Eye size={19}/> : <EyeOff size={19}/> }
-                    </button>
-                  </div>
-                  <div className={styles.rowBtn}>
-                    <button 
+              <form onSubmit={entrarLogin}>
+                <label className="label" htmlFor="email">E-mail</label>
+                <div className={styles.inputContent}>
+                  <AtSign size={19} />
+                  <input className={styles.input} type="email" name="email" id="email" placeholder="SuaConta@email.com"
+                    required
+                    minLength={8}
+                    maxLength={50}
+                    value={email}
+                    onChange={lerEmail} />
+                </div>
+                <label className="label" htmlFor="senha">Senha</label>
+                <div className={styles.inputContent}>
+                  <LockKeyhole size={19} />
+                  <input className={styles.input} type={senhaVisivel ? "text" : "password"} name="senha" id="senha" placeholder="Digite aqui" required
+                    minLength={3}
+                    maxLength={24}
+                    value={senha}
+                    onChange={lerSenha}
+                  />
+                  <button
+                    type="button"
+                    onClick={alternarVisibilidadeSenha}
+                    className={styles.togglePassword}
+                  >
+                    {senhaVisivel ? <Eye size={19} /> : <EyeOff size={19} />}
+                  </button>
+                </div>
+                <div className={styles.rowBtn}>
+                  <button
                     className={styles.btnL}
-                    >Entrar</button>
-                  </div>
-                </form>
+                    onClick={loadPerfil}
+                  >Entrar</button>
+                </div>
+              </form>
               {msgErro != "" && <p>{msgErro}</p>}
             </div>
           </div>

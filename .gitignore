@@ -1,3 +1,16 @@
+Admin
+{
+  "email": "admin@factoryflow.com",
+  "senha": "Admin@12345"
+}
+
+Funcionario
+{
+ "email": "funcionario@factoryflow.com",
+ "senha": "Funcionario@12345",
+}
+
+
 # dependencies
 node_modules/
 frontend/node_modules/
