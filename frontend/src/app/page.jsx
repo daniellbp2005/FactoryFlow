@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"
 
 export default function Login() {
-  // Aqui a baixo jápega os dados do inputs, tanto do Login e Cadastro. Falta só jogar em lista e subir no banco
-
   const [perfil, setPerfil] = useState("usuario");
   const [dado, setDado] = useState("");
   const [email, setEmail] = useState("");
@@ -32,15 +30,6 @@ export default function Login() {
       setErro("Campos Inválidos");
       return;
     }
-
-    const dados = { email, senha };
-
-
-
-    useEffect(() => {
-
-    }
-    )
   }
 
   async function loadPerfil(e) {
@@ -61,7 +50,8 @@ export default function Login() {
       console.log(resultado);
 
       if (!resultado.ok) {
-        setErro("Erro no login")
+        setErro("Erro no login");
+        return;
       }
       const usuario = resultado.dados.usuario
 

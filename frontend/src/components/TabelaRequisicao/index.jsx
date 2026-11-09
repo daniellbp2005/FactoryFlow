@@ -17,7 +17,7 @@ export default function RequisicaoMaquinas() {
                         <div className="container-icon"><Siren color="#00ffe5" /></div>
                         <div className="container-info-user">
                             <div className="container-info">
-                                <h8>Arthur Silva</h8>
+                                <h5>Arthur Silva</h5>
                                 <div className="container-text">
                                     <p>REQ-1062</p>
                                     <p>·</p>
@@ -32,20 +32,20 @@ export default function RequisicaoMaquinas() {
 
                     <div className="conjunto-info">
                         <div className="data-solicitada">
-                            <h8 className="h8">Data da Solicitação</h8>
+                            <h5 className="h8">Data da Solicitação</h5>
                             <p className="p">06/11/2026</p>
                         </div>
 
                         <div className="horario">
-                            <h8 className="h8">Horário</h8>
+                            <h5 className="h8">Horário</h5>
                             <p className="p">09:00 - 12:00</p>
                         </div>
                         <div className="finalidade">
-                            <h8 className="h8">Finalidade</h8>
+                            <h5 className="h8">Finalidade</h5>
                             <p className="p">Produção lote</p>
                         </div>
                         <div className="setor">
-                            <h8 className="h8">Setor</h8>
+                            <h5 className="h8">Setor</h5>
                             <p className="p">Usinagem</p>
                         </div>
                     </div>
@@ -62,7 +62,7 @@ export default function RequisicaoMaquinas() {
                         <div className="container-icon"><Siren color="#00ffe5" /></div>
                         <div className="container-info-user">
                             <div className="container-info">
-                                <h8>Adamastor</h8>
+                                <h5>Adamastor</h5>
                                 <div className="container-text">
                                     <p>REQ-1086</p>
                                     <p>·</p>
@@ -78,20 +78,20 @@ export default function RequisicaoMaquinas() {
                     <div className="conjunto-info">
 
                         <div className="data-solicitada">
-                            <h8 className="h8">Data da Solicitação</h8>
+                            <h5 className="h8">Data da Solicitação</h5>
                             <p className="p">09/11/2026</p>
                         </div>
 
                         <div className="horario">
-                            <h8 className="h8">Horário</h8>
+                            <h5 className="h8">Horário</h5>
                             <p className="p">07:00 - 11:00</p>
                         </div>
                         <div className="finalidade">
-                            <h8 className="h8">Finalidade</h8>
+                            <h5 className="h8">Finalidade</h5>
                             <p className="p">Produção lote</p>
                         </div>
                         <div className="setor">
-                            <h8 className="h8">Setor</h8>
+                            <h5 className="h8">Setor</h5>
                             <p className="p">Usinagem</p>
                         </div>
 
@@ -105,7 +105,7 @@ export default function RequisicaoMaquinas() {
                         <div className="container-icon"><Siren color="#00ffe5" /></div>
                         <div className="container-info-user">
                             <div className="container-info">
-                                <h8>Juliema</h8>
+                                <h5>Juliema</h5>
                                 <div className="container-text">
                                     <p>REQ-1040</p>
                                     <p>·</p>
@@ -121,20 +121,20 @@ export default function RequisicaoMaquinas() {
                     <div className="conjunto-info">
 
                         <div className="data-solicitada">
-                            <h8 className="h8">Data da Solicitação</h8>
+                            <h5 className="h8">Data da Solicitação</h5>
                             <p className="p">08/11/2026</p>
                         </div>
 
                         <div className="horario">
-                            <h8 className="h8">Horário</h8>
+                            <h5 className="h8">Horário</h5>
                             <p className="p">07:40 - 13:00</p>
                         </div>
                         <div className="finalidade">
-                            <h8 className="h8">Finalidade</h8>
+                            <h5 className="h8">Finalidade</h5>
                             <p className="p">Produção lote</p>
                         </div>
                         <div className="setor">
-                            <h8 className="h8">Setor</h8>
+                            <h5 className="h8">Setor</h5>
                             <p className="p">Usinagem</p>
                         </div>
 

@@ -3,11 +3,31 @@ Admin
   "email": "admin@factoryflow.com",
   "senha": "Admin@12345"
 }
+{
+  "nome": "Gestor de Produção",
+  "email": "admin@factoryflow.com",
+  "cpf": "111.444.777-35",
+  "cargo": "Supervisor Geral",
+  "turno": "Administrativo",
+  "senha": "Admin@12345"
+  "perfil": "administrador",
+  "codigo": "ADMIN-002"
+}
 
 Funcionario
 {
  "email": "funcionario@factoryflow.com",
  "senha": "Funcionario@12345",
+}
+{
+  "nome": "Lucas Martins",
+ "email": "funcionario@factoryflow.com",
+  "cpf": "222.555.888-46",
+  "cargo": "Operador de CNC",
+  "turno": "Manhã",
+ "senha": "Funcionario@12345",
+  "perfil": "funcionario",
+  "codigo": "FUNC-011"
 }
 
 
