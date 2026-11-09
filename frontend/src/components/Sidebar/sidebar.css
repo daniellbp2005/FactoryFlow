@@ -26,9 +26,10 @@
 
 .sidebar-brand {
   display: flex;
-  min-height: 112px;
+  min-height: 100px;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   gap: 5px;
   margin-bottom: 20px;
   color: inherit;
