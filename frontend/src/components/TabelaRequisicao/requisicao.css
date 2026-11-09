@@ -20,6 +20,7 @@
     display: flex;
     border-radius: 8px;
     padding: 20px;
+    margin-bottom: 15px;
     border: 1px solid #1f2937;
     background-color: #0c0f11;
     flex-direction: column;
@@ -93,6 +94,34 @@
     font-weight: bold;
     color: #ff8800;
     background-color: #ff510c4f;
+}
+
+.status-aprovado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    width: 85px;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #5eff00e0;
+    background-color: #45ff0c4f;
+}
+
+.status-reprovado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    width: 85px;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff0000;
+    background-color: #ff0c0c57
 }
 
 .data-solicitado p {

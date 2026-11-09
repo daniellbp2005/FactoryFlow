@@ -18,7 +18,7 @@ export default function AdminMachinesPage() {
           description="Programação, equipamentos e produtividade em uma única visão."
         />
 
-        <TabelaRequisicao />
+          <TabelaRequisicao />
 
         <footer className="admin-footer">
           FactoryFlow · Desenvolvido por Tech System
