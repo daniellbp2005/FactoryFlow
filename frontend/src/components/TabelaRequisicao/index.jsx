@@ -107,7 +107,7 @@ export default function RequisicaoMaquinas() {
                             <div className="container-info">
                                 <h8>Juliema</h8>
                                 <div className="container-text">
-                                    <p>REQ-1040</p>
+                                    <p>REQ-1050</p>
                                     <p>·</p>
                                     <p>CNC-03</p>
                                 </div>
