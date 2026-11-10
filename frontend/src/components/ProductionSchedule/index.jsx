@@ -128,7 +128,7 @@ export default function ProductionSchedule() {
         </div>
         <div className="period-switch" aria-label="Período da programação">
 
-          <button onClick={() => setPeriod("Dia")} className={period === "Dia" ? "selected" : ""} type="button"> Dia </button>          
+          <button onClick={() => setPeriod("Dia")} className={period === "Dia" ? "selected" : ""} type="button"> Dia </button>
           <button onClick={() => setPeriod("Semana")} className={period === "Semana" ? "selected" : ""} type="button">Semana</button>
           <button onClick={() => setPeriod("Mês")} className={period === "Mês" ? "selected" : ""} type="button">Mês</button>
 
