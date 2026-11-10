@@ -153,9 +153,9 @@ export default class Tarefa {
    * - periodo: VARCHAR(15) NOT NULL DEFAULT 'Semana' (Dia, Semana, Mês)
    * - turno_prazo: VARCHAR(20) NOT NULL DEFAULT 'Indefinido' (Dia, Tarde, Noite, Indefinido)
    * - prazo: DATETIME NULL
-   * - tempo_estimado: DECIMAL(5,2) NULL (em Horas)
-   * - iniciado_em: DATETIME NULL
-   * - finalizado_em: DATETIME NULL
+   * - tempo_estimado: DECIMAL(5,2) NOT NULL (em Horas)
+   * - iniciado_em: DATETIME NOT NULL
+   * - finalizado_em: DATETIME NOT NULL
    * - criado_em: DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
    */
   constructor({
@@ -175,7 +175,7 @@ export default class Tarefa {
     turno_prazo,
     prazo_turno, // alias aceito
     prazo = null,
-    tempo_estimado = null,
+    tempo_estimado = 0,
     iniciado_em = null,
     finalizado_em = null,
     criado_em = null,
@@ -258,7 +258,7 @@ export default class Tarefa {
       this.prazo = null;
     }
 
-    // 11. Tempo Estimado (em HORAS - aceita decimais, ex: 1.50 = 1h30)
+    // 11. Tempo Estimado (em HORAS - DECIMAL(5,2) NOT NULL)
     if (tempo_estimado !== undefined && tempo_estimado !== null && tempo_estimado !== '') {
       const tempoNum = Number(tempo_estimado);
       if (Number.isNaN(tempoNum) || tempoNum < 0) {
@@ -266,31 +266,37 @@ export default class Tarefa {
       }
       this.tempo_estimado = Number(tempoNum.toFixed(2));
     } else {
-      this.tempo_estimado = null;
+      this.tempo_estimado = 0.0;
     }
 
-    // 12. Data/hora de início real
-    if (iniciado_em) {
+    // 12. Data/hora de início real (DATETIME NOT NULL)
+    if (iniciado_em !== undefined && iniciado_em !== null && iniciado_em !== '') {
       const dataInicio = new Date(iniciado_em);
-      this.iniciado_em = Number.isNaN(dataInicio.getTime()) ? null : dataInicio;
+      if (Number.isNaN(dataInicio.getTime())) {
+        throw new TypeError('Data de início (iniciado_em) deve ser uma data válida');
+      }
+      this.iniciado_em = dataInicio;
     } else {
-      this.iniciado_em = null;
+      this.iniciado_em = new Date();
     }
 
-    // 13. Data/hora de conclusão real
-    if (finalizado_em) {
+    // 13. Data/hora de conclusão real (DATETIME NOT NULL)
+    if (finalizado_em !== undefined && finalizado_em !== null && finalizado_em !== '') {
       const dataFim = new Date(finalizado_em);
-      this.finalizado_em = Number.isNaN(dataFim.getTime()) ? null : dataFim;
+      if (Number.isNaN(dataFim.getTime())) {
+        throw new TypeError('Data de conclusão (finalizado_em) deve ser uma data válida');
+      }
+      this.finalizado_em = dataFim;
     } else {
-      this.finalizado_em = null;
+      this.finalizado_em = new Date();
     }
 
     // 14. Data de criação no sistema
     if (criado_em) {
       const dataCriacao = new Date(criado_em);
-      this.criado_em = Number.isNaN(dataCriacao.getTime()) ? null : dataCriacao;
+      this.criado_em = Number.isNaN(dataCriacao.getTime()) ? new Date() : dataCriacao;
     } else {
-      this.criado_em = null;
+      this.criado_em = new Date();
     }
   }
 
@@ -330,9 +336,7 @@ export default class Tarefa {
       throw new Error('Tarefa cancelada não pode ser iniciada');
     }
     this.status = STATUS_TAREFA.EM_ANDAMENTO;
-    if (!this.iniciado_em) {
-      this.iniciado_em = new Date();
-    }
+    this.iniciado_em = new Date();
     return this;
   }
 
@@ -341,9 +345,7 @@ export default class Tarefa {
       throw new Error('Tarefa cancelada não pode ser concluída');
     }
     this.status = STATUS_TAREFA.CONCLUIDA;
-    if (!this.finalizado_em) {
-      this.finalizado_em = new Date();
-    }
+    this.finalizado_em = new Date();
     return this;
   }
 

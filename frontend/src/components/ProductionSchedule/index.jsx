@@ -2,16 +2,6 @@
 
 import { useMemo, useState, useEffect } from "react";
 
-const initialTasks = [
-  { time: "08:00–10:30", order: "3-2847", priority: "Alta", status: "Em andamento", machine: "CNC-01", operator: "Ana Costa" },
-  { time: "09:00–12:00", order: "3-2848", priority: "Alta", status: "Em andamento", machine: "CNC-02", operator: "Bruno Lima" },
-  { time: "10:00–14:00", order: "3-2851", priority: "Alta", status: "Planejada", machine: "CNC-01", operator: "Carla Souza" },
-  { time: "13:00–16:00", order: "3-2855", priority: "Média", status: "Quebrada", machine: "MILL-01", operator: "Carla Souza" },
-  { time: "16:00–18:00", order: "3-2858", priority: "Baixa", status: "Concluída", machine: "CNC-03", operator: "Diego Rocha" },
-];
-
-const priorityOrder = { Alta: 0, Média: 1, Baixa: 2 };
-
 export default function ProductionSchedule() {
   const [period, setPeriod] = useState("Semana");
   const [query, setQuery] = useState("");
@@ -50,7 +40,7 @@ export default function ProductionSchedule() {
       );
 
       const correspondeBusca =
-        `${a.tarefa?.titulo ?? ""} ${a.maquina?.nome ?? ""} ${a.usuario?.nome ?? ""}`
+        `${a.codigo ?? ""} ${a.maquina?.nome ?? ""} ${a.usuario?.nome ?? ""} ${a.tarefa?.codigo ?? ""} ${a.tarefa?.titulo ?? ""}`
           .toLowerCase()
           .includes(query.toLowerCase());
 
@@ -64,12 +54,20 @@ export default function ProductionSchedule() {
 
 
   function converterHoras(data) {
-    if (!data) return "--:--";
+    if (!data) return "-:-";
     const aux = data;
     const converter = new Date(aux.replace(" ", "T"))
-    const horas = converter.getHours();
-    const minutos = converter.getMinutes()
+    const horas = String(converter.getHours()).padStart(2, "0");
+    const minutos = String(converter.getMinutes()).padStart(2, "0");
     return `${horas}:${minutos}`
+  }
+
+  function converterData(data) {
+    if (!data) return "--/--/----";
+    const d = new Date(data);
+    if (Number.isNaN(d.getTime())) return "--/--/----";
+
+    return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
   }
 
   function verificarPrazo(data, filtro, status) {
@@ -186,19 +184,19 @@ export default function ProductionSchedule() {
             <div className="task-time">
               <span>Horário</span>
               <strong>
-                {converterHoras(a.tarefa.iniciado_em)}-
-                {converterHoras(a.tarefa.finalizado_em)}
+                {converterHoras(a.tarefa?.iniciado_em)}-
+                {converterHoras(a.tarefa?.finalizado_em)}
               </strong>
             </div>
             <div className="task-info">
               <div className="task-tags">
-                <strong>OP {a.tarefa.titulo}</strong>
-                <span className={`tag`}>{a.resultado}</span>
+                <strong>OP {a.tarefa?.titulo}</strong>
+                <span className={`tag`}>{a.resultado ?? "Sem resultado"}</span>
                 <span className={`tag `}>
-                  {a.status}
+                  {a.status ?? "Sem status"}
                 </span>
               </div>
-              <span>{a.maquina.nome} · {a.usuario.nome}</span>
+              <span>{a.maquina?.nome} · {a.usuario?.nome}</span>
             </div>
 
             <button
@@ -227,20 +225,21 @@ export default function ProductionSchedule() {
           >
             <h2>Detalhes da tarefa</h2>
 
-            <p>OP: {modal.tarefa.titulo}</p>
-            <p>Resultado: {modal.resultado}</p>
-            <p>Status: {modal.status}</p>
+            <p>OP: {modal.tarefa?.titulo}</p>
+            <p>Resultado: {modal.resultado ?? "Sem resultado"}</p>
+            <p>Status: {modal.status ?? "Sem status"}</p>
 
             <p>
-              Início: {converterHoras(modal.tarefa.iniciado_em)}
+              Início: {converterHoras(modal.tarefa?.iniciado_em)}
             </p>
 
             <p>
-              Finalização: {converterHoras(modal.tarefa.finalizado_em)}
+              Finalização: {converterHoras(modal.tarefa?.finalizado_em)}
             </p>
 
-            <p>Máquina: {modal.maquina.nome}</p>
-            <p>Responsável: {modal.usuario.nome}</p>
+            <p>Máquina: {modal.maquina?.nome}</p>
+            <p>Responsável: {modal.usuario?.nome}</p>
+            <p>Prazo: {converterData(modal.tarefa?.prazo)}</p>
 
             <button
               className="button button-outline"
@@ -252,14 +251,6 @@ export default function ProductionSchedule() {
           </div>
         </div>
       )}
-
-      <button
-        className="button button-primary priority-button"
-        onClick={() => setSorted((current) => !current)}
-        type="button"
-      >
-        {sorted ? "Ordem original" : "Ordenar por prioridade"}
-      </button>
     </section>
   );
 }

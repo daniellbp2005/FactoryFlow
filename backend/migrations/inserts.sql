@@ -47,6 +47,7 @@ INSERT INTO usuarios (id, codigo, nome, cpf, cargo, turno, ativo, email, senha, 
 
 -- ==============================================================================
 -- 3. TAREFAS (10 registros com códigos de OS e dados completos de produção)
+-- Ajustado: tempo_estimado, iniciado_em e finalizado_em preenchidos (NOT NULL)
 -- ==============================================================================
 INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, periodo, turno_prazo, prazo, tempo_estimado, iniciado_em, finalizado_em, criado_em) VALUES
 (
@@ -62,7 +63,7 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   '2026-11-05 12:00:00',
   2.50,
   '2026-11-05 08:15:00',
-  NULL,
+  '2026-11-05 10:45:00',
   '2026-11-05 07:30:00'
 ),
 (
@@ -78,7 +79,7 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   '2026-11-05 16:30:00',
   1.50,
   '2026-11-05 13:00:00',
-  NULL,
+  '2026-11-05 14:30:00',
   '2026-11-05 08:00:00'
 ),
 (
@@ -125,8 +126,8 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   'Noite',
   '2026-11-06 22:00:00',
   4.00,
-  NULL,
-  NULL,
+  '2026-11-06 18:00:00',
+  '2026-11-06 22:00:00',
   '2026-11-05 08:30:00'
 ),
 (
@@ -141,8 +142,8 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   'Manhã',
   '2026-11-07 10:00:00',
   3.50,
-  NULL,
-  NULL,
+  '2026-11-07 06:30:00',
+  '2026-11-07 10:00:00',
   '2026-11-05 08:45:00'
 ),
 (
@@ -157,8 +158,8 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   'Tarde',
   '2026-11-05 17:00:00',
   1.00,
-  NULL,
-  NULL,
+  '2026-11-05 16:00:00',
+  '2026-11-05 17:00:00',
   '2026-11-05 09:00:00'
 ),
 (
@@ -174,7 +175,7 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   '2026-11-15 18:00:00',
   2.00,
   '2026-11-04 15:00:00',
-  NULL,
+  '2026-11-04 17:00:00',
   '2026-11-02 10:00:00'
 ),
 (
@@ -189,8 +190,8 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   'Tarde',
   '2026-11-08 16:00:00',
   5.00,
-  NULL,
-  NULL,
+  '2026-11-08 11:00:00',
+  '2026-11-08 16:00:00',
   '2026-11-05 09:15:00'
 ),
 (
@@ -205,8 +206,8 @@ INSERT INTO tarefas (id, codigo, titulo, descricao, setor, prioridade, status, p
   'Dia',
   '2026-11-02 11:00:00',
   2.00,
-  NULL,
-  NULL,
+  '2026-11-02 09:00:00',
+  '2026-11-02 11:00:00',
   '2026-11-01 08:00:00'
 );
 
