@@ -214,8 +214,7 @@ export default function ProductionSchedule() {
               <div className="task-tags">
                 <strong>OP {a.tarefa?.titulo}</strong>
                 <span className={`tag`}>{a.resultado ?? "Sem resultado"}</span>
-                <span className={`tag `}>
-                  {a.status ?? "Sem status"}
+                <span className={`tag`}>{a.status ?? "Sem status"}
                 </span>
               </div>
               <span>{a.maquina?.nome} · {a.usuario?.nome}</span>
