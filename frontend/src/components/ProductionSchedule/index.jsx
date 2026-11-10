@@ -1,3 +1,7 @@
+/* 
+Padronizar o status de tarefas, e de relatórios, fazer o css do status
+*/
+
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
@@ -5,11 +9,8 @@ import { useMemo, useState, useEffect } from "react";
 export default function ProductionSchedule() {
   const [period, setPeriod] = useState("Semana");
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState("Todos");
-  const [sorted, setSorted] = useState(false);
   const [modal, setModal] = useState(null);
   const [data, setData] = useState([]);
-  const [date, setDate] = useState();
   const [filtroStatus, setFiltroStatus] = useState('Todos');
   const [filtroPrazo, setFiltroPrazo] = useState('Todos');
 
@@ -126,9 +127,36 @@ export default function ProductionSchedule() {
         </div>
         <div className="period-switch" aria-label="Período da programação">
 
-          <button onClick={() => setPeriod("Dia")} className={period === "Dia" ? "selected" : ""} type="button"> Dia </button>          
-          <button onClick={() => setPeriod("Semana")} className={period === "Semana" ? "selected" : ""} type="button">Semana</button>
-          <button onClick={() => setPeriod("Mês")} className={period === "Mês" ? "selected" : ""} type="button">Mês</button>
+          <button
+            onClick={() => {
+              setPeriod("Dia")
+              setFiltroPrazo("Dia")
+            }} 
+            className={period === "Dia" ? "selected" : ""}
+            type="button"
+          >
+            Dia
+          </button>
+          <button
+            onClick={() => {
+              setPeriod("Semana")
+              setFiltroPrazo("Semana")
+            }} 
+            className={period === "Semana" ? "selected" : ""}
+            type="button"
+          >
+            Semana
+          </button>
+          <button
+            onClick={() => {
+              setPeriod("Mês")
+              setFiltroPrazo("Mês")
+            }} 
+            className={period === "Mês" ? "selected" : ""}
+            type="button"
+          >
+            Mês
+          </button>
 
         </div>
       </div>
@@ -152,8 +180,8 @@ export default function ProductionSchedule() {
             <option value="Todos">Todos</option>
             <option value="Em andamento">Em andamento</option>
             <option value="Pendente">Pendente</option>
-            <option value="Cancelada">Cancelada</option>
-            <option value="Concluida">Concluída</option>
+            <option value="Indisponível">Cancelada</option>
+            <option value="Concluído">Concluída</option>
           </select>
         </label>
         <label>
@@ -222,6 +250,7 @@ export default function ProductionSchedule() {
             <p>OP: {modal.tarefa?.titulo}</p>
             <p>Resultado: {modal.resultado ?? "Sem resultado"}</p>
             <p>Status: {modal.status ?? "Sem status"}</p>
+            <p>Status da Tarefa: {modal.tarefa?.status ?? "Sem status"}</p>
 
             <p>
               Início: {converterHoras(modal.tarefa?.iniciado_em)}
