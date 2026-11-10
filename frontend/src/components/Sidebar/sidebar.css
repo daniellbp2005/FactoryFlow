@@ -26,9 +26,10 @@
 
 .sidebar-brand {
   display: flex;
-  min-height: 112px;
+  min-height: 100px;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   gap: 5px;
   margin-bottom: 20px;
   color: inherit;
@@ -36,8 +37,8 @@
 }
 
 .brand-logo {
-  width: 40px;
-  height: 40px;
+  width: 70px;
+  height: 70px;
   flex: 0 0 auto;
   object-fit: contain;
 }
@@ -51,7 +52,7 @@
 
 .brand-copy strong {
   color: #f3f5f6;
-  font-size: 16px;
+  font-size: 20px;
   white-space: nowrap;
 }
 
@@ -139,6 +140,8 @@
   color: #10c7b5;
   text-decoration: none;
 }
+
+
 
 @media (max-width: 700px) {
   .app-layout {

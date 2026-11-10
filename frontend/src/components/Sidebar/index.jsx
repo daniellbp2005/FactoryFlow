@@ -4,10 +4,8 @@ import {
   ChartNoAxesColumnIncreasing,
   ClipboardList,
   Factory,
-  Gauge,
   LayoutDashboard,
   LogOut,
-  Settings,
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -31,10 +29,10 @@ export default function Sidebar() {
         <Image
           alt=""
           className="brand-logo"
-          height={80}
+          height={70}
           priority
           src="/images/logotype/logotype.png"
-          width={80}
+          width={70}
         />
         <span className="brand-copy">
           <strong>FactoryFlow</strong>

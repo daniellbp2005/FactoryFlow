@@ -1248,3 +1248,9 @@
     grid-row: 1 / span 2;
   }
 }
+
+.selected {
+  background-color: #10b8a8;
+  color: #061513;
+  font-weight: 700;
+}

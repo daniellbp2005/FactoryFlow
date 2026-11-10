@@ -127,17 +127,11 @@ export default function ProductionSchedule() {
           <p>Tarefas e ordens de serviço ilustrativas</p>
         </div>
         <div className="period-switch" aria-label="Período da programação">
-          {["Dia", "Semana", "Mês"].map((item) => (
-            <button
-              aria-pressed={period === item}
-              className={period === item ? "selected" : ""}
-              key={item}
-              onClick={() => setPeriod(item)}
-              type="button"
-            >
-              {item}
-            </button>
-          ))}
+
+          <button onClick={() => setPeriod("Dia")} className={period === "Dia" ? "selected" : ""} type="button"> Dia </button>          
+          <button onClick={() => setPeriod("Semana")} className={period === "Semana" ? "selected" : ""} type="button">Semana</button>
+          <button onClick={() => setPeriod("Mês")} className={period === "Mês" ? "selected" : ""} type="button">Mês</button>
+
         </div>
       </div>
 
