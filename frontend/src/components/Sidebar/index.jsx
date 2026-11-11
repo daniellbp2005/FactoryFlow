@@ -6,6 +6,7 @@ import {
   Factory,
   LayoutDashboard,
   LogOut,
+  ClipboardCheck,
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -15,6 +16,7 @@ import { usePathname } from "next/navigation";
 const links = [
   { label: "Painel" , icon: LayoutDashboard, href: "/admin" },
   { label: "Planejamento", icon: ClipboardList, href: "/admin/admin-planejamento" },
+  { label: "Tarefas", icon: ClipboardCheck  , href: "/admin/admin-tarefas" },
   { label: "Operadores", icon: UsersRound, href: "/admin/admin-operadores" },
   { label: "Máquinas", icon: Factory, href: "/admin/admin-maquinas" },
   { label: "Relatórios", icon: ChartNoAxesColumnIncreasing, href: "/admin/admin-relatorios" },
