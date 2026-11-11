@@ -317,11 +317,68 @@
 }
 
 .tag {
+  border: 1px solid #394148;
+  background-color: #22292e;
+  color: #c6d0d5;
+  border-radius: 5px;
+  padding: 3px 5px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.tag-aprovado {
+  border-color: #315343;
+  background-color: #1d3028;
+  color: #a9d2b8;
+}
+
+.tag-reprovado {
+  border-color: #624040;
+  background-color: #352525;
+  color: #dda6a6;
+}
+
+.tag-ressalvas {
+  border-color: #5b4b2d;
+  background-color: #342d20;
+  color: #ddc58c;
+}
+
+.tag-two {
+  border: 1px solid #394148;
+  background-color: #22292e;
+  color: #c6d0d5;
   border-radius: 3px;
   padding: 3px 5px;
   font-size: 12px;
   line-height: 1;
 }
+
+.tag-em-andamento {
+  border-color: #31524f;
+  background-color: #1d302e;
+  color: #9acbc4;
+}
+
+.tag-pendente {
+  border-color: #5b4b2d;
+  background-color: #342d20;
+  color: #ddc58c;
+}
+
+.tag-concluido {
+  border: 1px solid #315343;
+  background-color: #1d3028;
+  color: #a9d2b8;
+  border-radius: 15px;
+}
+
+.tag-indisponivel {
+  border-color: #424a50;
+  background: #292f34;
+  color: #b7c0c5;
+}
+
 
 .priority-alta {
   background: #512d2d;
