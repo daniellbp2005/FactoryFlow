@@ -14,6 +14,20 @@ export default function ProductionSchedule() {
   const [filtroStatus, setFiltroStatus] = useState('Todos');
   const [filtroPrazo, setFiltroPrazo] = useState('Todos');
 
+  const classResultado = {
+    "Aprovado": "tag-aprovado",
+    "Reprovado": "tag-reprovado",
+    "Com Ressalvas": "tag-ressalvas",
+    "Sem resultado": "tag-sem-resultado",
+  };
+
+  const classStatus = {
+    "Em andamento": "tag-em-andamento",
+    "Pendente": "tag-pendente",
+    "Indisponível": "tag-indisponivel",
+    "Concluído": "tag-concluido"
+  };
+
   useEffect(() => {
     async function listarRelatorios() {
       try {
@@ -131,7 +145,7 @@ export default function ProductionSchedule() {
             onClick={() => {
               setPeriod("Dia")
               setFiltroPrazo("Dia")
-            }} 
+            }}
             className={period === "Dia" ? "selected" : ""}
             type="button"
           >
@@ -141,7 +155,7 @@ export default function ProductionSchedule() {
             onClick={() => {
               setPeriod("Semana")
               setFiltroPrazo("Semana")
-            }} 
+            }}
             className={period === "Semana" ? "selected" : ""}
             type="button"
           >
@@ -151,7 +165,7 @@ export default function ProductionSchedule() {
             onClick={() => {
               setPeriod("Mês")
               setFiltroPrazo("Mês")
-            }} 
+            }}
             className={period === "Mês" ? "selected" : ""}
             type="button"
           >
@@ -213,9 +227,15 @@ export default function ProductionSchedule() {
             <div className="task-info">
               <div className="task-tags">
                 <strong>OP {a.tarefa?.titulo}</strong>
-                <span className={`tag`}>{a.resultado ?? "Sem resultado"}</span>
-                <span className={`tag`}>{a.status ?? "Sem status"}
+
+                <span className={`tag ${classResultado[a.resultado] ?? ""}`}>
+                  {a.resultado ?? "Sem resultado"}
                 </span>
+
+                <span className={`tag-two ${classStatus[a.status] ?? ""}`}>
+                  {a.status ?? "Sem status"}
+                </span>
+                
               </div>
               <span>{a.maquina?.nome} · {a.usuario?.nome}</span>
             </div>
