@@ -100,6 +100,7 @@ export async function listar({ limite, offset }) {
   };
 }
 
+
 // 2. Buscar por ID trazendo tarefa, usuário, máquina e equipamentos da intermediária
 export async function buscarPorId(id) {
   const sqlRelatorio = `

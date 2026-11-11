@@ -1,26 +1,50 @@
 "use client";
-
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Search, UserRound } from "lucide-react";
 
-export default function EmployeeList({ employees }) {
+export default function EmployeeList() {
+  const [data, setData] = useState([]);
   const [query, setQuery] = useState("");
 
-  const filteredEmployees = useMemo(() => {
+  useEffect(() => {
+    async function listarRelatorios() {
+      try {
+        const linkApi = await fetch("http://localhost:8080/api/relatorios");
+        const data = await linkApi.json();
+
+        setData(data.dados || []);
+      } catch (e) {
+        console.error("Erro ao consultar o backend");
+      }
+    }
+    listarRelatorios();
+  }, [])
+
+  const dadosFiltrados = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return employees.filter((employee) =>
-      `${employee.name} ${employee.email} ${employee.role} ${employee.shift}`
+    return data.filter((a) =>
+      `${a.usuario?.codigo ?? ""} ${a.usuario?.nome ?? ""} ${a.usuario?.cargo ?? ""} ${a.usuario?.turno ?? ""}`
         .toLowerCase()
         .includes(normalizedQuery),
     );
-  }, [employees, query]);
+  }, [query, data]);
+
+  function receberBoleano(data) {
+    if (data === null || data === undefined) return "Não informado";
+
+    if (data === true) {
+      return "Ativo"
+    } else {
+      return "Indisponivel"
+    }
+  }
 
   return (
     <section className="panel employee-list-panel" aria-labelledby="employee-list-title">
       <div className="panel-heading employee-list-heading">
         <div>
           <h2 id="employee-list-title">Funcionários</h2>
-          <p>{employees.length} {employees.length === 1 ? "pessoa cadastrada" : "pessoas cadastradas"}</p>
+          <p>{data.length} {data.length === 1 ? "pessoa cadastrada" : "pessoas cadastradas"}</p>
         </div>
         <label className="employee-search">
           <Search size={15} aria-hidden="true" />
@@ -34,28 +58,28 @@ export default function EmployeeList({ employees }) {
         </label>
       </div>
 
-      {filteredEmployees.length > 0 ? (
+      {dadosFiltrados.length > 0 ? (
         <div className="employee-list">
-          {filteredEmployees.map((employee) => (
+          {dadosFiltrados.map((employee) => (
             <article className="employee-card" key={employee.id}>
               <span className="employee-avatar" aria-hidden="true">
                 <UserRound size={18} />
               </span>
               <div className="employee-details">
-                <strong>{employee.name}</strong>
-                <span>{employee.email}</span>
+                <strong>{employee.usuario?.nome}</strong>
+                <span>{employee.usuario?.codigo}</span>
               </div>
               <div className="employee-role">
-                <strong>{employee.role}</strong>
-                <span>Turno {employee.shift}</span>
+                <strong>{employee.usuario?.cargo}</strong>
+                <span>Turno: {employee.usuario?.turno}</span>
               </div>
-              <span className="employee-status">Ativo</span>
+              <span className="employee-status">{receberBoleano(employee.usuario?.ativo)}</span>
             </article>
           ))}
         </div>
       ) : (
         <p className="employee-empty">
-          {employees.length === 0
+          {dadosFiltrados.length === 0
             ? "Nenhum funcionário cadastrado. Use o formulário para adicionar o primeiro."
             : "Nenhum funcionário encontrado para essa busca."}
         </p>

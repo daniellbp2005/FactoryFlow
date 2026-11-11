@@ -5,8 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"
 
 export default function Login() {
-  const [perfil, setPerfil] = useState("usuario");
-  const [dado, setDado] = useState("");
+  const [dado, setData] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
@@ -23,17 +22,14 @@ export default function Login() {
     setSenhaVisivel(!senhaVisivel);
   }
 
-  function entrarLogin(e) {
+  async function entrarLogin(e) {
     e.preventDefault();
 
     if (!email || !senha) {
       setErro("Campos Inválidos");
       return;
     }
-  }
 
-  async function loadPerfil(e) {
-    e.preventDefault();
     try {
       const LinkAPI = await fetch(`http://localhost:8080/usuarios/login`, {
         method: "POST",
@@ -49,7 +45,7 @@ export default function Login() {
       const resultado = await LinkAPI.json();
       console.log(resultado);
 
-      if (!resultado.ok) {
+      if (!resultado.sucesso) {
         setErro("Erro no login");
         return;
       }
@@ -60,12 +56,11 @@ export default function Login() {
       } else {
         router.push("/user");
       }
-      setDado();
+      setData();
     } catch (error) {
       console.error("Erro ao buscar perfil:", error);
     }
   }
-
 
   return (
     <>
@@ -123,7 +118,7 @@ export default function Login() {
                 <div className={styles.rowBtn}>
                   <button
                     className={styles.btnL}
-                    onClick={loadPerfil}
+                    type="submit"
                   >Entrar</button>
                 </div>
               </form>
