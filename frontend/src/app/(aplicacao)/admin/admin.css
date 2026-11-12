@@ -483,6 +483,7 @@
 
 .employee-form input,
 .employee-form select,
+.employee-form textarea,
 .employee-search input {
   width: 100%;
   min-height: 36px;
@@ -493,6 +494,12 @@
   color: var(--text);
   font: inherit;
   font-size: 14px;
+}
+
+.employee-form textarea {
+  resize: none;
+  overflow: hidden;
+  height: 90px;
 }
 
 .employee-form input::placeholder,
