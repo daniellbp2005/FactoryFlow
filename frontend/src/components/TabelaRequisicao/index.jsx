@@ -16,6 +16,7 @@ export default function RequisicaoMaquinas() {
                     <div className="container">
                         <div className="container-icon"><Siren color="#00ffe5" /></div>
                         <div className="container-info-user">
+
                             <div className="container-info">
                                 <h5>Arthur Silva</h5>
                                 <div className="container-text">

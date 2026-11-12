@@ -1,41 +1,26 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { Search, UserRound } from "lucide-react";
 
-export default function EmployeeList() {
-  const [data, setData] = useState([]);
+export default function EmployeeList({employees}) {
   const [query, setQuery] = useState("");
-
-  useEffect(() => {
-    async function listarRelatorios() {
-      try {
-        const linkApi = await fetch("http://localhost:8080/api/relatorios");
-        const data = await linkApi.json();
-
-        setData(data.dados || []);
-      } catch (e) {
-        console.error("Erro ao consultar o backend");
-      }
-    }
-    listarRelatorios();
-  }, [])
 
   const dadosFiltrados = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return data.filter((a) =>
-      `${a.usuario?.codigo ?? ""} ${a.usuario?.nome ?? ""} ${a.usuario?.cargo ?? ""} ${a.usuario?.turno ?? ""}`
+    return employees.filter((a) =>
+      `${a.codigo ?? ""} ${a.nome ?? ""} ${a.cargo ?? ""} ${a.turno ?? ""} ${a.ativo ?? ""}`
         .toLowerCase()
         .includes(normalizedQuery),
     );
-  }, [query, data]);
+  }, [query, employees]);
 
   function receberBoleano(data) {
     if (data === null || data === undefined) return "Não informado";
 
-    if (data === true) {
+    if (data === 1) {
       return "Ativo"
     } else {
-      return "Indisponivel"
+      return "Desativado"
     }
   }
 
@@ -44,7 +29,7 @@ export default function EmployeeList() {
       <div className="panel-heading employee-list-heading">
         <div>
           <h2 id="employee-list-title">Funcionários</h2>
-          <p>{data.length} {data.length === 1 ? "pessoa cadastrada" : "pessoas cadastradas"}</p>
+          <p>{employees.length} {employees.length === 1 ? "pessoa cadastrada" : "pessoas cadastradas"}</p>
         </div>
         <label className="employee-search">
           <Search size={15} aria-hidden="true" />
@@ -58,22 +43,22 @@ export default function EmployeeList() {
         </label>
       </div>
 
-      {dadosFiltrados.length > 0 ? (
+      {dadosFiltrados.length > 0 ? (  
         <div className="employee-list">
-          {dadosFiltrados.map((employee) => (
-            <article className="employee-card" key={employee.id}>
+          {dadosFiltrados.map((employee, i) => (
+            <article className="employee-card" key={i}>
               <span className="employee-avatar" aria-hidden="true">
                 <UserRound size={18} />
               </span>
               <div className="employee-details">
-                <strong>{employee.usuario?.nome}</strong>
-                <span>{employee.usuario?.codigo}</span>
+                <strong>{employee?.nome}</strong>
+                <span>{employee?.codigo}</span>
               </div>
               <div className="employee-role">
-                <strong>{employee.usuario?.cargo}</strong>
-                <span>Turno: {employee.usuario?.turno}</span>
+                <strong>{employee?.cargo}</strong>
+                <span>Turno: {employee?.turno}</span>
               </div>
-              <span className="employee-status">{receberBoleano(employee.usuario?.ativo)}</span>
+              <span className="employee-status">{receberBoleano(employee?.ativo)}</span>
             </article>
           ))}
         </div>
