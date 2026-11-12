@@ -30,3 +30,25 @@ export async function login(req, res, next) {
     return responderErro(erro, res, next);
   }
 }
+
+export async function listar(req, res, next) {
+  try {
+    const resultado = await AuthService.listar(req.query);
+    return res.status(200).json({
+      sucesso: true,
+      dados: resultado.usuarios,
+      paginacao: resultado.paginacao
+    });
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}
+
+export async function buscarPorId(req, res, next) {
+  try {
+    const usuario = await AuthService.buscarPorId(req.params.id);
+    return res.status(200).json({ sucesso: true, dados: usuario });
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}
