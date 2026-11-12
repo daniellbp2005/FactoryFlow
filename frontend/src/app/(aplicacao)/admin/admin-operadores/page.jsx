@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../admin.css";
 import AdminHeader from "@/components/AdminHeader";
 import EmployeeForm from "@/components/EmployeeForm";
@@ -15,6 +15,22 @@ export default function AdminEmployeesPage() {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
   }
 
+  async function listarRelatorios() {
+    try {
+      const linkApi = await fetch("http://localhost:8080/usuarios/listar");
+      const data = await linkApi.json();
+
+      setEmployees(data.dados || []);
+      
+    } catch (e) {
+      console.error("Erro ao consultar o backend");
+    }
+  }
+
+  useEffect(() => {
+    listarRelatorios();
+  }, [])
+
   return (
     <main className="admin-page">
       <Sidebar />
@@ -28,7 +44,7 @@ export default function AdminEmployeesPage() {
 
         <div className="employee-layout">
           <EmployeeForm onCreate={addEmployee} />
-          <EmployeeList employees={employees} />
+          <EmployeeList employees={employees}/>
         </div>
       </section>
     </main>

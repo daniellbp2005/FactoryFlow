@@ -1,62 +1,50 @@
 "use client";
-
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ClipboardList, Search } from "lucide-react";
-
-const reports = [
-  {
-    id: "report-1",
-    employeeName: "Ana Costa",
-    employeeId: "1024",
-    employeeCode: "FUNC-024",
-    comment: "Concluiu a ordem OP-2847 dentro do prazo e seguiu os procedimentos de segurança da CNC-01.",
-    createdAt: "02/11/2026 · 14:30",
-    type: "Desempenho",
-    status: "Concluído",
-  },
-  {
-    id: "report-2",
-    employeeName: "Bruno Lima",
-    employeeId: "1031",
-    employeeCode: "FUNC-031",
-    comment: "Solicitou inspeção preventiva do torno CNC-02 após identificar vibração durante a operação.",
-    createdAt: "02/11/2026 · 11:15",
-    type: "Manutenção",
-    status: "Em análise",
-  },
-  {
-    id: "report-3",
-    employeeName: "Carla Souza",
-    employeeId: "1042",
-    employeeCode: "FUNC-042",
-    comment: "Cobriu o turno da manhã na MILL-01 e comunicou a parada do equipamento à supervisão.",
-    createdAt: "01/11/2026 · 16:45",
-    type: "Ocorrência",
-    status: "Em análise",
-  },
-  {
-    id: "report-4",
-    employeeName: "Diego Rocha",
-    employeeId: "1056",
-    employeeCode: "FUNC-056",
-    comment: "Finalizou o treinamento de operação segura e está liberado para atuar no turno da noite.",
-    createdAt: "31/10/2026 · 09:20",
-    type: "Treinamento",
-    status: "Concluído",
-  },
-];
 
 export default function OperatorReports() {
   const [query, setQuery] = useState("");
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function listarRelatorios() {
+      try {
+        const linkApi = await fetch("http://localhost:8080/api/relatorios");
+        const data = await linkApi.json();
+
+        setData(data.dados || []);
+      } catch (e) {
+        console.error("Erro ao consultar o backend");
+      }
+    }
+    listarRelatorios();
+  }, [])
 
   const filteredReports = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return reports.filter((report) =>
-      `${report.employeeName} ${report.employeeId} ${report.employeeCode} ${report.comment} ${report.type}`
+    return data.filter((a) =>
+      `${a.usuario.nome} ${a.id} ${a.usuario.cargo} ${a.usuario.codigo}`
         .toLowerCase()
         .includes(normalizedQuery),
     );
-  }, [query]);
+  }, [query, data]);
+
+  function converterHoras(data) {
+    if (!data) return "-:-";
+    const aux = data;
+    const converter = new Date(aux.replace(" ", "T"))
+    const horas = String(converter.getHours()).padStart(2, "0");
+    const minutos = String(converter.getMinutes()).padStart(2, "0");
+    return `${horas}:${minutos}`
+  }
+
+  function converterData(data) {
+    if (!data) return "--/--/----";
+    const d = new Date(data);
+    if (Number.isNaN(d.getTime())) return "--/--/----";
+
+    return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+  }
 
   return (
     <section className="panel report-list-panel" aria-labelledby="report-list-title">
@@ -64,8 +52,8 @@ export default function OperatorReports() {
         <div>
           <h2 id="report-list-title">Relatórios dos operadores</h2>
           <p>
-            {filteredReports.length} de {reports.length}{" "}
-            {reports.length === 1 ? "registro" : "registros"}
+            {filteredReports.length} de {data.length}{" "}
+            {filteredReports.length === 1 ? "registro" : "registros"}
           </p>
         </div>
         <label className="report-search">
@@ -82,29 +70,29 @@ export default function OperatorReports() {
 
       {filteredReports.length ? (
         <div className="report-list">
-          {filteredReports.map((report) => (
-            <article className="report-card" key={report.id}>
+          {filteredReports.map((a) => (
+            <article className="report-card" key={a.id}>
               <span className="report-icon" aria-hidden="true">
                 <ClipboardList size={17} />
               </span>
               <div className="report-card-content">
                 <div className="report-card-heading">
                   <div>
-                    <strong>{report.employeeName}</strong>
-                    <span className="report-type">{report.type}</span>
+                    <strong>{a.usuario?.nome}</strong>
+                    <span className="report-type">{a.usuario?.cargo}</span>
                   </div>
-                  <time>{report.createdAt}</time>
+                  <span>{converterData(a.criado_em)} - {converterHoras(a.criado_em)}</span>
                 </div>
-                <p>{report.comment}</p>
+                <p>{a.finalidade}</p>
                 <div className="report-card-footer">
                   <div className="report-employee-meta">
-                    <span>ID: {report.employeeId}</span>
-                    <span>Código: {report.employeeCode}</span>
+                    <span>ID: {a?.id}</span>
+                    <span>Código: {a.usuario?.codigo}</span>
                   </div>
                   <span
-                    className={`report-status ${report.status === "Concluído" ? "complete" : "review"}`}
+                    className={`report-status ${a.status === "Concluído" ? "complete" : "review"}`}
                   >
-                    {report.status}
+                    {a.status}
                   </span>
                 </div>
               </div>

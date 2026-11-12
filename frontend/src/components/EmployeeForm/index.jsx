@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react'
 
-export default function EmployeeForm() {
+export default function EmployeeForm({onCreate}) {
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -44,6 +44,19 @@ export default function EmployeeForm() {
         cpf,
         turno,
         perfil
+      })
+    })
+    .then(res => {
+      if(!res.ok) return;
+      onCreate({
+          "nome": nome,
+          "email": email,
+          "senha": senha,
+          "cargo": cargo,
+          "cpf": cpf,
+          "turno": turno,
+          "perfil": perfil,
+          "ativo": true
       })
     })
     setNome("");
