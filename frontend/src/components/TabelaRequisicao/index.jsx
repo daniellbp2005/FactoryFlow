@@ -26,9 +26,11 @@ export default function RequisicaoMaquinas() {
                             </div>
                         </div>
                         <div className="status">Pendente</div>
+                        <div className="btns">
+                        <button className="btn-editar"><Check />Aprovar</button>
+                        <button className="btn-excluir"><X />Recusar</button>
                     </div>
-
-                    <hr />
+                    </div>
 
                     <div className="conjunto-info">
                         <div className="data-solicitada">
@@ -49,11 +51,6 @@ export default function RequisicaoMaquinas() {
                             <p className="p">Usinagem</p>
                         </div>
                     </div>
-
-                    <div className="btns">
-                        <button className="btn-editar"><Check />Aprovar</button>
-                        <button className="btn-excluir"><X />Recusar</button>
-                    </div>
                 </div>
 
                 <div className="requisicao-user">
@@ -72,8 +69,6 @@ export default function RequisicaoMaquinas() {
                         </div>
                         <div className="status-aprovado">Aprovado</div>
                     </div>
-
-                    <hr />
 
                     <div className="conjunto-info">
 
@@ -115,8 +110,6 @@ export default function RequisicaoMaquinas() {
                         </div>
                         <div className="status-reprovado">Reprovado</div>
                     </div>
-
-                    <hr />
 
                     <div className="conjunto-info">
 
