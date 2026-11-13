@@ -1,142 +1,133 @@
 "use client";
 
-import "./requisicao.css";
-import { ClipboardList, Siren, Check, X } from "lucide-react";
+import { Search, Siren, Check, X } from "lucide-react";
 
 export default function RequisicaoMaquinas() {
     return (
         <div className="requisicao-maquinas">
             <div className="requisicao-page">
-                <div className="requisicao-header">
-                    <h2>Requisição de Máquinas</h2>
-                    <p>Esta é a página de requisição de máquinas.</p>
-                </div>
+                <section className="panel report-list-panel" aria-labelledby="report-list-title">
+                    <div className="panel-heading report-list-heading">
+                        <div>
+                            <h2 id="report-list-title">Requisição de Máquinas</h2>
+                            <p>
+                                3 de 3 registros
+                            </p>
+                        </div>
+                        <label className="report-search">
+                            <Search size={15} aria-hidden="true" />
+                            <span className="sr-only">Buscar relatório de operador</span>
+                            <input
+                                placeholder="Buscar operador ou relatório"
+                                type="search"
+                            />
+                        </label>
+                    </div>
 
-                <div className="requisicao-user">
-                    <div className="container">
-                        <div className="container-icon"><Siren color="#00ffe5" /></div>
-                        <div className="container-info-user">
 
-                            <div className="container-info">
-                                <h5>Arthur Silva</h5>
-                                <div className="container-text">
-                                    <p>REQ-1062</p>
-                                    <p>·</p>
-                                    <p>CNC-04</p>
+                    <div className="report-lists">
+                        <article className="report-card">
+                            <span className="report-icon" aria-hidden="true">
+                                <Siren color="#00ffe5" size={17} />
+                            </span>
+                            <div className="report-card-content">
+                                <div className="report-card-heading">
+                                    <div>
+                                        <strong>Arthur Silva</strong>
+                                        <span className="report-type">Funcionário</span>
+                                    </div>
+                                    <div className="column">
+                                        <span>06/11/2026- 09:00 - 12:00</span>
+                                        <div>
+                                            <div className="report-status review fit">
+                                                Pendente
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="requisicao-text">
+                                    <p>Produção de Lote</p>
+                                </div>
+                                <div className="report-card-footer">
+                                    <div className="report-employee-meta">
+                                        <span>REQ-1085</span>
+                                        <span>Código: CNC-01</span>
+                                    </div>
+                                    <div className="btns">
+                                        <button className="btn-editar"><Check />Aprovar</button>
+                                        <button className="btn-excluir"><X />Recusar</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="status">Pendente</div>
-                        <div className="btns">
-                        <button className="btn-editar"><Check />Aprovar</button>
-                        <button className="btn-excluir"><X />Recusar</button>
-                    </div>
+                        </article>
                     </div>
 
-                    <div className="conjunto-info">
-                        <div className="data-solicitada">
-                            <h5 className="h8">Data da Solicitação</h5>
-                            <p className="p">06/11/2026</p>
-                        </div>
-
-                        <div className="horario">
-                            <h5 className="h8">Horário</h5>
-                            <p className="p">09:00 - 12:00</p>
-                        </div>
-                        <div className="finalidade">
-                            <h5 className="h8">Finalidade</h5>
-                            <p className="p">Produção lote</p>
-                        </div>
-                        <div className="setor">
-                            <h5 className="h8">Setor</h5>
-                            <p className="p">Usinagem</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="requisicao-user">
-
-                    <div className="container">
-                        <div className="container-icon"><Siren color="#00ffe5" /></div>
-                        <div className="container-info-user">
-                            <div className="container-info">
-                                <h5>Adamastor</h5>
-                                <div className="container-text">
-                                    <p>REQ-1086</p>
-                                    <p>·</p>
-                                    <p>CNC-01</p>
+                    <div className="report-lists">
+                        <article className="report-card">
+                            <span className="report-icon" aria-hidden="true">
+                                <Siren color="#00ffe5" size={17} />
+                            </span>
+                            <div className="report-card-content">
+                                <div className="report-card-heading">
+                                    <div>
+                                        <strong>Adamastor</strong>
+                                        <span className="report-type">Funcionário</span>
+                                    </div>
+                                    <div className="column">
+                                        <span>06/11/2026- 09:00 - 12:00</span>
+                                        <div>
+                                            <div className="report-status complete fit">
+                                                Aprovado
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="requisicao-text">
+                                    <p>Produção de Lote</p>
+                                </div>
+                                <div className="report-card-footer">
+                                    <div className="report-employee-meta">
+                                        <span>REQ-1086</span>
+                                        <span>Código: CNC-02</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="status-aprovado">Aprovado</div>
+                        </article>
                     </div>
 
-                    <div className="conjunto-info">
-
-                        <div className="data-solicitada">
-                            <h5 className="h8">Data da Solicitação</h5>
-                            <p className="p">09/11/2026</p>
-                        </div>
-
-                        <div className="horario">
-                            <h5 className="h8">Horário</h5>
-                            <p className="p">07:00 - 11:00</p>
-                        </div>
-                        <div className="finalidade">
-                            <h5 className="h8">Finalidade</h5>
-                            <p className="p">Produção lote</p>
-                        </div>
-                        <div className="setor">
-                            <h5 className="h8">Setor</h5>
-                            <p className="p">Usinagem</p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div className="requisicao-user">
-
-                    <div className="container">
-                        <div className="container-icon"><Siren color="#00ffe5" /></div>
-                        <div className="container-info-user">
-                            <div className="container-info">
-                                <h5>Juliema</h5>
-                                <div className="container-text">
-                                    <p>REQ-1040</p>
-                                    <p>·</p>
-                                    <p>CNC-03</p>
+                    <div className="report-list">
+                        <article className="report-card">
+                            <span className="report-icon" aria-hidden="true">
+                                <Siren color="#00ffe5" size={17} />
+                            </span>
+                            <div className="report-card-content">
+                                <div className="report-card-heading">
+                                    <div>
+                                        <strong>Juliema</strong>
+                                        <span className="report-type">Funcionário</span>
+                                    </div>
+                                    <div className="column">
+                                        <span>06/11/2026- 09:00 - 12:00</span>
+                                        <div>
+                                            <div className="report-status denied fit">
+                                                Reprovado
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="requisicao-text">
+                                    <p>Produção de Lote</p>
+                                </div>
+                                <div className="report-card-footer">
+                                    <div className="report-employee-meta">
+                                        <span>REQ-1087</span>
+                                        <span>Código: CNC-03</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="status-reprovado">Reprovado</div>
+                        </article>
                     </div>
-
-                    <div className="conjunto-info">
-
-                        <div className="data-solicitada">
-                            <h5 className="h8">Data da Solicitação</h5>
-                            <p className="p">08/11/2026</p>
-                        </div>
-
-                        <div className="horario">
-                            <h5 className="h8">Horário</h5>
-                            <p className="p">07:40 - 13:00</p>
-                        </div>
-                        <div className="finalidade">
-                            <h5 className="h8">Finalidade</h5>
-                            <p className="p">Produção lote</p>
-                        </div>
-                        <div className="setor">
-                            <h5 className="h8">Setor</h5>
-                            <p className="p">Usinagem</p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
+                </section>
             </div>
         </div>
     );

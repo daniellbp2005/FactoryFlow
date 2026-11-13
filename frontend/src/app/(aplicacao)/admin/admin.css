@@ -762,6 +762,12 @@
   color: #f2c56f;
 }
 
+.report-status.denied {
+  color: #ff6d6d;
+  background-color: #ff0c0c70;
+  margin-left: 70%;
+}
+
 .machine-fleet {
   min-width: 0;
 }
@@ -1319,4 +1325,64 @@
   background-color: #10b8a8;
   color: #061513;
   font-weight: 700;
+}
+
+.btns {
+    display: flex;
+    gap: 15px;
+    margin-left: auto;
+
+}
+.btn-editar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 7px;
+  font-size: 12px;
+  gap: 5px;
+  background: #123a35;
+  color: #55d7bd;
+}
+.btn-excluir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 7px;
+  font-size: 12px;
+  gap: 5px;
+  color: #ff6d6d;
+  background-color: #ff0c0c57
+}
+
+.flex{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.fit{
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-left: 80%;
+}
+
+.column{
+  display: flex;
+  flex-direction: column;
+}
+
+.requisicao-text{
+  margin-top: -1.5%;
+}
+
+.report-lists{
+  margin-bottom: 9px;
 }
