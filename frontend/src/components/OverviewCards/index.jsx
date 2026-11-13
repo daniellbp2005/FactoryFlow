@@ -1,49 +1,53 @@
+'use client'
 import { Activity, CalendarDays, CircleAlert, UsersRound } from "lucide-react";
 
-const metrics = [
-  {
-    label: "Tarefas programadas",
-    value: "05",
-    detail: "Nesta demonstração",
-    icon: CalendarDays,
-    tone: "teal",
-  },
-  {
-    label: "Utilização média",
-    value: "78%",
-    detail: "Capacidade estimada",
-    icon: Activity,
-    tone: "teal",
-  },
-  {
-    label: "Operadores ativos",
-    value: "04",
-    detail: "Equipe de exemplo",
-    icon: UsersRound,
-    tone: "teal",
-  },
-  {
-    label: "Ocorrências",
-    value: "01",
-    detail: "Requer atenção",
-    icon: CircleAlert,
-    tone: "warning",
-  },
-];
+export default function OverviewCards({ data, user }) {
+  
+  const safeData = Array.isArray(data) ? data : [];
+  const safeUser = Array.isArray(user) ? user : [];
+  
+    const andamento = safeData.filter((a) => a?.status === "Em andamento").length;
+    const concluidos = safeData.filter((a) => a?.status === "Concluído").length;
+    const ativos = safeUser.filter((a) => a?.ativo === 1).length;
+    const reprovados = safeData.filter((a) => a?.status === "Indisponível").length;
 
-export default function OverviewCards() {
   return (
     <div className="overview-cards">
-      {metrics.map(({ label, value, detail, icon: Icon, tone }) => (
-        <article className="metric-card" key={label}>
-          <span className="metric-icon">
-            <Icon size={15} aria-hidden="true" />
-          </span>
-          <p className="metric-label">{label}</p>
-          <strong className="metric-value">{value}</strong>
-          <span className={`metric-detail ${tone}`}>{detail}</span>
-        </article>
-      ))}
+      <article className="metric-card">
+        <span className="metric-icon">
+          <CalendarDays size={15} aria-hidden="true" />
+        </span>
+        <p className="metric-label">Em andamento</p>
+        <strong className="metric-value">{andamento}</strong>
+        <span className="metric-detail teal">Nesta demonstração</span>
+      </article>
+
+      <article className="metric-card">
+        <span className="metric-icon">
+          <Activity size={15} aria-hidden="true" />
+        </span>
+        <p className="metric-label">Concluídas</p>
+        <strong className="metric-value">{concluidos}</strong>
+        <span className="metric-detail teal">Capacidade estimada</span>
+      </article>
+
+      <article className="metric-card">
+        <span className="metric-icon">
+          <UsersRound size={15} aria-hidden="true" />
+        </span>
+        <p className="metric-label">Usuarios Ativos</p>
+        <strong className="metric-value">{ativos}</strong>
+        <span className="metric-detail teal">Equipe de exemplo</span>
+      </article>
+
+      <article className="metric-card">
+        <span className="metric-icon">
+          <CircleAlert size={15} aria-hidden="true" />
+        </span>
+        <p className="metric-label">Reprovados</p>
+        <strong className="metric-value">{reprovados}</strong>
+        <span className="metric-detail warning">Requer atenção</span>
+      </article>
     </div>
   );
 }
