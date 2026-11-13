@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react'
 
-export default function EmployeeForm() {
+export default function EmployeeFormTarefa() {
 
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
