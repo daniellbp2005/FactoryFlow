@@ -1,4 +1,6 @@
+'use client'
 import "./admin.css";
+import { useState, useEffect } from "react";
 import AdminHeader from "@/components/AdminHeader";
 import OverviewCards from "@/components/OverviewCards";
 import ProductionSchedule from "@/components/ProductionSchedule";
@@ -7,6 +9,35 @@ import AdminPageHeading from "@/components/AdminPageHeading";
 import Sidebar from "@/components/Sidebar";
 
 export default function AdminPage() {
+  const [data, setData] = useState([])
+  const [listarUser, setListarUser] = useState([]);
+  useEffect(() => {
+    async function listarRelatorios() {
+      try {
+        const linkApi = await fetch("http://localhost:8080/api/relatorios");
+        const data = await linkApi.json();
+
+        setData(data.dados || []);
+      } catch (e) {
+        console.error("Erro ao consultar o backend");
+      }
+    }
+  
+    async function listarUsuarios() {
+      try {
+        const linkApi = await fetch("http://localhost:8080/usuarios/listar");
+        const data = await linkApi.json();
+
+        setListarUser(data.dados || []);
+        // console.log(listarUser);
+        
+      } catch (e) {
+        console.error("Erro ao consultar o backend");
+      }
+    }
+    listarRelatorios()
+    listarUsuarios();
+  }, []);
   return (
     <main className="admin-page">
       <Sidebar />
@@ -20,7 +51,7 @@ export default function AdminPage() {
 
         <section className="overview-section" aria-labelledby="overview-title">
           <h2 id="overview-title">Visão geral</h2>
-          <OverviewCards />
+          <OverviewCards data={data} user={listarUser}/>
         </section>
 
         <div className="dashboard-grid">

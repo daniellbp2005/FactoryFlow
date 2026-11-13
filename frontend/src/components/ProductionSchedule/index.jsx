@@ -194,7 +194,7 @@ export default function ProductionSchedule() {
             <option value="Todos">Todos</option>
             <option value="Em andamento">Em andamento</option>
             <option value="Pendente">Pendente</option>
-            <option value="Indisponível">Cancelada</option>
+            <option value="Indisponível">Reporvados</option>
             <option value="Concluído">Concluída</option>
           </select>
         </label>
