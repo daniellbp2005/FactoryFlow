@@ -1,6 +1,6 @@
 'use client';
 import styles from "./page.module.css";
-import { AtSign, LockKeyhole, Eye, EyeOff, User } from "lucide-react";
+import { AtSign, LockKeyhole, Eye, EyeOff, User, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"
 
