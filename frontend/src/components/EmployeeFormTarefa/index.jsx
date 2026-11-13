@@ -160,7 +160,7 @@ export default function EmployeeFormTarefas() {
                 </label>
 
                 <div className='add-email'></div>
-                
+
                 <button className="button button-primary" type="submit">
                     Cadastrar funcionário
                 </button>
