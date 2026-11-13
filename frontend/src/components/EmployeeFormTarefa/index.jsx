@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react'
 
-export default function EmployeeFormTarefa() {
+export default function EmployeeFormTarefas() {
 
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
@@ -71,7 +71,7 @@ export default function EmployeeFormTarefa() {
                         autoComplete="name"
                         maxLength={100}
                         name="name"
-                        placeholder="Ex.: Inspeção da Prensa Hidráulica"
+                        placeholder="Ex: Inspeção da Prensa Hidráulica"
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}
                         required
@@ -97,7 +97,7 @@ export default function EmployeeFormTarefa() {
                             Começo do prazo
                             <input
                                 name="role"
-                                placeholder="Ex.: Operador de máquinas"
+                                placeholder="Ex: Operador de máquinas"
                                 minLength={3}
                                 maxLength={80}
                                 value={cargo}
@@ -147,17 +147,20 @@ export default function EmployeeFormTarefa() {
                     </div>
                 </label>
                 <label>
-                    Titulo
+                    E-mail
                     <input
                         autoComplete="name"
                         maxLength={100}
-                        name="name"
-                        placeholder="Ex.: Inspeção da Prensa Hidráulica"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
+                        name="email"
+                        placeholder="Ex: usuário@factoryflow.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </label>
+
+                <div className='add-email'></div>
+                
                 <button className="button button-primary" type="submit">
                     Cadastrar funcionário
                 </button>
