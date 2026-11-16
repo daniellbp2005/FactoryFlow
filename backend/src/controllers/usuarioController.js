@@ -10,12 +10,15 @@ function responderErro(erro, res, next) {
   if (erro.status === 401) {
     return res.status(401).json({ sucesso: false, erro: erro.message });
   }
+  if (erro.status === 404) {
+    return res.status(404).json({ sucesso: false, erro: erro.message });
+  }
   return next(erro);
 }
 
 export async function registrar(req, res, next) {
   try {
-    const usuario = await AuthService.registrar(req.body);
+    const usuario = await AuthService.registrar(req.body, req.usuario);
     return res.status(201).json({ sucesso: true, dados: usuario });
   } catch (erro) {
     return responderErro(erro, res, next);
@@ -26,6 +29,15 @@ export async function login(req, res, next) {
   try {
     const sessao = await AuthService.login(req.body);
     return res.status(200).json({ sucesso: true, dados: sessao });
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}
+
+export async function obterPerfil(req, res, next) {
+  try {
+    const usuario = await AuthService.obterPerfil(req.usuario.id);
+    return res.status(200).json({ sucesso: true, dados: usuario });
   } catch (erro) {
     return responderErro(erro, res, next);
   }

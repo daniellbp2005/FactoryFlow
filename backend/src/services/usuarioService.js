@@ -1,16 +1,15 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { authConfig } from '../config/auth.js';
 import * as UsuarioModel from '../models/UsuarioModel.js';
 
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const jwtSecret = process.env.JWT_SECRET || 'chave-padrao-desenvolvimento';
 
-export async function registrar({ nome, email, senha, cpf, cargo, perfil } = {}) {
+export async function registrar({ nome, email, senha, cpf, cargo, perfil } = {}, autorRequisicao = null) {
   const nomeLimpo = typeof nome === 'string' ? nome.trim() : '';
   const emailLimpo = typeof email === 'string' ? email.trim().toLowerCase() : '';
   const cpfLimpo = typeof cpf === 'string' ? cpf.trim().toLowerCase() : '';
   const cargoLimpo = typeof cargo === 'string' ? cargo.trim().toLowerCase() : '';
-
 
   if (nomeLimpo.length < 3) {
     throw new TypeError('Nome deve ter no mínimo 3 caracteres.');
@@ -42,6 +41,15 @@ export async function registrar({ nome, email, senha, cpf, cargo, perfil } = {})
     throw erro;
   }
 
+  // Prevenção de Escalada de Privilégio (BFLA):
+  // Usuários só podem ser registrados como 'administrador' se a requisição for feita por um administrador autenticado.
+  let perfilSeguro = 'funcionario';
+  if (perfil && perfil.toLowerCase() === 'administrador') {
+    if (autorRequisicao && autorRequisicao.perfil === 'administrador') {
+      perfilSeguro = 'administrador';
+    }
+  }
+
   const senhaHash = await bcrypt.hash(senha, 10);
   return await UsuarioModel.criar({
     nome: nomeLimpo,
@@ -49,7 +57,7 @@ export async function registrar({ nome, email, senha, cpf, cargo, perfil } = {})
     senha: senhaHash,
     cpf: cpfLimpo,
     cargo: cargoLimpo,
-    perfil: perfil || 'funcionario'
+    perfil: perfilSeguro,
   });
 }
 
@@ -66,14 +74,24 @@ export async function login({ email, senha } = {}) {
 
   const token = jwt.sign(
     { perfil: usuario.perfil },
-    jwtSecret,
-    { subject: String(usuario.id), expiresIn: '2h' }
+    authConfig.jwtSecret,
+    { subject: String(usuario.id), expiresIn: authConfig.jwtExpiresIn }
   );
 
   return {
     token,
     tipo: 'Bearer',
-    expiraEm: '2h',
-    usuario: { id: usuario.id, nome: usuario.nome, perfil: usuario.perfil}
+    expiraEm: authConfig.jwtExpiresIn,
+    usuario: { id: usuario.id, nome: usuario.nome, perfil: usuario.perfil },
   };
+}
+
+export async function obterPerfil(id) {
+  const usuario = await UsuarioModel.buscarPorId(id);
+  if (!usuario) {
+    const erro = new Error('Usuário não encontrado.');
+    erro.status = 404;
+    throw erro;
+  }
+  return usuario;
 }
