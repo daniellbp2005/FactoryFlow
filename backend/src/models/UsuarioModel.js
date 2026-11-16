@@ -26,6 +26,7 @@ export async function criar({ codigo, nome, cpf, cargo, turno, email, senha, per
     cargo,
     turno,
     email,
+    senha,
     perfil
   };
 }
