@@ -2,7 +2,8 @@
 import styles from "./page.module.css";
 import { AtSign, LockKeyhole, Eye, EyeOff, User, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { setSessao } from "@/utils/api";
 
 export default function Login() {
   const [dado, setData] = useState("");
@@ -43,20 +44,20 @@ export default function Login() {
       });
 
       const resultado = await LinkAPI.json();
-      console.log(resultado);
 
       if (!resultado.sucesso) {
-        setErro("Erro no login");
+        setErro(resultado.erro || "Erro no login");
         return;
       }
-      const usuario = resultado.dados.usuario
 
-      if (usuario.perfil === "administrador") {
+      const { token, usuario } = resultado.dados;
+      setSessao(token, usuario);
+
+      if (usuario?.perfil === "administrador") {
         router.push("/admin");
       } else {
         router.push("/user");
       }
-      setData();
     } catch (error) {
       console.error("Erro ao buscar perfil:", error);
     }

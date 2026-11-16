@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react';
+import { fetchComAuth } from "@/utils/api";
 
 export default function EmployeeFormTarefas() {
 
@@ -31,11 +32,8 @@ export default function EmployeeFormTarefas() {
     }
 
     async function criarUser() {
-        fetch("http://localhost:8080/usuarios/cadastro/", {
+        fetchComAuth("/usuarios/cadastro/", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({
                 nome,
                 email,

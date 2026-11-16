@@ -7,6 +7,7 @@ import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeList from "@/components/EmployeeList";
 import AdminPageHeading from "@/components/AdminPageHeading";
 import Sidebar from "@/components/Sidebar";
+import { fetchComAuth } from "@/utils/api";
 
 export default function AdminEmployeesPage() {
   const [employees, setEmployees] = useState([]);
@@ -15,21 +16,28 @@ export default function AdminEmployeesPage() {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
   }
 
-  async function listarRelatorios() {
-    try {
-      const linkApi = await fetch("http://localhost:8080/usuarios/listar");
-      const data = await linkApi.json();
-
-      setEmployees(data.dados || []);
-      
-    } catch (e) {
-      console.error("Erro ao consultar o backend");
-    }
-  }
-
   useEffect(() => {
-    listarRelatorios();
-  }, [])
+    let ativo = true;
+
+    async function carregarOperadores() {
+      try {
+        const linkApi = await fetchComAuth("/usuarios/listar");
+        const data = await linkApi.json();
+
+        if (ativo) {
+          setEmployees(data.dados || []);
+        }
+      } catch (e) {
+        console.error("Erro ao consultar o backend");
+      }
+    }
+
+    carregarOperadores();
+
+    return () => {
+      ativo = false;
+    };
+  }, []);
 
   return (
     <main className="admin-page">

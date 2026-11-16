@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { limparSessao } from "@/utils/api";
 
 const links = [
   { label: "Painel" , icon: LayoutDashboard, href: "/admin" },
@@ -59,7 +60,7 @@ export default function Sidebar() {
       </nav>
 
       <footer className="sidebar-footer">
-        <Link className="sidebar-logout" href="/" aria-label="Sair e voltar ao início">
+        <Link className="sidebar-logout" href="/" onClick={limparSessao} aria-label="Sair e voltar ao início">
           <LogOut size={20} aria-hidden="true" />
           <span>Sair</span>
         </Link>

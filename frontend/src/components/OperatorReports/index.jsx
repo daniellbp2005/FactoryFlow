@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState, useEffect } from "react";
 import { ClipboardList, Search } from "lucide-react";
+import { fetchComAuth } from "@/utils/api";
 
 export default function OperatorReports() {
   const [query, setQuery] = useState("");
@@ -9,7 +10,7 @@ export default function OperatorReports() {
   useEffect(() => {
     async function listarRelatorios() {
       try {
-        const linkApi = await fetch("http://localhost:8080/api/relatorios");
+        const linkApi = await fetchComAuth("/api/relatorios");
         const data = await linkApi.json();
 
         setData(data.dados || []);

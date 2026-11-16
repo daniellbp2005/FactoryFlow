@@ -106,15 +106,6 @@ export async function obterPerfil(id) {
   return usuario;
 }
 
-export async function obterPerfil(id) {
-  const usuario = await UsuarioModel.buscarPorId(id);
-  if (!usuario) {
-    const erro = new Error('Usuário não encontrado.');
-    erro.status = 404;
-    throw erro;
-  }
-  return usuario;
-}
 
 export async function listar({ pagina = 1, limite = 10 } = {}) {
   const paginaNum = Number(pagina);

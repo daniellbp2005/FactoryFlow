@@ -5,12 +5,6 @@ import { criarRateLimiter } from "../middlewares/rateLimiter.js";
 
 export const usuariosRouter = express.Router();
 
-<<<<<<< HEAD
-usuariosRouter.get("/listar/",usuarioController.listar);
-usuariosRouter.get('/listar/:id/', usuarioController.buscarPorId);
-usuariosRouter.post("/login/", usuarioController.login);
-usuariosRouter.post("/cadastro/", usuarioController.registrar);
-=======
 // Proteção contra brute force: máx 10 tentativas a cada 15 minutos por IP
 const loginLimiter = criarRateLimiter({
   janelaMs: 15 * 60 * 1000,
@@ -25,13 +19,18 @@ const cadastroLimiter = criarRateLimiter({
   mensagem: "Limite de cadastros atingido para este IP. Tente novamente mais tarde.",
 });
 
+// Rotas de autenticação
 usuariosRouter.post("/login", loginLimiter, usuarioController.login);
 usuariosRouter.post("/login/", loginLimiter, usuarioController.login);
 
 usuariosRouter.post("/cadastro", cadastroLimiter, usuarioController.registrar);
 usuariosRouter.post("/cadastro/", cadastroLimiter, usuarioController.registrar);
 
+// Rotas de listagem de usuários (suporta /listar e / para compatibilidade com o frontend)
+usuariosRouter.get("/listar", autenticar, usuarioController.listar);
+usuariosRouter.get("/", autenticar, usuarioController.listar);
+usuariosRouter.get("/:id", autenticar, usuarioController.buscarPorId);
+
 // Rota protegida para consultar o próprio perfil logado
 usuariosRouter.get("/me", autenticar, usuarioController.obterPerfil);
 usuariosRouter.get("/perfil", autenticar, usuarioController.obterPerfil);
->>>>>>> 719cd93f1020d8bed1496fe07c3f5dd064dba394

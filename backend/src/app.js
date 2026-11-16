@@ -41,7 +41,6 @@ app.use("/api/maquinas", maqRouter);
 app.use("/api/tarefas", tarefasRouter);
 app.use("/api/equipamentos", equipamentoRouter);
 app.use("/api/relatorios", relatoriosRouter);
-app.use("/usuarios", usuariosRouter);
 
 // Tratamento centralizado de erros
 app.use(errorHandler);

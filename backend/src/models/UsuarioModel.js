@@ -36,7 +36,7 @@ export async function listar({ limite, offset }) {
   const offsetNum = Number.parseInt(offset, 10);
 
   const [linhas] = await pool.query(
-    'SELECT nome, codigo, cargo, turno, ativo FROM usuarios ORDER BY id LIMIT ? OFFSET ?',
+    'SELECT id, nome, email, codigo, cargo, turno, ativo, perfil FROM usuarios ORDER BY id LIMIT ? OFFSET ?',
     [limiteNum, offsetNum]
   );
 

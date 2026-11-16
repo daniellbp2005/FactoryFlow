@@ -5,6 +5,7 @@ Padronizar o status de tarefas, e de relatórios, fazer o css do status
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import { fetchComAuth } from "@/utils/api";
 
 export default function ProductionSchedule() {
   const [period, setPeriod] = useState("Semana");
@@ -31,7 +32,7 @@ export default function ProductionSchedule() {
   useEffect(() => {
     async function listarRelatorios() {
       try {
-        const linkApi = await fetch("http://localhost:8080/api/relatorios");
+        const linkApi = await fetchComAuth("/api/relatorios");
         const data = await linkApi.json();
 
         setData(data.dados || []);

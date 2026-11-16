@@ -7,6 +7,7 @@ import ProductionSchedule from "@/components/ProductionSchedule";
 import AvailabilityPanel from "@/components/AvailabilityPanel";
 import AdminPageHeading from "@/components/AdminPageHeading";
 import Sidebar from "@/components/Sidebar";
+import { fetchComAuth } from "@/utils/api";
 
 export default function AdminPage() {
   const [data, setData] = useState([])
@@ -14,7 +15,7 @@ export default function AdminPage() {
   useEffect(() => {
     async function listarRelatorios() {
       try {
-        const linkApi = await fetch("http://localhost:8080/api/relatorios");
+        const linkApi = await fetchComAuth("/api/relatorios");
         const data = await linkApi.json();
 
         setData(data.dados || []);
@@ -25,12 +26,10 @@ export default function AdminPage() {
   
     async function listarUsuarios() {
       try {
-        const linkApi = await fetch("http://localhost:8080/usuarios/listar");
+        const linkApi = await fetchComAuth("/usuarios/listar");
         const data = await linkApi.json();
 
         setListarUser(data.dados || []);
-        // console.log(listarUser);
-        
       } catch (e) {
         console.error("Erro ao consultar o backend");
       }
