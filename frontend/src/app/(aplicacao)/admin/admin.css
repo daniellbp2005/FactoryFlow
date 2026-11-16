@@ -1282,6 +1282,10 @@
 }
 
 @media (max-width: 450px) {
+  .admin-page {
+    width: 100% !important;
+  }
+
   .topbar-user span {
     display: none;
   }

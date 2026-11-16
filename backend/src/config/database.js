@@ -8,7 +8,7 @@ export function criarPool() {
     const host = process.env.DB_HOST || "127.0.0.1";
     const port = Number(process.env.DB_PORT || 3309);
     const user = process.env.DB_USER || "root";
-    const password = process.env.DB_PASSWORD || "";
+    const password = process.env.DB_PASSWORD || "senai@123";
     const database = process.env.DB_NAME || "api_flow";
 
     console.log(`[Database Config]: Conectando em ${user}@${host}:${port}/${database}`);
