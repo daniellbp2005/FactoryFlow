@@ -1,8 +1,9 @@
 "use client";
 import { useMemo, useState } from "react";
 import { Search, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-export default function EmployeeList({employees}) {
+export default function EmployeeList({ employees, aumentarPagina, diminuirPagina }) {
   const [query, setQuery] = useState("");
 
   const dadosFiltrados = useMemo(() => {
@@ -18,9 +19,9 @@ export default function EmployeeList({employees}) {
     if (data === null || data === undefined) return "Não informado";
 
     if (data === 1) {
-      return "Ativo"
+      return "Disponivel"
     } else {
-      return "Desativado"
+      return "Trabalhando"
     }
   }
 
@@ -43,7 +44,7 @@ export default function EmployeeList({employees}) {
         </label>
       </div>
 
-      {dadosFiltrados.length > 0 ? (  
+      {dadosFiltrados.length > 0 ? (
         <div className="employee-list">
           {dadosFiltrados.map((employee, i) => (
             <article className="employee-card" key={i}>
@@ -69,6 +70,14 @@ export default function EmployeeList({employees}) {
             : "Nenhum funcionário encontrado para essa busca."}
         </p>
       )}
+      <div className="d-flex justify-content-end w-full align-itmes-center gap-2 mt-3">
+        <div className="seta" onClick={diminuirPagina}>
+          <ArrowLeft size={20} />
+        </div>
+        <div className="seta" onClick={aumentarPagina}>
+          <ArrowRight size={20} />
+        </div>
+      </div>
     </section>
   );
 }

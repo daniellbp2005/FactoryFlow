@@ -15,7 +15,7 @@ export default function AdminPage() {
   useEffect(() => {
     async function listarRelatorios() {
       try {
-        const linkApi = await fetchComAuth("/api/relatorios");
+        const linkApi = await fetchComAuth("/api/relatorios?limite=100");
         const data = await linkApi.json();
 
         setData(data.dados || []);
@@ -26,7 +26,7 @@ export default function AdminPage() {
   
     async function listarUsuarios() {
       try {
-        const linkApi = await fetchComAuth("/usuarios/listar");
+        const linkApi = await fetchComAuth("/usuarios/listar?limite=100");
         const data = await linkApi.json();
 
         setListarUser(data.dados || []);

@@ -11,6 +11,8 @@ import { fetchComAuth } from "@/utils/api";
 
 export default function AdminEmployeesPage() {
   const [employees, setEmployees] = useState([]);
+  let [pagina, setPagina] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
 
   function addEmployee(employee) {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
@@ -21,11 +23,14 @@ export default function AdminEmployeesPage() {
 
     async function carregarOperadores() {
       try {
-        const linkApi = await fetchComAuth("/usuarios/listar");
+        const linkApi = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
         const data = await linkApi.json();
 
         if (ativo) {
           setEmployees(data.dados || []);
+        }
+        if (data.paginacao?.totalPaginas) {
+          setTotalPaginas(data.paginacao.totalPaginas);
         }
       } catch (e) {
         console.error("Erro ao consultar o backend");
@@ -37,7 +42,19 @@ export default function AdminEmployeesPage() {
     return () => {
       ativo = false;
     };
-  }, []);
+  }, [pagina]);
+
+  function aumentarPagina() {
+    if (pagina < totalPaginas) {
+      setPagina((prev) => prev + 1);
+    }
+  }
+
+  function diminuirPagina() {
+    if (pagina > 1) {
+      setPagina((prev) => prev - 1);
+    }
+  }
 
   return (
     <main className="admin-page">
@@ -52,7 +69,7 @@ export default function AdminEmployeesPage() {
 
         <div className="employee-layout">
           <EmployeeForm onCreate={addEmployee} />
-          <EmployeeList employees={employees}/>
+          <EmployeeList employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina}/>
         </div>
       </section>
     </main>
