@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import "../admin.css";
-import AdminHeader from "@/components/AdminHeader";
+import Header from "@/components/Header";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeList from "@/components/EmployeeList";
-import AdminPageHeading from "@/components/AdminPageHeading";
+import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 import { fetchComAuth } from "@/utils/api";
 
@@ -63,9 +63,9 @@ export default function AdminEmployeesPage() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <AdminHeader />
+      <Header />
       <section className="admin-content">
-        <AdminPageHeading
+        <PageHeading
           eyebrow="FACTORYFLOW / EQUIPE"
           title="Funcionários"
           description="Cadastre e visualize os funcionários da equipe."

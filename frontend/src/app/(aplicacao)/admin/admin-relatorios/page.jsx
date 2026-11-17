@@ -1,16 +1,16 @@
 import "../admin.css";
-import AdminHeader from "@/components/AdminHeader";
+import Header from "@/components/Header";
 import OperatorReports from "@/components/OperatorReports";
-import AdminPageHeading from "@/components/AdminPageHeading";
+import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 
 export default function AdminReportsPage() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <AdminHeader />
+      <Header />
       <section className="admin-content">
-        <AdminPageHeading
+        <PageHeading
           eyebrow="FACTORYFLOW / REGISTROS"
           title="Relatórios"
           description="Acompanhe os relatórios e comentários registrados para os operadores."

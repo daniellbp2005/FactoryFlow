@@ -1,11 +1,11 @@
 'use client'
 import "./admin.css";
 import { useState, useEffect } from "react";
-import AdminHeader from "@/components/AdminHeader";
-import OverviewCards from "@/components/OverviewCards";
+import Header from "@/components/Header";
+import AdminOverviewCards from "@/components/AdminOverviewCards";
 import ProductionSchedule from "@/components/ProductionSchedule";
 import AvailabilityPanel from "@/components/AvailabilityPanel";
-import AdminPageHeading from "@/components/AdminPageHeading";
+import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 import { fetchComAuth } from "@/utils/api";
 
@@ -40,9 +40,9 @@ export default function AdminPage() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <AdminHeader />
+      <Header />
       <section className="admin-content">
-        <AdminPageHeading
+        <PageHeading
           eyebrow="FACTORYFLOW / MÊS"
           title="Planejamento de Produção"
           description="Programação, equipamentos e produtividade em uma única visão."
@@ -50,7 +50,7 @@ export default function AdminPage() {
 
         <section className="overview-section" aria-labelledby="overview-title">
           <h2 id="overview-title">Visão geral</h2>
-          <OverviewCards data={data} user={listarUser}/>
+          <AdminOverviewCards data={data} user={listarUser}/>
         </section>
 
         <div className="dashboard-grid">

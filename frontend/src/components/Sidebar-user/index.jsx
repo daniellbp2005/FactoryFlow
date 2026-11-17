@@ -15,8 +15,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { label: "Painel" , icon: LayoutDashboard, href: "/" },
-  { label: "Planejamento", icon: ClipboardList, href: "/" },
+  { label: "Painel" , icon: LayoutDashboard, href: "/user" },
+  { label: "Planejamento", icon: ClipboardList, href: "/user/user-planejamento" },
   { label: "Operadores", icon: UsersRound, href: "/" },
   { label: "Máquinas", icon: Factory, href: "/" },
   { label: "Relatórios", icon: ChartNoAxesColumnIncreasing, href: "/" },
