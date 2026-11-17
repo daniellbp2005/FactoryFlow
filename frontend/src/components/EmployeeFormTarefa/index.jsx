@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { Eye, EyeOff, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
 export default function EmployeeFormTarefas() {
 
