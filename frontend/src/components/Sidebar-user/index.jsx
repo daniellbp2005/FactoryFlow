@@ -7,7 +7,7 @@ import {
   Gauge,
   LayoutDashboard,
   LogOut,
-  Settings,
+  ClipboardCheck,
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -16,10 +16,9 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { label: "Painel" , icon: LayoutDashboard, href: "/user" },
-  { label: "Planejamento", icon: ClipboardList, href: "/user/user-planejamento" },
-  { label: "Operadores", icon: UsersRound, href: "/" },
-  { label: "Máquinas", icon: Factory, href: "/" },
-  { label: "Relatórios", icon: ChartNoAxesColumnIncreasing, href: "/" },
+  { label: "Tarefas", icon: ClipboardCheck, href: "/user/user-tarefas" },
+  { label: "Máquinas", icon: Factory, href: "/user/user-maquinas" },
+  { label: "Relatórios", icon: ChartNoAxesColumnIncreasing, href: "/user/user-relatorios" },
 ];
 
 export default function SidebarUser() {
