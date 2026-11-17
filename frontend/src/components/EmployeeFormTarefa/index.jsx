@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { Plus } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 
 export default function EmployeeFormTarefas() {
 
@@ -12,6 +12,13 @@ export default function EmployeeFormTarefas() {
     }
     function adicionarMaq() {
         setInputsMaq([...inputsMaq, inputsMaq.length + 1]);
+    }
+
+    function deletarInputEmail() {
+        setInputs(inputs.slice(0, -1));
+    }
+    function deletarInputMaq() {
+        setInputsMaq(inputsMaq.slice(0, -1));
     }
 
     const [nome, setNome] = useState("");
@@ -66,8 +73,8 @@ export default function EmployeeFormTarefas() {
         <section className="panel employee-form-panel" aria-labelledby="employee-form-title">
             <div className="panel-heading">
                 <div>
-                    <h2 id="employee-form-title">Nova tarefa</h2>
-                    <p>Preencha os dados para adicionar à tarefa.</p>
+                    <h2 id="employee-form-title">Novo funcionário</h2>
+                    <p>Preencha os dados para adicionar à equipe.</p>
                 </div>
             </div>
 
@@ -84,6 +91,66 @@ export default function EmployeeFormTarefas() {
                         required
                     />
                 </label>
+                {/* <p className='fs-5 fw-bold mt-2'>O funcionário tem um grupo ? Adicione ele aqui.</p> */}
+
+                <label id='EmailCriar'>
+                    <div className='d-flex justify-content-center align-items-center gap-2 py-1'>
+                        <p className='w-75 px-2 fs-4 fw-bold'>E-mail</p>
+                        <div className='add-email w-25 ' onClick={adicionar}>
+                            <Plus />
+                        </div>
+                    </div>
+                    <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
+                        <input
+                            type="email"
+                            name="email_0"
+                            placeholder="Digite aqui"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        {inputs.map((item) => (
+                            <div key={item} className='d-flex justify-content-center align-items-center gap-2 w-100'>
+                                <input
+                                    key={item}
+                                    type="email"
+                                    name={`input_${item}`}
+                                    placeholder="Digite aqui"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <X className='cursor-pointer' onClick={() => deletarInputEmail()} />
+                            </div>
+                        ))}
+                    </div>
+                </label>
+
+                <label id='maquinasAdd'>
+                    <div className='d-flex justify-content-center align-items-center gap-2 py-1'>
+                        <p className='w-75 px-2 fs-4 fw-bold'>Máquinas Atribuidas</p>
+                        <div className='add-email w-25 ' onClick={adicionarMaq}>
+                            <Plus />
+                        </div>
+                    </div>
+                    <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
+                        <input
+                            type="text"
+                            name="maq_0"
+                            placeholder="Digite aqui"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        {inputsMaq.map((item) => (
+                            <div key={item} className='d-flex justify-content-center align-items-center gap-2 w-100'>
+                                <input
+                                    key={item}
+                                    type="text"
+                                    name={`maq_${item}`}
+                                    placeholder="Digite aqui"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <X className='cursor-pointer' onClick={() => deletarInputMaq()} />
+                            </div>
+                        ))}
+                    </div>
+                </label>
+
                 <label>
                     Descrição
                     <textarea
@@ -156,16 +223,16 @@ export default function EmployeeFormTarefas() {
                 <label id='EmailCriar'>
                     <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
 
-                        <p className='w-75 px-2'>E-mail</p> <div className='add-email' onClick={adicionar}><Plus /></div>
+                        <p className='w-75 px-2'>E-mail</p> <div className='add-email w-25 ' onClick={adicionar}><Plus /></div>
                     </div>
                     <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
                         <input
                             type="email"
                             name="email_0"
-                            placeholder="Ex: nome@empresa.com"
+                            placeholder="Digite aqui"
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        {inputs.map((item) => ( 
+                        {inputs.map((item) => (
                             <input
                                 key={item}
                                 type="email"
@@ -181,7 +248,7 @@ export default function EmployeeFormTarefas() {
                 <label id='maquinasAdd'>
                     <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
 
-                        <p className='w-75 px-2'>Máquinas Atribuidas</p> <div className='add-email' onClick={adicionarMaq}><Plus /></div>
+                        <p className='w-75 px-2'>Máquinas Atribuidas</p> <div className='add-email w-25 ' onClick={adicionarMaq}><Plus /></div>
                     </div>
                     <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
                         <input

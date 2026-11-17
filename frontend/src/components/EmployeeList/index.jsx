@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Search, UserRound } from "lucide-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-export default function EmployeeList({ employees, aumentarPagina, diminuirPagina }) {
+export default function EmployeeList({ employees, aumentarPagina, diminuirPagina, cadastroTodos }) {
   const [query, setQuery] = useState("");
 
   const dadosFiltrados = useMemo(() => {
@@ -25,12 +25,14 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
     }
   }
 
+  const todos = cadastroTodos.length;
+
   return (
     <section className="panel employee-list-panel" aria-labelledby="employee-list-title">
       <div className="panel-heading employee-list-heading">
         <div>
           <h2 id="employee-list-title">Funcionários</h2>
-          <p>{employees.length} {employees.length === 1 ? "pessoa cadastrada" : "pessoas cadastradas"}</p>
+          <p>{todos} {todos === 1 ? "pessoa cadastrada" : "pessoas cadastradas"}</p>
         </div>
         <label className="employee-search">
           <Search size={15} aria-hidden="true" />

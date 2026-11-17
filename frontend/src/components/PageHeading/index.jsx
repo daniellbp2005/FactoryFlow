@@ -1,4 +1,4 @@
-export default function AdminPageHeading({ eyebrow, title, description, actions }) {
+export default function PageHeading({ eyebrow, title, description, actions }) {
   return (
     <div className="page-heading">
       <div>

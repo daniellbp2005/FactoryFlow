@@ -1,7 +1,7 @@
 'use client'
 import { Activity, CalendarDays, CircleAlert, UsersRound } from "lucide-react";
 
-export default function OverviewCards({ data, user }) {
+export default function AdminOverviewCards({ data, user }) {
   
   const safeData = Array.isArray(data) ? data : [];
   const safeUser = Array.isArray(user) ? user : [];

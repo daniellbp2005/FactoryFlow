@@ -1,26 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../admin.css";
-import AdminHeader from "@/components/AdminHeader";
+import Header from "@/components/Header";
 import EmployeeFormTarefa from "@/components/EmployeeFormTarefa";
-import EmployeeList from "@/components/EmployeeList";
-import AdminPageHeading from "@/components/AdminPageHeading";
+import EmployeeListTarefa from "@/components/EmployeeListTarefa";
+import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 
 export default function Tarefas() {
   const [employees, setEmployees] = useState([]);
+  const [aux, setAux] = useState([]);
+  let [pagina, setPagina] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
 
   function addEmployee(employee) {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
   }
 
+  useEffect(() => {
+    let ativo = true;
+
+    async function carregarOperadores() {
+      try {
+        const linkApiLimite = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
+        const data = await linkApiLimite.json();
+        const linkApiTodos = await fetchComAuth(`/usuarios/listar?limite=100`);
+        const cadastroTodos = await linkApiTodos.json();
+        setAux(cadastroTodos.dados || []);
+
+        if (ativo) {
+          setEmployees(data.dados || []);
+        }
+        if (data.paginacao?.totalPaginas) {
+          setTotalPaginas(data.paginacao.totalPaginas);
+        }
+      } catch (e) {
+        console.error("Erro ao consultar o backend");
+      }
+    }
+
+    carregarOperadores();
+
+    return () => {
+      ativo = false;
+    };
+  }, [pagina]);
+
+  function aumentarPagina() {
+    if (pagina < totalPaginas) {
+      setPagina((prev) => prev + 1);
+    }
+  }
+
+  function diminuirPagina() {
+    if (pagina > 1) {
+      setPagina((prev) => prev - 1);
+    }
+  }
+
   return (
     <main className="admin-page">
       <Sidebar />
-      <AdminHeader />
+      <Header />
       <section className="admin-content">
-        <AdminPageHeading
+        <PageHeading
           eyebrow="FACTORYFLOW / Tarefa"
           title="Funcionário"
           description="Cadastre e visualize os funcionários da equipe."
@@ -28,7 +72,7 @@ export default function Tarefas() {
 
         <div className="employee-layout">
           <EmployeeFormTarefa onCreate={addEmployee} />
-          <EmployeeList employees={employees} />
+          <EmployeeListTarefa employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} />
         </div>
       </section>
     </main>
