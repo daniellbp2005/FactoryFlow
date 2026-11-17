@@ -510,8 +510,8 @@
 }
 
 .employee-form .add-email {
-  width: 100%;
-  min-height: 36px;
+  width: 35px;
+  min-height: 20px;
   border: 1px solid #394148;
   border-radius: 5px;
   padding: 0 10px;

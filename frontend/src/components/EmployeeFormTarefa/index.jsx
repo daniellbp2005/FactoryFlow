@@ -66,8 +66,8 @@ export default function EmployeeFormTarefas() {
         <section className="panel employee-form-panel" aria-labelledby="employee-form-title">
             <div className="panel-heading">
                 <div>
-                    <h2 id="employee-form-title">Novo funcionário</h2>
-                    <p>Preencha os dados para adicionar à equipe.</p>
+                    <h2 id="employee-form-title">Nova tarefa</h2>
+                    <p>Preencha os dados para adicionar à tarefa.</p>
                 </div>
             </div>
 
@@ -156,16 +156,16 @@ export default function EmployeeFormTarefas() {
                 <label id='EmailCriar'>
                     <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
 
-                        <p className='w-75 px-2'>E-mail</p> <div className='add-email w-25 ' onClick={adicionar}><Plus /></div>
+                        <p className='w-75 px-2'>E-mail</p> <div className='add-email' onClick={adicionar}><Plus /></div>
                     </div>
                     <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
                         <input
                             type="email"
                             name="email_0"
-                            placeholder="Digite aqui"
+                            placeholder="Ex: nome@empresa.com"
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        {inputs.map((item) => (
+                        {inputs.map((item) => ( 
                             <input
                                 key={item}
                                 type="email"
@@ -181,7 +181,7 @@ export default function EmployeeFormTarefas() {
                 <label id='maquinasAdd'>
                     <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
 
-                        <p className='w-75 px-2'>Máquinas Atribuidas</p> <div className='add-email w-25 ' onClick={adicionarMaq}><Plus /></div>
+                        <p className='w-75 px-2'>Máquinas Atribuidas</p> <div className='add-email' onClick={adicionarMaq}><Plus /></div>
                     </div>
                     <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
                         <input
@@ -205,7 +205,7 @@ export default function EmployeeFormTarefas() {
 
 
                 <button className="button button-primary" type="submit">
-                    Cadastrar funcionário
+                    Cadastrar Tarefa
                 </button>
             </form>
         </section>
