@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import "../admin.css";
-import AdminHeader from "@/components/AdminHeader";
+import Header from "@/components/Header";
 import EmployeeFormTarefa from "@/components/EmployeeFormTarefa";
 import EmployeeListTarefa from "@/components/EmployeeListTarefa";
-import AdminPageHeading from "@/components/AdminPageHeading";
+import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 
 export default function Tarefas() {
@@ -62,9 +62,9 @@ export default function Tarefas() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <AdminHeader />
+      <Header />
       <section className="admin-content">
-        <AdminPageHeading
+        <PageHeading
           eyebrow="FACTORYFLOW / Tarefa"
           title="Funcionário"
           description="Cadastre e visualize os funcionários da equipe."
