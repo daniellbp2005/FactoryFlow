@@ -81,7 +81,7 @@ export async function criar(dados) {
   return await RelatoriosModel.criar(relatorioDominio);
 }
 
-export async function atualizar(idRecebido, dados) {
+export async function atualizar(idRecebido, dados, usuarioLogado = null) {
   const id = validarId(idRecebido);
 
   // 1. Verifica se o relatório existe
@@ -89,6 +89,17 @@ export async function atualizar(idRecebido, dados) {
   if (!relatorioExistente) {
     const erro = new Error(`Relatório ${id} não encontrado.`);
     erro.status = 404;
+    throw erro;
+  }
+
+  // Prevenção de BOLA: Se o solicitante não for administrador e não for o autor do relatório, bloqueia
+  if (
+    usuarioLogado &&
+    usuarioLogado.perfil !== "administrador" &&
+    relatorioExistente.usuario?.id !== usuarioLogado.id
+  ) {
+    const erro = new Error("Acesso negado: você só pode editar os seus próprios relatórios.");
+    erro.status = 403;
     throw erro;
   }
 

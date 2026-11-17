@@ -37,7 +37,18 @@ export async function buscarPorId(req, res, next) {
 
 export async function criar(req, res, next) {
   try {
-    const relatorio = await relatoriosService.criar(req.body);
+    // Prevenção de Falsificação de Identidade (BOLA):
+    // Se o usuário autenticado não for administrador, o usuario_id do relatório é forçado para o seu próprio ID
+    const autorId = req.usuario?.id;
+    const autorPerfil = req.usuario?.perfil;
+    const usuarioFinalId = (autorPerfil === "administrador" && req.body.usuario_id)
+      ? req.body.usuario_id
+      : autorId;
+
+    const relatorio = await relatoriosService.criar({
+      ...req.body,
+      usuario_id: usuarioFinalId,
+    });
     return res.status(201).json({ sucesso: true, dados: relatorio });
   } catch (erro) {
     return responderErro(erro, res, next);
@@ -46,7 +57,7 @@ export async function criar(req, res, next) {
 
 export async function atualizar(req, res, next) {
   try {
-    const relatorio = await relatoriosService.atualizar(req.params.id, req.body);
+    const relatorio = await relatoriosService.atualizar(req.params.id, req.body, req.usuario);
     return res.status(200).json({ sucesso: true, dados: relatorio });
   } catch (erro) {
     return responderErro(erro, res, next);

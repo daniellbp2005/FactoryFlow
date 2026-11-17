@@ -53,6 +53,36 @@ export function autenticar(req, res, next) {
 }
 
 /**
+ * Middleware de Autenticação Opcional
+ * Se o token for fornecido e válido, injeta req.usuario; caso contrário, continua sem erro.
+ * Útil para rotas públicas onde usuários logados podem ter privilégios adicionais (ex.: cadastro de admin).
+ */
+export function autenticarOpcional(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return next();
+  }
+
+  const partes = authHeader.trim().split(/\s+/);
+  const tipo = partes[0];
+  const token = partes.slice(1).join(" ").trim();
+
+  if (tipo === "Bearer" && token) {
+    try {
+      const payload = jwt.verify(token, authConfig.jwtSecret);
+      req.usuario = {
+        id: Number(payload.sub),
+        perfil: payload.perfil,
+      };
+    } catch {
+      // Ignora falhas no opcional
+    }
+  }
+
+  return next();
+}
+
+/**
  * Middleware de Controle de Acesso Baseado em Perfis (RBAC)
  * Exemplo de uso: autorizarPerfis('administrador')
  */

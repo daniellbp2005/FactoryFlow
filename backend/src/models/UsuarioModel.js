@@ -26,7 +26,6 @@ export async function criar({ codigo, nome, cpf, cargo, turno, email, senha, per
     cargo,
     turno,
     email,
-    senha,
     perfil
   };
 }
@@ -49,7 +48,10 @@ export async function listar({ limite, offset }) {
 }
 
 export async function buscarPorId(id) {
-  const [linhas] = await pool.query('SELECT * FROM usuarios WHERE id = ?', [id]);
+  const [linhas] = await pool.query(
+    'SELECT id, codigo, nome, cpf, cargo, turno, ativo, email, perfil, criado_em FROM usuarios WHERE id = ?',
+    [id]
+  );
   if (linhas.length === 0) return null;
   return hidratar(linhas[0]);
 }

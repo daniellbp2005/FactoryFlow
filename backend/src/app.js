@@ -15,10 +15,26 @@ const app = express();
 // Defesa em Profundidade: Helmet para headers HTTP seguros
 app.use(helmet());
 
-// CORS restrito ao Frontend
+// CORS flexível para portas de desenvolvimento (3000, 3001, etc.)
+const origensPermitidas = [
+  process.env.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      // Permite requisições sem origin (como mobile, Postman, Thunder Client)
+      if (!origin) return callback(null, true);
+      if (origensPermitidas.includes(origin) || process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+      return callback(new Error("Origem não permitida pelo CORS"));
+    },
+    credentials: true,
   }),
 );
 

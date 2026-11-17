@@ -60,6 +60,12 @@ export async function listar(req, res, next) {
 export async function buscarPorId(req, res, next) {
   try {
     const usuario = await AuthService.buscarPorId(req.params.id);
+
+    // Proteção de Privacidade (LGPD): se o usuário logado não for administrador nem o próprio dono da conta, oculta o CPF
+    if (req.usuario && req.usuario.perfil !== "administrador" && req.usuario.id !== usuario.id) {
+      delete usuario.cpf;
+    }
+
     return res.status(200).json({ sucesso: true, dados: usuario });
   } catch (erro) {
     return responderErro(erro, res, next);

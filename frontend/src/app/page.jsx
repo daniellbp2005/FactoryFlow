@@ -53,13 +53,19 @@ export default function Login() {
       const { token, usuario } = resultado.dados;
       setSessao(token, usuario);
 
-      if (usuario?.perfil === "administrador") {
+      // Verifica se o perfil chegou corretamente; caso contrário, exibe erro.
+      if (!usuario?.perfil) {
+        setErro("Login recebido sem informação de perfil. Contate o suporte.");
+        return;
+      }
+      if (usuario.perfil === "administrador") {
         router.push("/admin");
       } else {
         router.push("/user");
       }
     } catch (error) {
       console.error("Erro ao buscar perfil:", error);
+      setErro("Falha ao conectar à API (porta 8080). Verifique se o servidor backend está iniciado.");
     }
   }
 
