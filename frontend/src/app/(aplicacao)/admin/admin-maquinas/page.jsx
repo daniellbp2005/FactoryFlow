@@ -1,7 +1,7 @@
 import "../admin.css";
-import AdminHeader from "@/components/AdminHeader";
+import Header from "@/components/Header";
 import MachineFleet from "@/components/MachineFleet";
-import AdminPageHeading from "@/components/AdminPageHeading";
+import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 import TabelaRequisicao from "@/components/TabelaRequisicao";
 
@@ -9,10 +9,10 @@ export default function AdminMachinesPage() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <AdminHeader />
+      <Header />
       <section className="admin-content">
 
-        <AdminPageHeading
+        <PageHeading
           eyebrow="FACTORYFLOW / OPERAÇÃO"
           title="Planejamento de Produção"
           description="Programação, equipamentos e produtividade em uma única visão."
