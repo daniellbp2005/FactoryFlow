@@ -1,8 +1,18 @@
 "use client";
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Plus } from 'lucide-react'
 
 export default function EmployeeFormTarefas() {
+
+    const [inputsMaq, setInputsMaq] = useState([]);
+    const [inputs, setInputs] = useState([]);
+
+    function adicionar() {
+        setInputs([...inputs, inputs.length + 1]);
+    }
+    function adicionarMaq() {
+        setInputsMaq([...inputsMaq, inputsMaq.length + 1]);
+    }
 
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
@@ -146,20 +156,56 @@ export default function EmployeeFormTarefas() {
                         </div>
                     </div>
                 </label>
-                <label>
-                    E-mail
-                    <input
-                        autoComplete="name"
-                        maxLength={100}
-                        name="email"
-                        placeholder="Ex: usuário@factoryflow.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+                <label id='EmailCriar'>
+                    <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
+
+                        <p className='w-75 px-2'>E-mail</p> <div className='add-email w-25 ' onClick={adicionar}><Plus /></div>
+                    </div>
+                    <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
+                        <input
+                            type="email"
+                            name="email_0"
+                            placeholder="Digite aqui"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        {inputs.map((item) => (
+                            <input
+                                key={item}
+                                type="email"
+                                name={`input_${item}`}
+                                placeholder="Digite aqui"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        ))}
+
+                    </div>
                 </label>
 
-                <div className='add-email'></div>
+                <label id='maquinasAdd'>
+                    <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
+
+                        <p className='w-75 px-2'>Máquinas Atribuidas</p> <div className='add-email w-25 ' onClick={adicionarMaq}><Plus /></div>
+                    </div>
+                    <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
+                        <input
+                            type="text"
+                            name="maq_0"
+                            placeholder="Digite aqui"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        {inputsMaq.map((item) => (
+                            <input
+                                key={item}
+                                type="text"
+                                name={`maq_${item}`}
+                                placeholder="Digite aqui"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        ))}
+
+                    </div>
+                </label>
+
 
                 <button className="button button-primary" type="submit">
                     Cadastrar funcionário
