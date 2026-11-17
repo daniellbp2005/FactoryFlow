@@ -1,4 +1,3 @@
-Admin
 {
   "email": "admin@factoryflow.com",
   "senha": "Admin@12345"
@@ -14,7 +13,7 @@ Admin
   "codigo": "ADMIN-002"
 }
 
-Funcionario
+
 {
  "email": "funcionario@factoryflow.com",
  "senha": "Funcionario@12345",
