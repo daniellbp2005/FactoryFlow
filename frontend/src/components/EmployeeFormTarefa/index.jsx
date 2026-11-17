@@ -41,11 +41,8 @@ export default function EmployeeFormTarefas() {
     }
 
     async function criarUser() {
-        fetch("http://localhost:8080/usuarios/cadastro/", {
+        fetchComAuth("/usuarios/cadastro/", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({
                 nome,
                 email,

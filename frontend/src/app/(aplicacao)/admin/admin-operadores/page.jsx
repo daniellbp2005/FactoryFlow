@@ -7,29 +7,54 @@ import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeList from "@/components/EmployeeList";
 import AdminPageHeading from "@/components/AdminPageHeading";
 import Sidebar from "@/components/Sidebar";
+import { fetchComAuth } from "@/utils/api";
 
 export default function AdminEmployeesPage() {
   const [employees, setEmployees] = useState([]);
+  let [pagina, setPagina] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
 
   function addEmployee(employee) {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
   }
 
-  async function listarRelatorios() {
-    try {
-      const linkApi = await fetch("http://localhost:8080/usuarios/listar");
-      const data = await linkApi.json();
+  useEffect(() => {
+    let ativo = true;
 
-      setEmployees(data.dados || []);
-      
-    } catch (e) {
-      console.error("Erro ao consultar o backend");
+    async function carregarOperadores() {
+      try {
+        const linkApi = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
+        const data = await linkApi.json();
+
+        if (ativo) {
+          setEmployees(data.dados || []);
+        }
+        if (data.paginacao?.totalPaginas) {
+          setTotalPaginas(data.paginacao.totalPaginas);
+        }
+      } catch (e) {
+        console.error("Erro ao consultar o backend");
+      }
+    }
+
+    carregarOperadores();
+
+    return () => {
+      ativo = false;
+    };
+  }, [pagina]);
+
+  function aumentarPagina() {
+    if (pagina < totalPaginas) {
+      setPagina((prev) => prev + 1);
     }
   }
 
-  useEffect(() => {
-    listarRelatorios();
-  }, [])
+  function diminuirPagina() {
+    if (pagina > 1) {
+      setPagina((prev) => prev - 1);
+    }
+  }
 
   return (
     <main className="admin-page">
@@ -44,7 +69,7 @@ export default function AdminEmployeesPage() {
 
         <div className="employee-layout">
           <EmployeeForm onCreate={addEmployee} />
-          <EmployeeList employees={employees}/>
+          <EmployeeList employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina}/>
         </div>
       </section>
     </main>

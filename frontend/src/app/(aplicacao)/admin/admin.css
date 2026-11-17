@@ -1282,6 +1282,10 @@
 }
 
 @media (max-width: 450px) {
+  .admin-page {
+    width: 100% !important;
+  }
+
   .topbar-user span {
     display: none;
   }
@@ -1410,4 +1414,20 @@
   width: 100%;
   height: 30px;
 
+}
+
+.seta {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: #dce1e4;
+  border-radius: 4px;
+  padding: 3px 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #101316;
+}
+
+.seta:hover {
+  background: #20262a;
 }

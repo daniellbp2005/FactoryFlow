@@ -12,7 +12,7 @@ export default function NotFound() {
         <p className={styles['description']}>
           Eu sugiro que volte a página de login ! 
         </p>
-        <a href="/" className={styles['btn-home']}>Clique aqui para voltar.</a>
+        <Link href="/" className={styles['btn-home']}>Clique aqui para voltar.</Link>
       </div>
 
       {/* Seção Direita: Ilustração */}

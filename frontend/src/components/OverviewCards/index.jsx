@@ -8,7 +8,7 @@ export default function OverviewCards({ data, user }) {
   
     const andamento = safeData.filter((a) => a?.status === "Em andamento").length;
     const concluidos = safeData.filter((a) => a?.status === "Concluído").length;
-    const ativos = safeUser.filter((a) => a?.ativo === 1).length;
+    const ativos = safeUser.filter((a) => Boolean(a?.ativo) || a?.ativo === 1 || a?.ativo === true).length;
     const reprovados = safeData.filter((a) => a?.status === "Indisponível").length;
 
   return (

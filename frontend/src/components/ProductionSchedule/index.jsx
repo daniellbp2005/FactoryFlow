@@ -5,6 +5,8 @@ Padronizar o status de tarefas, e de relatórios, fazer o css do status
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import { fetchComAuth } from "@/utils/api";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function ProductionSchedule() {
   const [period, setPeriod] = useState("Semana");
@@ -13,6 +15,8 @@ export default function ProductionSchedule() {
   const [data, setData] = useState([]);
   const [filtroStatus, setFiltroStatus] = useState('Todos');
   const [filtroPrazo, setFiltroPrazo] = useState('Todos');
+  let [pagina, setPagina] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
 
   const classResultado = {
     "Aprovado": "tag-aprovado",
@@ -31,17 +35,32 @@ export default function ProductionSchedule() {
   useEffect(() => {
     async function listarRelatorios() {
       try {
-        const linkApi = await fetch("http://localhost:8080/api/relatorios");
+        const linkApi = await fetchComAuth(`/api/relatorios?pagina=${pagina}&limite=10`);
         const data = await linkApi.json();
 
         setData(data.dados || []);
+        if (data.paginacao?.totalPaginas) {
+          setTotalPaginas(data.paginacao.totalPaginas);
+        }
       } catch (e) {
         console.error("Erro ao consultar o backend");
       }
     }
     listarRelatorios();
 
-  }, [])
+  }, [pagina])
+
+  function aumentarPagina() {
+    if (pagina < totalPaginas) {
+      setPagina((prev) => prev + 1);
+    }
+  }
+
+  function dimimuirPagina() {
+    if (pagina > 1) {
+      setPagina((prev) => prev - 1);
+    }
+  }
 
   const dadosFiltrados = useMemo(() => {
     return data.filter((a) => {
@@ -235,7 +254,7 @@ export default function ProductionSchedule() {
                 <span className={`tag-two ${classStatus[a.status] ?? ""}`}>
                   {a.status ?? "Sem status"}
                 </span>
-                
+
               </div>
               <span>{a.maquina?.nome} · {a.usuario?.nome}</span>
             </div>
@@ -251,6 +270,15 @@ export default function ProductionSchedule() {
           </article>
         ))}
         {dadosFiltrados.length === 0 && <p className="empty-state">Nenhuma tarefa encontrada.</p>}
+
+        <div className="d-flex justify-content-end w-full align-itmes-center gap-2">
+          <div className="seta" onClick={dimimuirPagina}>
+            <ArrowLeft size={20} />
+          </div>
+          <div className="seta" onClick={aumentarPagina}>
+            <ArrowRight size={20} />
+          </div>
+        </div>
       </div>
 
       {modal && (
