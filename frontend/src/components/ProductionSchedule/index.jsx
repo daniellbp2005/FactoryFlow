@@ -284,13 +284,10 @@ export default function ProductionSchedule() {
       {modal && (
         <div
           className="task-modal-overlay"
-          onClick={() => setModal(null)}
         >
           <div
-            aria-modal="true"
             className="task-modal"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
+            onClick={(event) => event.stopPropagation()} // impede que o clique dentro do modal se propague para os elementos superiores
           >
             <h2>Detalhes da tarefa</h2>
 

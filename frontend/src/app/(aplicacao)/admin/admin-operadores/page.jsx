@@ -11,6 +11,7 @@ import { fetchComAuth } from "@/utils/api";
 
 export default function AdminEmployeesPage() {
   const [employees, setEmployees] = useState([]);
+  const [aux, setAux] = useState([]);
   let [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
 
@@ -23,8 +24,11 @@ export default function AdminEmployeesPage() {
 
     async function carregarOperadores() {
       try {
-        const linkApi = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
-        const data = await linkApi.json();
+        const linkApiLimite = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
+        const data = await linkApiLimite.json();
+        const linkApiTodos = await fetchComAuth(`/usuarios/listar?limite=100`);
+        const cadastroTodos = await linkApiTodos.json();
+        setAux(cadastroTodos.dados || []);
 
         if (ativo) {
           setEmployees(data.dados || []);
@@ -69,7 +73,7 @@ export default function AdminEmployeesPage() {
 
         <div className="employee-layout">
           <EmployeeForm onCreate={addEmployee} />
-          <EmployeeList employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina}/>
+          <EmployeeList employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} />
         </div>
       </section>
     </main>

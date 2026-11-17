@@ -9,7 +9,7 @@ Admin
   "cpf": "111.444.777-35",
   "cargo": "Supervisor Geral",
   "turno": "Administrativo",
-  "senha": "Admin@12345"
+  "senha": "Admin@12345",
   "perfil": "administrador",
   "codigo": "ADMIN-002"
 }
