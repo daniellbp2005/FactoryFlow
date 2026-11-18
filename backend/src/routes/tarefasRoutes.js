@@ -9,6 +9,6 @@ tarefasRouter.use(autenticar);
 
 tarefasRouter.get("/", terefaController.listar);
 tarefasRouter.get("/:id", terefaController.buscarPorId);
-tarefasRouter.post("/", terefaController.criar);
+tarefasRouter.post("/", autorizarPerfis("administrador"), terefaController.criar);
 tarefasRouter.put("/:id", terefaController.atualizar);
 tarefasRouter.delete("/:id", autorizarPerfis("administrador"), terefaController.excluir);
