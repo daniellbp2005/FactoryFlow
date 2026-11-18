@@ -190,7 +190,6 @@
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2.2fr) minmax(245px, 0.75fr);
   align-items: start;
   gap: 14px;
 }

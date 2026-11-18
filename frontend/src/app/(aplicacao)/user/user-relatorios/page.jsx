@@ -3,6 +3,7 @@ import '../user.css';
 import Header from "@/components/Header";
 import SidebarUser from "@/components/Sidebar-user";
 import PageHeading from '@/components/PageHeading';
+import UserReports from '@/components/OperatorReports';
 
 export default function Relatorios(){
     return(
@@ -11,10 +12,12 @@ export default function Relatorios(){
             <Header />
             <section className="user-content">
                 <PageHeading
-                    eyebrow="FACTORYFLOW / MÊS"
-                    title="Planejamento de Produção"
-                    description="Programação, equipamentos e produtividade em uma única visão."
+                    eyebrow="FACTORYFLOW / REGISTROS"
+                    title="Relatórios"
+                    description="Acompanhe os relatórios e comentários registrados para os operadores."
                 />
+
+                <UserReports/>
             </section>
         </main>
     )

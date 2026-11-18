@@ -14,7 +14,7 @@ export default function User() {
             <Header />
             <section className="user-content">
                 <PageHeading
-                    eyebrow="FACTORYFLOW / MÊS"
+                    eyebrow="FACTORYFLOW / PAINEL DO USUÁRIO"
                     title="Planejamento de Produção"
                     description="Programação, equipamentos e produtividade em uma única visão."
                 />

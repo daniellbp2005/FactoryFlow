@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 import { ClipboardList, Search } from "lucide-react";
 import { fetchComAuth } from "@/utils/api";
 
-export default function OperatorReports() {
+export default function UserReports() {
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
 

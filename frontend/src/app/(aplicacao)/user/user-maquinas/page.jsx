@@ -12,8 +12,8 @@ export default function Maquinas(){
             <section className="user-content">
                 <PageHeading
                     eyebrow="FACTORYFLOW / OPERAÇÃO"
-                    title="Planejamento de Produção"
-                    description="Programação, equipamentos e produtividade em uma única visão."
+                    title="Máquinas"
+                    description="Acompanhe a disponibilidade e o estado dos equipamentos."
                 />
             </section>
         </main>
