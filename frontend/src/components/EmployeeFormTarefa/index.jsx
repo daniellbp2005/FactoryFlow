@@ -73,8 +73,8 @@ export default function EmployeeFormTarefas() {
         <section className="panel employee-form-panel" aria-labelledby="employee-form-title">
             <div className="panel-heading">
                 <div>
-                    <h2 id="employee-form-title">Novo funcionário</h2>
-                    <p>Preencha os dados para adicionar à equipe.</p>
+                    <h2 id="employee-form-title">Novo Tarefa</h2>
+                    <p>Preencha os dados para adicionar uma nova tarefa.</p>
                 </div>
             </div>
 
