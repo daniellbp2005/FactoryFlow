@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { setSessao } from "@/utils/api";
 
 export default function Login() {
-  const [dado, setData] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);

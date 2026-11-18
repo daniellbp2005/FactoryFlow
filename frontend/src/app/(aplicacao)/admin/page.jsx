@@ -12,7 +12,10 @@ import { fetchComAuth } from "@/utils/api";
 export default function AdminPage() {
   const [data, setData] = useState([])
   const [listarUser, setListarUser] = useState([]);
+  const [usuario, setUsuario] = useState(null);
   useEffect(() => {
+    const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
+    setUsuario(usuarioLogado);
     async function listarRelatorios() {
       try {
         const linkApi = await fetchComAuth("/api/relatorios?limite=100");
@@ -23,7 +26,7 @@ export default function AdminPage() {
         console.error("Erro ao consultar o backend");
       }
     }
-  
+
     async function listarUsuarios() {
       try {
         const linkApi = await fetchComAuth("/usuarios/listar?limite=100");
@@ -40,7 +43,7 @@ export default function AdminPage() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <Header />
+      <Header usuario={usuario?.nome ?? "Usuário não logado"} />
       <section className="admin-content">
         <PageHeading
           eyebrow="FACTORYFLOW / MÊS"
@@ -50,7 +53,7 @@ export default function AdminPage() {
 
         <section className="overview-section" aria-labelledby="overview-title">
           <h2 id="overview-title">Visão geral</h2>
-          <AdminOverviewCards data={data} user={listarUser}/>
+          <AdminOverviewCards data={data} user={listarUser} />
         </section>
 
         <div className="dashboard-grid">

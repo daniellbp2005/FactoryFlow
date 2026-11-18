@@ -7,12 +7,14 @@ import EmployeeFormTarefa from "@/components/EmployeeFormTarefa";
 import EmployeeListTarefa from "@/components/EmployeeListTarefa";
 import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
+import { fetchComAuth } from "@/utils/api";
 
 export default function Tarefas() {
   const [employees, setEmployees] = useState([]);
   const [aux, setAux] = useState([]);
   let [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
+  const [usuario, setUsuario] = useState(null);
 
   function addEmployee(employee) {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
@@ -20,12 +22,14 @@ export default function Tarefas() {
 
   useEffect(() => {
     let ativo = true;
+    const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
+    setUsuario(usuarioLogado);
 
     async function carregarOperadores() {
       try {
-        const linkApiLimite = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
+        const linkApiLimite = await fetchComAuth(`/api/relatorios?pagina=${pagina}&limite=10`);
         const data = await linkApiLimite.json();
-        const linkApiTodos = await fetchComAuth(`/usuarios/listar?limite=100`);
+        const linkApiTodos = await fetchComAuth(`/api/relatorios?limite=100`);
         const cadastroTodos = await linkApiTodos.json();
         setAux(cadastroTodos.dados || []);
 
@@ -37,6 +41,8 @@ export default function Tarefas() {
         }
       } catch (e) {
         console.error("Erro ao consultar o backend");
+        console.log(e);
+
       }
     }
 
@@ -62,7 +68,7 @@ export default function Tarefas() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <Header />
+      <Header usuario={usuario?.nome ?? "Usuário não logado"} />
       <section className="admin-content">
         <PageHeading
           eyebrow="FACTORYFLOW / Tarefa"

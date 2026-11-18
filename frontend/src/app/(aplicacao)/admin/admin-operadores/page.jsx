@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import "../admin.css";
 import Header from "@/components/Header";
@@ -14,12 +13,15 @@ export default function AdminEmployeesPage() {
   const [aux, setAux] = useState([]);
   let [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
+  const [usuario, setUsuario] = useState(null);
 
   function addEmployee(employee) {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
   }
 
   useEffect(() => {
+    const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
+    setUsuario(usuarioLogado);
     let ativo = true;
 
     async function carregarOperadores() {
@@ -63,7 +65,7 @@ export default function AdminEmployeesPage() {
   return (
     <main className="admin-page">
       <Sidebar />
-      <Header />
+      <Header usuario={usuario?.nome ?? "Usuário não logado"} />
       <section className="admin-content">
         <PageHeading
           eyebrow="FACTORYFLOW / EQUIPE"
