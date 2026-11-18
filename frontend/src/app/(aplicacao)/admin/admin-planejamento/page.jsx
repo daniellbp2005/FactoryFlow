@@ -6,6 +6,7 @@ import ProductionSchedule from "@/components/ProductionSchedule";
 import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 import { useState, useEffect } from "react";
+import Footer from "@/components/Footer";
 
 
 export default function AdminPlanningPage() {
@@ -33,9 +34,7 @@ export default function AdminPlanningPage() {
           </aside>
         </div>
 
-        <footer className="admin-footer">
-          FactoryFlow · Desenvolvido por Tech System
-        </footer>
+        <Footer />
 
       </section>
     </main>

@@ -1,4 +1,5 @@
 'use client'
+import Footer from "@/components/Footer";
 import "../admin.css";
 import Header from "@/components/Header";
 import MachineFleet from "@/components/MachineFleet";
@@ -28,9 +29,7 @@ export default function AdminMachinesPage() {
 
         <TabelaRequisicao />
 
-        <footer className="admin-footer">
-          FactoryFlow · Desenvolvido por Tech System
-        </footer>
+        <Footer />
       </section>
     </main>
   );
