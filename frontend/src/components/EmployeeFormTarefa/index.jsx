@@ -94,8 +94,8 @@ export default function EmployeeFormTarefas() {
                 {/* <p className='fs-5 fw-bold mt-2'>O funcionário tem um grupo ? Adicione ele aqui.</p> */}
 
                 <label id='EmailCriar'>
-                    <div className='d-flex justify-content-center align-items-center gap-2 py-1'>
-                        <p className='w-75 px-2 fs-4 fw-bold'>E-mail</p>
+                    <div className='d-flex justify-content-center align-items-center gap-2 py-0'>
+                        <p className='w-75 px-0 fs-0'>E-mail</p>
                         <div className='add-email w-25 ' onClick={adicionar}>
                             <Plus />
                         </div>
@@ -104,7 +104,7 @@ export default function EmployeeFormTarefas() {
                         <input
                             type="email"
                             name="email_0"
-                            placeholder="Digite aqui"
+                            placeholder="Ex: admin@factoryflow.com"
                             onChange={(e) => setEmail(e.target.value)}
                         />
                         {inputs.map((item) => (
@@ -113,7 +113,7 @@ export default function EmployeeFormTarefas() {
                                     key={item}
                                     type="email"
                                     name={`input_${item}`}
-                                    placeholder="Digite aqui"
+                                    placeholder="Ex: admin@factoryflow.com"
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <X className='cursor-pointer' onClick={() => deletarInputEmail()} />
@@ -123,8 +123,8 @@ export default function EmployeeFormTarefas() {
                 </label>
 
                 <label id='maquinasAdd'>
-                    <div className='d-flex justify-content-center align-items-center gap-2 py-1'>
-                        <p className='w-75 px-2 fs-4 fw-bold'>Máquinas Atribuidas</p>
+                    <div className='d-flex justify-content-center align-items-center gap-2 py-0'>
+                        <p className='w-75 px-0 fs-0'>Máquinas Atribuidas</p>
                         <div className='add-email w-25 ' onClick={adicionarMaq}>
                             <Plus />
                         </div>
@@ -133,7 +133,7 @@ export default function EmployeeFormTarefas() {
                         <input
                             type="text"
                             name="maq_0"
-                            placeholder="Digite aqui"
+                            placeholder="Tipo de maquina"
                             onChange={(e) => setEmail(e.target.value)}
                         />
                         {inputsMaq.map((item) => (
@@ -142,7 +142,7 @@ export default function EmployeeFormTarefas() {
                                     key={item}
                                     type="text"
                                     name={`maq_${item}`}
-                                    placeholder="Digite aqui"
+                                    placeholder="Tipo de maquina"
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <X className='cursor-pointer' onClick={() => deletarInputMaq()} />
@@ -218,55 +218,6 @@ export default function EmployeeFormTarefas() {
                                 <option value="Montagem">Montagem</option>
                             </select>
                         </div>
-                    </div>
-                </label>
-                <label id='EmailCriar'>
-                    <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
-
-                        <p className='w-75 px-2'>E-mail</p> <div className='add-email w-25 ' onClick={adicionar}><Plus /></div>
-                    </div>
-                    <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
-                        <input
-                            type="email"
-                            name="email_0"
-                            placeholder="Digite aqui"
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        {inputs.map((item) => (
-                            <input
-                                key={item}
-                                type="email"
-                                name={`input_${item}`}
-                                placeholder="Digite aqui"
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        ))}
-
-                    </div>
-                </label>
-
-                <label id='maquinasAdd'>
-                    <div className='d-flex justify-content-center align-items-center gap-2 w-full py-2'>
-
-                        <p className='w-75 px-2'>Máquinas Atribuidas</p> <div className='add-email w-25 ' onClick={adicionarMaq}><Plus /></div>
-                    </div>
-                    <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
-                        <input
-                            type="text"
-                            name="maq_0"
-                            placeholder="Digite aqui"
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        {inputsMaq.map((item) => (
-                            <input
-                                key={item}
-                                type="text"
-                                name={`maq_${item}`}
-                                placeholder="Digite aqui"
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        ))}
-
                     </div>
                 </label>
 
