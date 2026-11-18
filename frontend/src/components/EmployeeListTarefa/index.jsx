@@ -9,21 +9,11 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
   const dadosFiltrados = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return employees.filter((a) =>
-      `${a.codigo ?? ""} ${a.nome ?? ""} ${a.cargo ?? ""} ${a.turno ?? ""} ${a.ativo ?? ""}`
+      `${a.tarefa?.codigo ?? ""} ${a.tarefa?.titulo ?? ""} ${a.tarefa?.setor ?? ""} ${a.tarefa?.prioridade ?? ""}`
         .toLowerCase()
         .includes(normalizedQuery),
     );
   }, [query, employees]);
-
-  function receberBoleano(data) {
-    if (data === null || data === undefined) return "Não informado";
-
-    if (data === 1) {
-      return "Disponivel"
-    } else {
-      return "Trabalhando"
-    }
-  }
 
   const todos = cadastroTodos.length;
 
@@ -54,14 +44,14 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
                 <UserRound size={18} />
               </span>
               <div className="employee-details">
-                <strong>{employee?.nome}</strong>
-                <span>{employee?.codigo}</span>
+                <strong>{employee?.tarefa?.titulo ?? "Não informado"}</strong>
+                <span>{employee?.tarefa?.codigo ?? "Não informado"}</span>
               </div>
               <div className="employee-role">
-                <strong>{employee?.cargo}</strong>
-                <span>Turno: {employee?.turno}</span>
+                <span>Prioridade: <strong> {employee?.tarefa?.prioridade ?? "Não informado"}</strong> </span>
+                <span>Setor: {employee?.tarefa?.setor ?? "Não informado"}</span>
               </div>
-              <span className="employee-status">{receberBoleano(employee?.ativo)}</span>
+              <span className="employee-status">{employee?.tarefa?.prioridade ?? "Não informado"}</span>
             </article>
           ))}
         </div>

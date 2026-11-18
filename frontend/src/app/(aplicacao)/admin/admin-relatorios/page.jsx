@@ -1,14 +1,23 @@
+'use client';
 import "../admin.css";
 import Header from "@/components/Header";
 import OperatorReports from "@/components/OperatorReports";
 import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
+import { useState,useEffect } from "react";
 
 export default function AdminReportsPage() {
+  const [usuario,setUsuario] = useState(null);
+
+  useEffect(() => {
+    const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
+    setUsuario(usuarioLogado);
+  }, []);
+
   return (
     <main className="admin-page">
       <Sidebar />
-      <Header />
+      <Header usuario={usuario?.nome ?? "Usuário não logado"} />
       <section className="admin-content">
         <PageHeading
           eyebrow="FACTORYFLOW / REGISTROS"
@@ -17,7 +26,7 @@ export default function AdminReportsPage() {
         />
 
         <OperatorReports />
-        
+
         <footer className="admin-footer">
           FactoryFlow · Desenvolvido por Tech System
         </footer>
