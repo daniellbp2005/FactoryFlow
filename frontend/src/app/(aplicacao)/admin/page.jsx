@@ -8,6 +8,7 @@ import AvailabilityPanel from "@/components/AvailabilityPanel";
 import PageHeading from "@/components/PageHeading";
 import Sidebar from "@/components/Sidebar";
 import { fetchComAuth } from "@/utils/api";
+import Footer from "@/components/Footer";
 
 export default function AdminPage() {
   const [data, setData] = useState([])
@@ -63,9 +64,7 @@ export default function AdminPage() {
           </aside>
         </div>
 
-        <footer className="admin-footer">
-          FactoryFlow · Desenvolvido por Tech System
-        </footer>
+        <Footer />
       </section>
     </main>
   );

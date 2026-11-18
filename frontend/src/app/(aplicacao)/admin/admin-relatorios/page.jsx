@@ -1,4 +1,5 @@
 'use client';
+import Footer from "@/components/Footer";
 import "../admin.css";
 import Header from "@/components/Header";
 import OperatorReports from "@/components/OperatorReports";
@@ -27,9 +28,7 @@ export default function AdminReportsPage() {
 
         <OperatorReports />
 
-        <footer className="admin-footer">
-          FactoryFlow · Desenvolvido por Tech System
-        </footer>
+        <Footer />
       </section>
     </main>
   );

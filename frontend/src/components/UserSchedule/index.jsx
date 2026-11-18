@@ -4,7 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { fetchComAuth } from "@/utils/api";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-export default function UserSchedule() {
+export default function UserSchedule({ uid }) {
   const [visao, setVisao] = useState("Todos");
   const [period, setPeriod] = useState("Semana");
   const [query, setQuery] = useState("");
@@ -59,7 +59,7 @@ export default function UserSchedule() {
       setPagina((prev) => prev - 1);
     }
   }
-  const usuarioLogadoId = 7; /* IMPORTANTE: TROCAR PARA O ID DO USUÁRIO LGOADO DEPOIS*/
+  const usuarioLogadoId = uid;
   const dadosFiltrados = useMemo(() => {
 
     return data.filter((a) => {

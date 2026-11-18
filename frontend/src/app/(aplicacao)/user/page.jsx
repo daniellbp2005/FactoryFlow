@@ -6,12 +6,20 @@ import SidebarUser from "@/components/Sidebar-user";
 import PageHeading from '@/components/PageHeading';
 import UserOverviewCards from '@/components/UserOverviewCards';
 import UserSchedule from '@/components/UserSchedule';
+import { useState, useEffect } from "react";
+import Footer from '@/components/Footer';
 
 export default function User() {
+  const [usuario,setUsuario] = useState(null);
+
+  useEffect(() => {
+    const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
+    setUsuario(usuarioLogado);
+  }, []);
     return (
         <main className="user-page">
             <SidebarUser />
-            <Header />
+            <Header usuario={usuario?.nome ?? "Usuário não logado"} />
             <section className="user-content">
                 <PageHeading
                     eyebrow="FACTORYFLOW / PAINEL DO USUÁRIO"
@@ -23,8 +31,9 @@ export default function User() {
                   <UserOverviewCards/>
                 </section>
                 <div className="dashboard-grid">
-                    <UserSchedule />
+                    <UserSchedule uid={usuario?.id} />
                 </div>
+                <Footer />
             </section>
         </main>
     )

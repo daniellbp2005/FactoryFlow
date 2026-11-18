@@ -3,7 +3,8 @@ import { useMemo, useState, useEffect } from "react";
 import { ClipboardList, Search } from "lucide-react";
 import { fetchComAuth } from "@/utils/api";
 
-export default function OperatorReports() {
+export default function UserReports({ uid }) {
+  const [visao, setVisao] = useState("Todos");
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
 
@@ -20,16 +21,20 @@ export default function OperatorReports() {
     }
     listarRelatorios();
   }, [])
-
+  const usuarioLogadoId = uid;
   const filteredReports = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return data.filter((a) =>
-      `${a.usuario.nome} ${a.id} ${a.usuario.cargo} ${a.usuario.codigo}`
+    return data.filter((a) => {
+      const correspondeVisao =
+        visao === "Todos" || a.usuario?.id === usuarioLogadoId;
+  
+      const correspondeBusca = `${a.usuario.nome} ${a.id} ${a.usuario.cargo} ${a.usuario.codigo}`
         .toLowerCase()
-        .includes(normalizedQuery),
-    );
-  }, [query, data]);
-
+        .includes(normalizedQuery);
+  
+      return correspondeVisao && correspondeBusca;
+    });
+  }, [query, data, visao, usuarioLogadoId]);
   function converterHoras(data) {
     if (!data) return "-:-";
     const aux = data;
@@ -57,16 +62,34 @@ export default function OperatorReports() {
             {filteredReports.length === 1 ? "registro" : "registros"}
           </p>
         </div>
-        <label className="report-search">
-          <Search size={15} aria-hidden="true" />
-          <span className="sr-only">Buscar relatório de operador</span>
-          <input
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar operador ou relatório"
-            type="search"
-            value={query}
-          />
-        </label>
+        <div className="period-flex">
+          <label className="report-search">
+            <Search size={15} aria-hidden="true" />
+            <span className="sr-only">Buscar relatório de operador</span>
+            <input
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Buscar operador ou relatório"
+              type="search"
+              value={query}
+            />
+          </label>
+          <div className="report-switch">
+            <button
+              onClick={() => setVisao("Todos")}
+              className={visao === "Todos" ? "selected" : ""}
+              type="button"
+            >
+              Todos
+            </button>
+            <button
+              onClick={() => setVisao("Apenas meu")}
+              className={visao === "Apenas meu" ? "selected" : ""}
+              type="button"
+            >
+              Apenas meu
+            </button>
+          </div>
+        </div>
       </div>
 
       {filteredReports.length ? (

@@ -644,6 +644,31 @@
   align-items: center;
 }
 
+.report-switch {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  width: 155.6px;
+  margin-left: 27%;
+}
+
+.report-switch button {
+  border: 0;
+  padding: 6px 9px;
+  background: transparent;
+  color: #aeb8bf;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+}
+
+.report-switch button.selected {
+  background: var(--accent);
+  color: #061513;
+  font-weight: 700;
+}
+
 .report-search {
   position: relative;
   display: flex;
@@ -1298,7 +1323,7 @@
   background: #20262a;
 }
 
-.admin-footer {
+.footer {
   margin-top: 28px;
   color: #7f8a91;
   font-size: 12px;
