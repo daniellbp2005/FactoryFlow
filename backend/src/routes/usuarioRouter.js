@@ -1,6 +1,6 @@
 import express from "express";
 import * as usuarioController from "../controllers/usuarioController.js";
-import { autenticar } from "../middlewares/authMiddleware.js";
+import { autenticar, autorizarPerfis } from "../middlewares/authMiddleware.js";
 import { criarRateLimiter } from "../middlewares/rateLimiter.js";
 
 export const usuariosRouter = express.Router();
@@ -23,8 +23,8 @@ const cadastroLimiter = criarRateLimiter({
 usuariosRouter.post("/login", loginLimiter, usuarioController.login);
 usuariosRouter.post("/login/", loginLimiter, usuarioController.login);
 
-usuariosRouter.post("/cadastro", cadastroLimiter, usuarioController.registrar);
-usuariosRouter.post("/cadastro/", cadastroLimiter, usuarioController.registrar);
+usuariosRouter.post("/cadastro", cadastroLimiter, autenticar, autorizarPerfis("administrador"), usuarioController.registrar);
+usuariosRouter.post("/cadastro/", cadastroLimiter, autenticar, autorizarPerfis("administrador"), usuarioController.registrar);
 
 // Rotas de listagem de usuários (suporta /listar e / para compatibilidade com o frontend)
 usuariosRouter.get("/listar", autenticar, usuarioController.listar);

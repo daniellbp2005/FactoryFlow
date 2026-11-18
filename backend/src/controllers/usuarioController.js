@@ -18,6 +18,8 @@ function responderErro(erro, res, next) {
 
 export async function registrar(req, res, next) {
   try {
+    console.log("PERFIL SOLICITADO:", req.body.perfil);
+    console.log("USUÁRIO AUTENTICADO:", req.usuario);
     const usuario = await AuthService.registrar(req.body, req.usuario);
     return res.status(201).json({ sucesso: true, dados: usuario });
   } catch (erro) {
