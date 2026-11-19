@@ -5,7 +5,7 @@
   height: auto !important;
   align-items: stretch;
   padding-left: clamp(115px, 16vw, 228px);
-  background: #090b0d;
+  background: #a0a0a0;
 }
 
 .app-sidebar {
@@ -18,9 +18,9 @@
   min-width: clamp(115px, 16vw, 228px);
   height: 100vh;
   flex-direction: column;
-  border-right: 1px solid #252b2f;
+  border-right: 1px solid #cccccc;
   padding: 13px 10px;
-  background: #0d1012;
+  background: #e6e6e6;
   color: #d7dddf;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .brand-copy strong {
-  color: #f3f5f6;
+  color: #000000;
   font-size: 20px;
   white-space: nowrap;
 }
@@ -69,7 +69,7 @@
   border-radius: 5px;
   padding: 0 6px;
   border: 0;
-  color: #aab4ba;
+  color: #000000;
   font-size: 14px;
   text-decoration: none;
   box-shadow: none;
@@ -81,11 +81,22 @@
   display: none;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active {
-  background: #252a2e;
-  color: #10c7b5;
+.sidebar-link:hover {
+  background: #097a6f15;
+  color: #000000;
+  transform: translateX(2px);
+  box-shadow: 00px 0px 10px 1px #b3b3b3;
   text-decoration: none;
+}
+
+
+.sidebar-link.active {
+  background: #10c7b5;
+  color: #fffdfd;
+  transform: translateX(2px);
+  box-shadow: 00px 0px 10px 1px #b3b3b3;
+  text-decoration: none;
+  
 }
 
 .sidebar-footer {
@@ -125,13 +136,14 @@
   min-height: 36px;
   align-items: center;
   gap: 8px;
-  border: 1px solid #394148;
+  /* border: 1px solid #394148; */
   border-radius: 5px;
   padding: 0 9px;
-  background: #15191c;
-  color: #d7dddf;
+  background: #10b8a8;
+  color: #ffffff;
   font-size: 15px;
   text-decoration: none;
+  transition: all 1s ease;
 }
 
 .sidebar-logout:hover {
@@ -139,6 +151,7 @@
   background: #1b2424;
   color: #10c7b5;
   text-decoration: none;
+  transform: scale(1.03);
 }
 
 
