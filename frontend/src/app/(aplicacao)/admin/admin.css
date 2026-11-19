@@ -1,17 +1,17 @@
 .admin-page {
-  --surface: #101316;
-  --surface-raised: #171b1f;
-  --border: #2b3238;
-  --text: #f3f5f6;
-  --muted: #9aa4ad;
-  --accent: #10b8a8;
+  --surface: #f0f0f0;
+  --surface-raised: #ffffff;
+  --border: #e7e7e7;
+  --text: #000000;
+  --muted: #000000;
+  --accent: #10c7b5;
   display: flex;
   min-width: 0;
   flex: 1;
   flex-direction: column;
   min-height: 100vh;
   color: var(--text);
-  background: #090b0d;
+  background: #ffffff;
   font-size: 15px;
 }
 
@@ -22,8 +22,8 @@
   justify-content: space-between;
   padding: 0 24px;
   border-bottom: 1px solid var(--border);
-  background: #0c0f11;
-  color: #b6c0c6;
+  background: #e9e9e9;
+  color: #5c5c5c;
   font-size: 16px;
 }
 
@@ -38,7 +38,7 @@
   border-radius: 5px;
   padding: 6px 11px;
   background: var(--accent);
-  color: #061513;
+  color: #000000;
   font-weight: 700;
 }
 
@@ -100,12 +100,12 @@
 
 .button-outline {
   border: 1px solid var(--border);
-  background: transparent;
-  color: #dce1e4;
+  background: #10c7b5;
+  color: #20262a;
 }
 
 .button-outline:hover {
-  background: #20262a;
+  background: #05cebade;
 }
 
 .button-primary {
@@ -155,7 +155,8 @@
   place-items: center;
   margin-bottom: 8px;
   border-radius: 5px;
-  background: #102d2b;
+  background: #ffffff;
+  border: 1px solid #dddddd ;
   color: var(--accent);
 }
 
@@ -182,7 +183,7 @@
 
 .warning,
 .machine-heading .broken {
-  color: #f2ad3f;
+  color: #f39c11;
 }
 
 .dashboard-grid {
@@ -226,7 +227,7 @@
   border: 0;
   padding: 6px 9px;
   background: transparent;
-  color: #aeb8bf;
+  color: #838383;
   cursor: pointer;
   font: inherit;
   font-size: 14px;
@@ -260,10 +261,10 @@
 .impact-form input {
   width: 100%;
   min-height: 34px;
-  border: 1px solid #394148;
+  border: 1px solid #e7e7e7;
   border-radius: 5px;
   padding: 0 9px;
-  background: #111518;
+  background: #ffffff;
   color: var(--text);
   font: inherit;
   font-size: 14px;
@@ -284,10 +285,10 @@
   align-items: center;
   gap: 12px;
   min-height: 53px;
-  border: 1px solid #2a3136;
+  border: 1px solid #e7e7e7;
   border-radius: 6px;
   padding: 8px 10px;
-  background: #14181b;
+  background: #ffffff9d;
 }
 
 .task-time,
@@ -328,20 +329,20 @@
 
 .tag-aprovado {
   border-color: #315343;
-  background-color: #1d3028;
-  color: #a9d2b8;
+  background: #DCFCE7;
+  color: #0F766E;
 }
 
 .tag-reprovado {
   border-color: #624040;
-  background-color: #352525;
-  color: #dda6a6;
+  background: #FEE2E2;
+  color: #B91C1C;
 }
 
 .tag-ressalvas {
   border-color: #5b4b2d;
-  background-color: #342d20;
-  color: #ddc58c;
+  background: #FEF3C7;
+  color: #92400E;
 }
 
 .tag-two {
@@ -356,27 +357,27 @@
 
 .tag-em-andamento {
   border-color: #31524f;
-  background-color: #1d302e;
-  color: #9acbc4;
+  background: #DBEAFE;
+  color: #1D4ED8;
 }
 
 .tag-pendente {
   border-color: #5b4b2d;
-  background-color: #342d20;
-  color: #ddc58c;
+  background: #FFEDD5;
+  color: #C2410C;
 }
 
 .tag-concluido {
   border: 1px solid #315343;
-  background-color: #1d3028;
-  color: #a9d2b8;
+  background: #CCFBF1;
+  color: #0F766E;
   border-radius: 15px;
 }
 
 .tag-indisponivel {
   border-color: #424a50;
-  background: #292f34;
-  color: #b7c0c5;
+  background: #E2E8F0;
+  color: #334155;
 }
 
 
@@ -1293,7 +1294,7 @@
 
 .footer {
   margin-top: 28px;
-  color: #7f8a91;
+  color: #3f3f3f;
   font-size: 12px;
 }
 

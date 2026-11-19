@@ -38,7 +38,7 @@ export default function Sidebar() {
           width={70}
         />
         <span className="brand-copy">
-          <strong>FactoryFlow</strong>
+          <strong>Factory Flow</strong>
         </span>
       </Link>
 
