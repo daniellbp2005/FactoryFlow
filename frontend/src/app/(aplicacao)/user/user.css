@@ -1323,7 +1323,30 @@
   background: #20262a;
 }
 
-.footer {
+.machine-situation {
+  border: 1px solid #24534e;
+  border-radius: 4px;
+  padding: 3px 6px;
+  color: #388f86;
+  font-size: 16px;
+}
+
+.machine-situation.running{
+  border: 1px solid #4f7900;
+  color: #ccff7b;
+}
+
+.machine-situation.maintenance {
+  border: 1px solid #4a3b22;
+  color: #f2aa6f;
+}
+
+.machine-situation.inactive {
+  border: 1px solid #920000;
+  color: #ff6d6d;
+}
+
+footer {
   margin-top: 28px;
   color: #7f8a91;
   font-size: 12px;
