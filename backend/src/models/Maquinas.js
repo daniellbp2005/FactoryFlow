@@ -14,8 +14,18 @@ export default class Maquina {
    * @param {number} [dados.id] - Identificador único da máquina (opcional na criação antes do banco)
    * @param {string} dados.nome - Nome/descrição da máquina (máx. 125 caracteres)
    * @param {string} [dados.estado='Disponível'] - Estado operacional atual
+   * @param {number|null} [dados.usuario_id=null] - ID do operador atribuído à máquina
+   * @param {string|null} [dados.operador_nome=null] - Nome do operador (via JOIN)
+   * @param {string|null} [dados.operador_turno=null] - Turno do operador (via JOIN)
    */
-  constructor({ id, nome, estado = ESTADOS_MAQUINA.DISPONIVEL } = {}) {
+  constructor({
+    id,
+    nome,
+    estado = ESTADOS_MAQUINA.DISPONIVEL,
+    usuario_id = null,
+    operador_nome = null,
+    operador_turno = null,
+  } = {}) {
     // Validação do ID: se informado, deve ser inteiro positivo
     if (id !== undefined && id !== null) {
       if (!Number.isInteger(id) || id <= 0) {
@@ -43,6 +53,11 @@ export default class Maquina {
       );
     }
     this.estado = estado.trim();
+
+    // Associação com Usuário / Operador
+    this.usuario_id = usuario_id ? Number(usuario_id) : null;
+    this.operador_nome = operador_nome || null;
+    this.operador_turno = operador_turno || null;
   }
 
   /**
@@ -127,6 +142,9 @@ export default class Maquina {
       id: this.id,
       nome: this.nome,
       estado: this.estado,
+      usuario_id: this.usuario_id,
+      operador_nome: this.operador_nome,
+      operador_turno: this.operador_turno,
     };
   }
 }

@@ -23,9 +23,11 @@ export default function AdminMachinesPage() {
 
         <PageHeading
           eyebrow="FACTORYFLOW / OPERAÇÃO"
-          title="Planejamento de Produção"
-          description="Programação, equipamentos e produtividade em uma única visão."
+          title="Gestão de Máquinas e Ocupação"
+          description="Acompanhe equipamentos, operadores vinculados e requisições em uma única visão."
         />
+
+        <MachineFleet />
 
         <TabelaRequisicao />
 

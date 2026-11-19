@@ -8,15 +8,38 @@ function hidratarMaquina(linha) {
   return new Maquina(linha);
 }
 
-// 1. Listagem com paginação parametrizada
+// 1. Listagem com paginação parametrizada e operador atribuído
 export async function listar({ limite, offset }) {
   const limiteNum = Number.parseInt(limite, 10);
   const offsetNum = Number.parseInt(offset, 10);
 
-  const [linhas] = await pool.query(
-    'SELECT * FROM maquinas ORDER BY id LIMIT ? OFFSET ?',
-    [limiteNum, offsetNum]
-  );
+  let linhas;
+  try {
+    const [rows] = await pool.query(
+      `SELECT 
+         m.id, 
+         m.nome, 
+         m.estado, 
+         m.usuario_id, 
+         u.nome AS operador_nome, 
+         u.turno AS operador_turno
+       FROM maquinas m
+       LEFT JOIN usuarios u ON m.usuario_id = u.id
+       ORDER BY m.id LIMIT ? OFFSET ?`,
+      [limiteNum, offsetNum]
+    );
+    linhas = rows;
+  } catch (error) {
+    if (error.code === 'ER_BAD_FIELD_ERROR') {
+      const [rows] = await pool.query(
+        'SELECT * FROM maquinas ORDER BY id LIMIT ? OFFSET ?',
+        [limiteNum, offsetNum]
+      );
+      linhas = rows;
+    } else {
+      throw error;
+    }
+  }
 
   const [[{ total }]] = await pool.query('SELECT COUNT(*) AS total FROM maquinas');
 
@@ -27,23 +50,66 @@ export async function listar({ limite, offset }) {
 }
 
 export async function buscarPorId(id) {
-  const [linhas] = await pool.query('SELECT * FROM maquinas WHERE id = ?', [id]);
+  let linhas;
+  try {
+    const [rows] = await pool.query(
+      `SELECT 
+         m.id, 
+         m.nome, 
+         m.estado, 
+         m.usuario_id, 
+         u.nome AS operador_nome, 
+         u.turno AS operador_turno
+       FROM maquinas m
+       LEFT JOIN usuarios u ON m.usuario_id = u.id
+       WHERE m.id = ?`,
+      [id]
+    );
+    linhas = rows;
+  } catch (error) {
+    if (error.code === 'ER_BAD_FIELD_ERROR') {
+      const [rows] = await pool.query('SELECT * FROM maquinas WHERE id = ?', [id]);
+      linhas = rows;
+    } else {
+      throw error;
+    }
+  }
   if (linhas.length === 0) return null;
   return hidratarMaquina(linhas[0]);
 }
 
 export async function criar(produto) {
-  const sql = 'INSERT INTO maquinas (nome, estado) VALUES (?, ?)';
-  const valores = [produto.nome, produto.estado];
-  const [resultado] = await pool.query(sql, valores);
-  return { ...produto, id: resultado.insertId};
+  try {
+    const sql = 'INSERT INTO maquinas (nome, estado, usuario_id) VALUES (?, ?, ?)';
+    const valores = [produto.nome, produto.estado, produto.usuario_id || null];
+    const [resultado] = await pool.query(sql, valores);
+    return { ...produto, id: resultado.insertId };
+  } catch (error) {
+    if (error.code === 'ER_BAD_FIELD_ERROR') {
+      const sql = 'INSERT INTO maquinas (nome, estado) VALUES (?, ?)';
+      const valores = [produto.nome, produto.estado];
+      const [resultado] = await pool.query(sql, valores);
+      return { ...produto, id: resultado.insertId };
+    }
+    throw error;
+  }
 }
 
 export async function atualizar(id, produto) {
-  const sql = 'UPDATE maquinas SET nome = ?, estado = ? WHERE id = ?';
-  const valores = [produto.nome, produto.estado, id];
-  const [resultado] = await pool.query(sql, valores);
-  return resultado.affectedRows > 0;
+  try {
+    const sql = 'UPDATE maquinas SET nome = ?, estado = ?, usuario_id = ? WHERE id = ?';
+    const valores = [produto.nome, produto.estado, produto.usuario_id || null, id];
+    const [resultado] = await pool.query(sql, valores);
+    return resultado.affectedRows > 0;
+  } catch (error) {
+    if (error.code === 'ER_BAD_FIELD_ERROR') {
+      const sql = 'UPDATE maquinas SET nome = ?, estado = ? WHERE id = ?';
+      const valores = [produto.nome, produto.estado, id];
+      const [resultado] = await pool.query(sql, valores);
+      return resultado.affectedRows > 0;
+    }
+    throw error;
+  }
 }
 
 export async function excluir(id) {

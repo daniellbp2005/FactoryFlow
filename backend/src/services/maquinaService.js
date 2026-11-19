@@ -45,7 +45,8 @@ function validarId(idRecebido) {
 
 export async function criar(dados) {
   const produtoDominio = new Maquinas({ id: 1, ...dados });
-  return await MaquinaModel.criar(produtoDominio);
+  const criado = await MaquinaModel.criar(produtoDominio);
+  return await MaquinaModel.buscarPorId(criado.id);
 }
 
 export async function atualizar(idRecebido, dados) {

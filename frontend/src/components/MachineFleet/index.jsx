@@ -1,65 +1,29 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Factory, Plus, Search, Wrench, X } from "lucide-react";
+import { fetchComAuth } from "@/utils/api";
 
-const initialMachines = [
-  {
-    id: "cnc-01",
-    name: "CNC-01",
-    type: "Centro de usinagem CNC",
-    category: "Usinagem",
-    status: "Em operação",
-    progress: 75,
-    operator: "Ana Costa",
-    shift: "Manhã",
-    order: "OP-2847",
-    image: "cnc",
-  },
-  {
-    id: "cnc-02",
-    name: "CNC-02",
-    type: "Torno CNC",
-    category: "Usinagem",
-    status: "Em operação",
-    progress: 90,
-    operator: "Bruno Lima",
-    shift: "Tarde",
-    order: "OP-2848",
-    image: "lathe",
-  },
-  {
-    id: "mill-01",
-    name: "MILL-01",
-    type: "Fresadora industrial",
-    category: "Usinagem",
-    status: "Manutenção",
-    progress: 24,
-    operator: "",
-    shift: "—",
-    order: "Sem ordem ativa",
-    image: "mill",
-  },
-  {
-    id: "cnc-03",
-    name: "CNC-03",
-    type: "Corte a laser CNC",
-    category: "Corte",
-    status: "Disponível",
-    progress: 0,
-    operator: "",
-    shift: "—",
-    order: "Aguardando programação",
-    image: "laser",
-  },
-];
+function getStatusClass(status) {
+  const s = String(status || "").toLowerCase();
+  if (s.includes("operação") || s.includes("operacao")) return "running";
+  if (s.includes("manutenção") || s.includes("manutencao")) return "maintenance";
+  return "available";
+}
 
-const employees = [
-  { name: "Ana Costa", shift: "Manhã" },
-  { name: "Bruno Lima", shift: "Tarde" },
-  { name: "Carla Souza", shift: "Manhã" },
-  { name: "Diego Rocha", shift: "Noite" },
-];
+function inferCategoryAndImage(nome = "") {
+  const n = nome.toLowerCase();
+  if (n.includes("corte") || n.includes("laser")) {
+    return { category: "Corte", image: "laser", type: "Corte a laser CNC" };
+  }
+  if (n.includes("torno")) {
+    return { category: "Usinagem", image: "lathe", type: "Torno CNC" };
+  }
+  if (n.includes("fresadora")) {
+    return { category: "Usinagem", image: "mill", type: "Fresadora industrial" };
+  }
+  return { category: "Usinagem", image: "cnc", type: "Centro de usinagem CNC" };
+}
 
 function MachineIllustration({ variant }) {
   return (
@@ -126,17 +90,56 @@ function MachineIllustration({ variant }) {
   );
 }
 
-function getStatusClass(status) {
-  if (status === "Em operação") return "running";
-  if (status === "Manutenção") return "maintenance";
-  return "available";
-}
-
 export default function MachineFleet() {
-  const [machines, setMachines] = useState(initialMachines);
+  const [machines, setMachines] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Todas");
   const [isAddingMachine, setIsAddingMachine] = useState(false);
+
+  async function carregarDados() {
+    setLoading(true);
+    try {
+      const [resMaquinas, resUsuarios] = await Promise.all([
+        fetchComAuth("/api/maquinas?limite=100"),
+        fetchComAuth("/usuarios/listar?limite=100"),
+      ]);
+
+      const dadosMaquinas = await resMaquinas.json();
+      const dadosUsuarios = await resUsuarios.json();
+
+      const listaUsuarios = dadosUsuarios.dados || [];
+      setEmployees(listaUsuarios);
+
+      const listaMaquinas = (dadosMaquinas.dados || []).map((m) => {
+        const { category: cat, image, type } = inferCategoryAndImage(m.nome);
+        return {
+          id: m.id,
+          name: m.nome,
+          type: type,
+          category: cat,
+          status: m.estado || "Disponível",
+          progress: m.estado === "Em Operação" ? 75 : m.estado === "Em Manutenção" ? 25 : 0,
+          operator: m.operador_nome || "",
+          operatorId: m.usuario_id || null,
+          shift: m.operador_turno || "—",
+          order: m.estado === "Em Operação" ? `OP-${1000 + Number(m.id)}` : "Aguardando programação",
+          image: image,
+        };
+      });
+
+      setMachines(listaMaquinas);
+    } catch (err) {
+      console.error("Erro ao carregar máquinas e usuários:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    carregarDados();
+  }, []);
 
   const visibleMachines = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -156,35 +159,56 @@ export default function MachineFleet() {
     );
   }
 
-  function assignEmployee(machine, employeeName) {
-    const employee = employees.find((item) => item.name === employeeName);
+  async function assignEmployee(machine, employeeId) {
+    const employee = employees.find((item) => String(item.id) === String(employeeId));
+    const novoEstado = employee ? "Em Operação" : "Disponível";
+
+    // 1. Atualização otimista na interface
     updateMachine(machine.id, {
-      operator: employeeName,
-      shift: employee?.shift ?? "—",
-      status: employeeName ? "Em operação" : "Disponível",
+      operator: employee?.nome ?? "",
+      operatorId: employee?.id ?? null,
+      shift: employee?.turno ?? "—",
+      status: novoEstado,
+      order: employee ? `OP-${1000 + Number(machine.id)}` : "Aguardando programação",
+      progress: employee ? 60 : 0,
     });
+
+    // 2. Persistência real no MySQL via API
+    try {
+      await fetchComAuth(`/api/maquinas/${machine.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          nome: machine.name,
+          estado: novoEstado,
+          usuario_id: employee ? employee.id : null,
+        }),
+      });
+    } catch (err) {
+      console.error("Erro ao persistir atribuição no banco:", err);
+    }
   }
 
-  function addMachine(event) {
+  async function addMachine(event) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const machineCategory = formData.get("category");
+    const nome = formData.get("name").trim();
 
-    setMachines((currentMachines) => [
-      {
-        id: crypto.randomUUID(),
-        name: formData.get("name").trim(),
-        type: formData.get("type").trim(),
-        category: machineCategory,
-        status: "Disponível",
-        progress: 0,
-        operator: "",
-        shift: "—",
-        order: "Aguardando programação",
-        image: machineCategory === "Corte" ? "laser" : "cnc",
-      },
-      ...currentMachines,
-    ]);
+    try {
+      const res = await fetchComAuth("/api/maquinas", {
+        method: "POST",
+        body: JSON.stringify({
+          nome,
+          estado: "Disponível",
+        }),
+      });
+
+      if (res.ok) {
+        await carregarDados();
+      }
+    } catch (err) {
+      console.error("Erro ao cadastrar máquina no banco:", err);
+    }
+
     setCategory("Todas");
     setQuery("");
     setIsAddingMachine(false);
@@ -333,12 +357,12 @@ export default function MachineFleet() {
                 <select
                   id={`operator-${machine.id}`}
                   onChange={(event) => assignEmployee(machine, event.target.value)}
-                  value={machine.operator}
+                  value={machine.operatorId || ""}
                 >
-                  <option value="">Atribuir funcionário</option>
+                  <option value="">Sem operador atribuído</option>
                   {employees.map((employee) => (
-                    <option key={employee.name} value={employee.name}>
-                      {employee.name} · {employee.shift}
+                    <option key={employee.id} value={employee.id}>
+                      {employee.nome} · {employee.turno || "Geral"}
                     </option>
                   ))}
                 </select>
