@@ -40,7 +40,7 @@ a {
 }
 
 .bg-cinza:has(.app-layout) {
-  background-color: #090b0d;
+  background-color: #ffffff;
 }
 
 .nav-link.active {  

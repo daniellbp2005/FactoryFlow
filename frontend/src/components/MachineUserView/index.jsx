@@ -109,7 +109,17 @@ export default function MachineUserView({machines, error, loading}) {
                     onClick={(event) => event.stopPropagation()}
                     role="dialog"
                 >
-                    <h2>Detalhes da tarefa</h2>
+                    <h2>Detalhes da Máquina</h2>
+                    <div style={{ margin: "14px 0", display: "grid", gap: "8px" }}>
+                        <p><strong>Equipamento:</strong> {modal.nome}</p>
+                        <p><strong>Código:</strong> MAQ-{String(modal.id).padStart(3, "0")}</p>
+                        <p><strong>Estado:</strong> {modal.estado}</p>
+                        <p style={{ color: "var(--muted)", fontSize: "14px" }}>
+                            {modal.estado === "Disponível"
+                                ? "Este equipamento está livre para alocação e operação."
+                                : "Este equipamento encontra-se indisponível no momento."}
+                        </p>
+                    </div>
                     <button
                     className="button button-outline"
                     onClick={() => setModal(null)}
@@ -119,7 +129,6 @@ export default function MachineUserView({machines, error, loading}) {
                     </button>
                 </div>
                 </div>
-                
             )}
         </section>
     );

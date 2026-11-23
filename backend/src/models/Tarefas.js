@@ -277,7 +277,7 @@ export default class Tarefa {
       }
       this.iniciado_em = dataInicio;
     } else {
-      this.iniciado_em = new Date();
+      this.iniciado_em = null;
     }
 
     // 13. Data/hora de conclusão real (DATETIME NOT NULL)
@@ -288,7 +288,7 @@ export default class Tarefa {
       }
       this.finalizado_em = dataFim;
     } else {
-      this.finalizado_em = new Date();
+      this.finalizado_em = null;
     }
 
     // 14. Data de criação no sistema

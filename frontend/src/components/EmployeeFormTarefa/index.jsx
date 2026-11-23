@@ -3,13 +3,9 @@ import { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { fetchComAuth } from '@/utils/api';
 
-export default function EmployeeFormTarefas() {
-
-    const [inputsMaq, setInputsMaq] = useState([""]);
-    const [inputs, setInputs] = useState([""]);
-
+export default function EmployeeFormTarefas({ onSuccess }) {
     function adicionarEmail() {
-        setInputs([...inputs, inputs.length + 1]);
+        setEmail([...emails, ""]);
     }
 
     function alterarEmail(index, valor) {
@@ -19,11 +15,11 @@ export default function EmployeeFormTarefas() {
     }
 
     function deletarInputEmail() {
-        setInputs(inputs.slice(0, -1));
+        setEmail(emails.slice(0, -1));
     }
 
     function adicionarMaq() {
-        setInputsMaq([...inputsMaq, inputsMaq.length + 1]);
+        setEquipamentos([...equipamentos, ""]);
     }
 
     function alterarMaq(index, valor) {
@@ -33,7 +29,7 @@ export default function EmployeeFormTarefas() {
     }
 
     function deletarInputMaq() {
-        setInputsMaq(inputsMaq.slice(0, -1));
+        setEquipamentos(equipamentos.slice(0, -1));
     }
 
     const [titulo, setTitulo] = useState("");
@@ -45,48 +41,77 @@ export default function EmployeeFormTarefas() {
     const [turno_prazo, setTurnoPrazo] = useState("");
     const [prazo, setPrazo] = useState("");
     const [tempo_estimado, setTempoEstimado] = useState("");
-    const [finalizado_em, setFinalizadoEm] = useState("");
     const [emails, setEmail] = useState([""]);
     const [equipamentos, setEquipamentos] = useState([""]);
+    const [loading, setLoading] = useState(false);
+    const [erro, setErro] = useState(null)
 
     async function onClickCriar(e) {
         e.preventDefault();
         try {
             await criarTarefa()
         } catch (e) {
-            console.error("Erro ao criar a tarefa", e.message);
+            console.log("Erro ao criar a tarefa", e.message);
         }
     }
 
-
     async function criarTarefa() {
-        const resposta = await fetchComAuth("/api/tarefas/", {
-            method: "POST",
-            body: JSON.stringify({
-                titulo,
-                descricao,
-                setor,
-                prioridade,
-                status,
-                periodo,
-                turno_prazo,
-                prazo,
-                tempo_estimado,
-                iniciado_em: null,
-                finalizado_em: null,
-                emails,
-                equipamentos
+        setLoading(true);
+        setErro(null)
+        try {
+            const emailsValidos = emails
+                .map(email => email.trim())
+                .filter(email => email !== "");
+
+            const equipamentosValidos = equipamentos
+                .filter(id => id !== "")
+                .map(Number);
+            const resposta = await fetchComAuth("/api/tarefas/", {
+                method: "POST",
+                body: JSON.stringify({
+                    titulo,
+                    descricao,
+                    setor,
+                    prioridade,
+                    status,
+                    periodo,
+                    turno_prazo,
+                    prazo,
+                    tempo_estimado,
+                    iniciado_em: null,
+                    finalizado_em: null,
+                    emails: emailsValidos,
+                    equipamentos: equipamentosValidos
+                })
             })
-        });
 
-        const resultado = await resposta.json();
+            const resultado = await resposta.json();
 
-        if (!resposta.ok) {
-            throw new Error(resultado.erro || "Erro ao criar tarefa.");
+            if (!resposta.ok) {
+                throw new Error(resultado.erro || "Erro ao criar tarefa.");
+            }
+
+            onSuccess?.(resultado);
+
+            console.log("Tarefa criada:", resultado.dados);
+            setTitulo("");
+            setDescricao("");
+            setSetor("");
+            setPrioridade("");
+            setStatus("");
+            setPrioridade("");
+            setSetor("");
+            setPeriodo("");
+            setTurnoPrazo("");
+            setPrazo("");
+            setTempoEstimado("");
+            setEmail([""]);
+            setEquipamentos([""]);
+        } catch (e) {
+            setErro(e.message)
+        } finally {
+            setLoading(false)
         }
-
-        console.log("Tarefa criada:", resultado.dados);
-
         return resultado;
     }
 
@@ -112,8 +137,6 @@ export default function EmployeeFormTarefas() {
                         required
                     />
                 </label>
-                {/* <p className='fs-5 fw-bold mt-2'>O funcionário tem um grupo ? Adicione ele aqui.</p> */}
-
                 <label id='EmailCriar'>
                     <div className='d-flex justify-content-center align-items-center gap-2 py-0'>
                         <p className='w-75 px-0 fs-0'>E-mail</p>
@@ -122,23 +145,19 @@ export default function EmployeeFormTarefas() {
                         </div>
                     </div>
                     <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
-                        <input
-                            type="email"
-                            name="email_0"
-                            placeholder="Ex: admin@factoryflow.com"
-                            onChange={(e) => alterarEmail(0, e.target.value)}
-                        />
-                        {inputs.map((email, index) => (
+                        {emails.map((email, index) => (
                             <div key={index} className='d-flex justify-content-center align-items-center gap-2 w-100'>
                                 <input
-                                    key={index}
                                     type="email"
-                                    name={`input_${index}`}
-                                    value={email}
+                                    name={`email_${index}`}
                                     placeholder="Ex: admin@factoryflow.com"
+                                    value={email}
                                     onChange={(e) => alterarEmail(index, e.target.value)}
                                 />
-                                <X className='cursor-pointer' onClick={() => deletarInputEmail()} />
+                                <X
+                                    className='cursor-pointer'
+                                    onClick={() => deletarInputEmail(index)}
+                                />
                             </div>
                         ))}
                     </div>
@@ -152,20 +171,11 @@ export default function EmployeeFormTarefas() {
                         </div>
                     </div>
                     <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
-                        <input
-                            type="number"
-                            min="1"
-                            name="maq_0"
-                            placeholder="ID do equipamento"
-                            value={equipamentos[0]}
-                            onChange={(e) => alterarMaq(0, e.target.value)}
-                        />
-                        {inputsMaq.map((maquina, index) => (
+                        {equipamentos.map((equipamento, index) => (
                             <div key={index} className='d-flex justify-content-center align-items-center gap-2 w-100'>
                                 <input
-                                    key={index}
-                                    type="text"
-                                    value={maquinas}
+                                    type="number"
+                                    value={equipamento}
                                     name={`maq_${index}`}
                                     placeholder="Tipo de maquina"
                                     onChange={(e) => alterarMaq(index, e.target.value)}
@@ -191,32 +201,29 @@ export default function EmployeeFormTarefas() {
                 </label>
 
                 <label>
-                    <div className="d-flex align-itmes-center justify-content-center gap-3 w-full">
-                        <div className='w-full col-6 ps-2'>
-                            Hora de entrega
-                            <input
-                                name="role"
-                                type='time'
-                                placeholder="Digite o prazo da tarefa"
-                                minLength={3}
-                                maxLength={80}
-                                value={tempo_estimado}
-                                onChange={(e) => setTempoEstimado(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className='w-full col-6 pe-2'>
-                            Hora final da tarefa
-                            <input
-                                name="role"
-                                type='time'
-                                placeholder="Digite o prazo final da tarefa"
-                                minLength={14}
-                                maxLength={14}
-                                value={finalizado_em}
-                                onChange={(e) => setFinalizadoEm(e.target.value)}
-                                required
-                            />
+                    <div className="d-flex gap-3">
+                        <div className="d-flex justify-content-center align-items-center">
+                            <div className='d-flex justify-content-center align-items-center flex-column w-50'>
+                                <p>Prazo de entrega</p>
+                                <input
+                                    type="datetime-local"
+                                    value={prazo}
+                                    onChange={(e) => setPrazo(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className='d-flex justify-content-center align-items-center flex-column w-50'>
+                                <p>Duração estimada (horas)</p>
+                                <input
+                                    type="number"
+                                    min="0.01"
+                                    step="0.01"
+                                    placeholder="Ex: 3.5"
+                                    value={tempo_estimado}
+                                    onChange={(e) => setTempoEstimado(e.target.value)}
+                                    required
+                                />
+                            </div>
                         </div>
                     </div>
                 </label>
@@ -249,9 +256,10 @@ export default function EmployeeFormTarefas() {
                 </label>
 
 
-                <button className="button button-primary" type="submit">
-                    Cadastrar Tarefa
+                <button className="button button-primary" type="submit" disabled={loading}>
+                    {loading ? "Cadastrando Tarefa" : "Cadastrar"}
                 </button>
+                {erro && <p className='fs-4'>{erro}</p>}
             </form>
         </section>
     );
