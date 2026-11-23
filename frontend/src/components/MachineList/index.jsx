@@ -26,7 +26,7 @@ export default function MachineList({
     <section className="panel employee-list-panel" aria-labelledby="employee-list-title">
       <div className="panel-heading employee-list-heading">
         <div>
-          <h2 id="employee-list-title">Máquinas</h2>
+          <h2 id="machine-list-title">Máquinas</h2>
           <p>
             {todos} {todos === 1 ? "máquina cadastrada" : "máquinas cadastradas"}
           </p>
