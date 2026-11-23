@@ -78,7 +78,7 @@ export default function Tarefas() {
 
         <div className="employee-layout">
           <EmployeeFormTarefa onSuccess={addEmployee} />
-          <EmployeeListTarefa employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} />
+          <EmployeeListTarefa employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} totalPaginas={totalPaginas} pagina={pagina} />
         </div>
       </section>
     </main>
