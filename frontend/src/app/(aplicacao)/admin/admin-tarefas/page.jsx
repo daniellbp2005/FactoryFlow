@@ -27,9 +27,9 @@ export default function Tarefas() {
 
     async function carregarOperadores() {
       try {
-        const linkApiLimite = await fetchComAuth(`/api/relatorios?pagina=${pagina}&limite=10`);
+        const linkApiLimite = await fetchComAuth(`/api/tarefas?pagina=${pagina}&limite=10`);
         const data = await linkApiLimite.json();
-        const linkApiTodos = await fetchComAuth(`/api/relatorios?limite=100`);
+        const linkApiTodos = await fetchComAuth(`/api/tarefas?limite=100`);
         const cadastroTodos = await linkApiTodos.json();
         setAux(cadastroTodos.dados || []);
 
@@ -77,7 +77,7 @@ export default function Tarefas() {
         />
 
         <div className="employee-layout">
-          <EmployeeFormTarefa onCreate={addEmployee} />
+          <EmployeeFormTarefa onSuccess={addEmployee} />
           <EmployeeListTarefa employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} />
         </div>
       </section>
