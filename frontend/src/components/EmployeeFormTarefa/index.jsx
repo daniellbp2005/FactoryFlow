@@ -87,6 +87,9 @@ export default function EmployeeFormTarefas({ onSuccess }) {
 
             const resultado = await resposta.json();
 
+            console.log("Resposta do servidor:", resultado);
+            console.log("Status HTTP:", resposta.status);
+
             if (!resposta.ok) {
                 throw new Error(resultado.erro || "Erro ao criar tarefa.");
             }
@@ -109,10 +112,11 @@ export default function EmployeeFormTarefas({ onSuccess }) {
             setEquipamentos([""]);
         } catch (e) {
             setErro(e.message)
+            console.log(e);
+
         } finally {
             setLoading(false)
         }
-        return resultado;
     }
 
     return (
