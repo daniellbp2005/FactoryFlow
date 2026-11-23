@@ -110,7 +110,7 @@ export default function EmployeeForm({onCreate}) {
               placeholder="Digite a senha do usuário"
               type={senhaVisivel ? "text" : "password"}
               minLength={3}
-              maxLength={24}
+              maxLength={25}
               value={senha}
               onChange = {(e) => {
                 setSenha(e.target.value)
