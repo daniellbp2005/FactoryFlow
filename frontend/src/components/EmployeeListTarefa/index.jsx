@@ -62,18 +62,16 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
             : "Nenhum tarefa encontrada para essa busca."}
         </p>
       )}
-      <div className="d-flex justify-content-between w-full align-itmes-center gap-2 px-2 mt-2">
-        <span>
-          Página {pagina} de {totalPaginas}
+      <div className="d-flex justify-content-between align-items-center w-full mt-3 px-2">
+        <span style={{ fontSize: "13px", color: "var(--muted)" }}>
+          Página {pagina} de {Math.max(totalPaginas, 1)}
         </span>
-        <div className="d-flex justify-content-center align-itmes-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <div
             className="seta"
             onClick={diminuirPagina}
-            style={{
-              cursor: pagina > totalPaginas ? "pointer" : "not-allowed",
-              opacity: pagina > 1 ? 1 : .4
-            }} >
+            style={{ cursor: pagina > 1 ? "pointer" : "not-allowed", opacity: pagina > 1 ? 1 : 0.4 }}
+          >
             <ArrowLeft size={20} />
           </div>
           <div
@@ -81,8 +79,9 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
             onClick={aumentarPagina}
             style={{
               cursor: pagina < totalPaginas ? "pointer" : "not-allowed",
-              opacity: pagina <= 1 ? 1 : .4
-            }} >
+              opacity: pagina < totalPaginas ? 1 : 0.4,
+            }}
+          >
             <ArrowRight size={20} />
           </div>
         </div>

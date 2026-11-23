@@ -7,7 +7,7 @@ export default function MachineForm({ onCreate }) {
   const [nome, setNome] = useState("");
   const [estado, setEstado] = useState("Disponível");
 
-  function onClickCriar(e) {
+  async function onClickCriar(e) {
     e.preventDefault();
     try {
       criarMaquina();
@@ -24,12 +24,15 @@ export default function MachineForm({ onCreate }) {
         estado,
       }),
     })
-      .then((res) => {
-        if (!res.ok) return;
-        onCreate({
-          nome: nome,
-          estado: estado,
-        });
+      .then(async (res) => {
+        const resultado = await res.json();
+
+        if (!res.ok) {
+          throw new Error(resultado.message || "Erro ao cadastrar máquina.");
+        }
+
+        onCreate(resultado.dados);
+
         setNome("");
         setEstado("Disponível");
         alert("Sucesso");

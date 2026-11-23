@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
 import { fetchComAuth } from '@/utils/api';
 
@@ -45,6 +45,7 @@ export default function EmployeeFormTarefas({ onSuccess }) {
     const [equipamentos, setEquipamentos] = useState([""]);
     const [loading, setLoading] = useState(false);
     const [erro, setErro] = useState(null)
+    const [listaEquipamentos, setListaEquipamentos] = useState([]);
 
     async function onClickCriar(e) {
         e.preventDefault();
@@ -119,6 +120,25 @@ export default function EmployeeFormTarefas({ onSuccess }) {
         }
     }
 
+    useEffect(() => {
+        async function buscarEquipamentos() {
+            try {
+                const resposta = await fetchComAuth("/api/equipamentos/");
+                const resultado = await resposta.json();
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao buscar equipamentos.");
+                }
+
+                setListaEquipamentos(resultado.dados);
+            } catch (e) {
+                console.error("Erro ao carregar equipamentos:", e.message);
+            }
+        }
+
+        buscarEquipamentos();
+    }, []);
+
     return (
         <section className="panel employee-form-panel" aria-labelledby="employee-form-title">
             <div className="panel-heading">
@@ -177,14 +197,25 @@ export default function EmployeeFormTarefas({ onSuccess }) {
                     <div className='d-flex justify-content-center align-items-center gap-2 flex-column'>
                         {equipamentos.map((equipamento, index) => (
                             <div key={index} className='d-flex justify-content-center align-items-center gap-2 w-100'>
-                                <input
-                                    type="number"
+
+                                <select
                                     value={equipamento}
                                     name={`maq_${index}`}
-                                    placeholder="Tipo de maquina"
                                     onChange={(e) => alterarMaq(index, e.target.value)}
+                                >
+                                    <option value="">Selecione um equipamento</option>
+
+                                    {listaEquipamentos.map((item) => (
+                                        <option key={item.id} value={item.id}>
+                                            {item.nome}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                <X
+                                    className='cursor-pointer'
+                                    onClick={() => deletarInputMaq()}
                                 />
-                                <X className='cursor-pointer' onClick={() => deletarInputMaq()} />
                             </div>
                         ))}
                     </div>
