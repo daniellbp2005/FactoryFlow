@@ -165,7 +165,7 @@ export default function EmployeeFormTarefas() {
                                 <input
                                     key={index}
                                     type="text"
-                                    value={maquinas}
+                                    value={maquina}
                                     name={`maq_${index}`}
                                     placeholder="Tipo de maquina"
                                     onChange={(e) => alterarMaq(index, e.target.value)}
