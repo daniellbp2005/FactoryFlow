@@ -162,7 +162,7 @@
 
 .metric-label {
   margin: 0 0 3px;
-  color: #b3bdc4;
+  color: #696969;
   font-size: 15px;
 }
 
@@ -478,7 +478,7 @@
 .employee-form label {
   display: grid;
   gap: 5px;
-  color: #bac3c9;
+  color: #000000;
   font-size: 14px;
 }
 
@@ -488,10 +488,10 @@
 .employee-search input {
   width: 100%;
   min-height: 36px;
-  border: 1px solid #394148;
+  border: 1px solid #cfcfcf;
   border-radius: 5px;
   padding: 0 10px;
-  background: #111518;
+  background: #ffffff;
   color: var(--text);
   font: inherit;
   font-size: 14px;
@@ -560,10 +560,10 @@
   align-items: center;
   gap: 12px;
   min-height: 62px;
-  border: 1px solid #2a3136;
+  border: 1px solid #cecece;
   border-radius: 6px;
   padding: 9px;
-  background: #14181b;
+  background: #ffffff;
 }
 
 .employee-avatar {
@@ -572,7 +572,7 @@
   height: 34px;
   place-items: center;
   border-radius: 50%;
-  background: #102d2b;
+  background: #bcfdf7;
   color: var(--accent);
 }
 
@@ -605,8 +605,8 @@
 .employee-status {
   border-radius: 4px;
   padding: 4px 7px;
-  background: #123a35;
-  color: #55d7bd;
+  background: #55d7bd;
+  color: #020202;
   font-size: 15px;
 }
 
@@ -1279,13 +1279,13 @@
 .seta {
   border: 1px solid var(--border);
   background: transparent;
-  color: #dce1e4;
+  color: #555555;
   border-radius: 4px;
   padding: 3px 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #101316;
+  background-color: #ffffff;
 }
 
 .seta:hover {
