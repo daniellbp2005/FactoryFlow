@@ -10,7 +10,8 @@ export default function AdminOverviewCards({ data, user }) {
     const concluidos = safeData.filter((a) => a?.status === "Concluído").length;
     const ativos = safeUser.filter((a) => Boolean(a?.ativo) || a?.ativo === 1 || a?.ativo === true).length;
     const reprovados = safeData.filter((a) => a?.status === "Indisponível").length;
-
+    console.log(data);
+    
   return (
     <div className="overview-cards">
       <article className="metric-card">
