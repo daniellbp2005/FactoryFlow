@@ -13,13 +13,11 @@ function getStatusSlug(status) {
 
 export default function MachineList({
   machines = [],
-  total = 0,
-  onEdit,
-  onDelete,
+  total = machines.length,
   aumentarPagina,
   diminuirPagina,
-  pagina = 1,
-  totalPaginas = 1,
+  pagina,
+  totalPaginas,
   loading = false,
 }) {
   const [query, setQuery] = useState("");
@@ -80,26 +78,6 @@ export default function MachineList({
                   <span className={`employee-status status-${statusSlug}`}>
                     {m.estado || "Disponível"}
                   </span>
-                  {onEdit && (
-                    <button
-                      type="button"
-                      title="Editar máquina"
-                      className="btn-card-action"
-                      onClick={() => onEdit(m)}
-                    >
-                      <Pencil size={15} />
-                    </button>
-                  )}
-                  {onDelete && (
-                    <button
-                      type="button"
-                      title="Excluir máquina"
-                      className="btn-card-action btn-card-delete"
-                      onClick={() => onDelete(m.id)}
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  )}
                 </div>
               </article>
             );

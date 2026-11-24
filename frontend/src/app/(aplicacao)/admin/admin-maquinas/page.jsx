@@ -11,22 +11,22 @@ import Footer from "@/components/Footer";
 import { fetchComAuth } from "@/utils/api";
 
 export default function AdminMachinesPage() {
-  const [machines, setMachines] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [aux, setAux] = useState([]);
   let [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [usuario, setUsuario] = useState(null);
 
-  function addMachine(machine) {
-    setMachines((currentMachines) => [machine, ...currentMachines]);
+  function addEmployee(employee) {
+    setEmployees((currentEmployees) => [employee, ...currentEmployees]);
   }
 
   useEffect(() => {
+    let ativo = true;
     const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
     setUsuario(usuarioLogado);
-    let ativo = true;
 
-    async function carregarMaquinas() {
+    async function carregarOperadores() {
       try {
         const linkApiLimite = await fetchComAuth(`/api/maquinas?pagina=${pagina}&limite=10`);
         const data = await linkApiLimite.json();
@@ -35,17 +35,19 @@ export default function AdminMachinesPage() {
         setAux(cadastroTodos.dados || []);
 
         if (ativo) {
-          setMachines(data.dados || []);
+          setEmployees(data.dados || []);
         }
         if (data.paginacao?.totalPaginas) {
           setTotalPaginas(data.paginacao.totalPaginas);
         }
       } catch (e) {
         console.error("Erro ao consultar o backend");
+        console.log(e);
+
       }
     }
 
-    carregarMaquinas();
+    carregarOperadores();
 
     return () => {
       ativo = false;
@@ -76,12 +78,14 @@ export default function AdminMachinesPage() {
         />
 
         <div className="employee-layout">
-          <MachineForm onCreate={addMachine} />
+          <MachineForm onCreate={addEmployee} />
           <MachineList
-            machines={machines}
+            machines={employees}
             aumentarPagina={aumentarPagina}
             diminuirPagina={diminuirPagina}
-            cadastroTodos={aux}
+            total={aux.length}
+            totalPaginas={totalPaginas}
+            pagina={pagina}
           />
         </div>
         <Footer />

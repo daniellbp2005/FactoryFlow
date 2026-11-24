@@ -1526,3 +1526,145 @@
     grid-row: 1 / span 2;
   }
 }
+
+/* ==============================================================================
+   FORMULÁRIO DE TAREFAS (Aprimoramento Visual)
+   ============================================================================== */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.form-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.btn-add-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px dashed var(--accent);
+  color: #0d9488;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-item:hover {
+  background: rgba(16, 199, 181, 0.12);
+  border-style: solid;
+}
+
+.dynamic-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dynamic-input-row .input-with-icon {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.dynamic-input-row .input-with-icon svg {
+  position: absolute;
+  left: 10px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.dynamic-input-row .input-with-icon input {
+  padding-left: 32px;
+}
+
+.btn-remove-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-remove-item:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.form-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+.form-alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.form-alert-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.button-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
