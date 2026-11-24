@@ -19,7 +19,7 @@ export default function AdminPage() {
     setUsuario(usuarioLogado);
     async function listarRelatorios() {
       try {
-        const linkApi = await fetchComAuth("/api/tarefas?limite=100");
+        const linkApi = await fetchComAuth("/api/relatorios?limite=100");
         const data = await linkApi.json();
 
         setData(data.dados || []);

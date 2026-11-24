@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import { AtSign, LockKeyhole, Eye, EyeOff, User, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { setSessao } from "@/utils/api";
+import { API_BASE_URL, setSessao } from "@/utils/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ export default function Login() {
     }
 
     try {
-      const LinkAPI = await fetch(`http://localhost:8080/usuarios/login`, {
+      const LinkAPI = await fetch(`${API_BASE_URL}/usuarios/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
