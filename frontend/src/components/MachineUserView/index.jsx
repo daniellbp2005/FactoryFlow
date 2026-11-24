@@ -28,7 +28,7 @@ export default function MachineUserView({machines, error, loading}) {
                     <p>Acompanhe a disponibilidade dos equipamentos.</p>
                 </div>
                 <div className="period-flex">
-                    <div className="period-switch" aria-label="Filtro de disponibilidade">
+                    <div className="machines-switch" aria-label="Filtro de disponibilidade">
                         <button
                             className={view === "Todos" ? "selected" : ""}
                             onClick={() => setView("Todos")}

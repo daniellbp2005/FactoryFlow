@@ -36,10 +36,11 @@
 
 .topbar-pill {
   border-radius: 5px;
-  padding: 6px 11px;
+  padding: 6px 6px;
   background: var(--accent);
   color: #000000;
   font-weight: 700;
+  min-width: 95px !important;
 }
 
 .topbar-user svg {
@@ -219,6 +220,7 @@
 .period-switch {
   display: flex;
   overflow: hidden;
+  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 5px;
 }
@@ -238,6 +240,31 @@
   color: #000000;
   font-weight: 700;
 }
+
+.machines-switch {
+  display: flex;
+  overflow: hidden;
+  flex-direction: row;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+.machines-switch button {
+  border: 0;
+  padding: 6px 9px;
+  background: transparent;
+  color: #555555;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+}
+
+.machines-switch button.selected {
+  background: var(--accent);
+  color: #000000;
+  font-weight: 700;
+}
+
 .period-flex{
   display: flex;
   flex-direction: column;
@@ -659,16 +686,16 @@
 }
 
 .report-list-heading {
-  align-items: center;
+  align-items: flex-start;
 }
 
 .report-switch {
   display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 5px;
   width: 155.6px;
-  margin-left: 27%;
 }
 
 .report-switch button {
@@ -797,6 +824,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
   gap: 8px;
 }
 
@@ -842,7 +870,7 @@
 
 .machine-fleet-toolbar {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 12px;
@@ -1382,13 +1410,23 @@ footer {
   font-size: 12px;
 }
 
+@media (max-width: 1050px) {
+  .employee-layout{
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
-  .admin-content {
+  .user-content {
     padding: 22px 18px;
   }
 
-  .dashboard-grid {
-    grid-template-columns: minmax(0, 1.6fr) minmax(220px, 0.8fr);
+  .panel-heading{
+    flex-direction: column;
+  }
+
+  .period-switch{
+    flex-direction: row;
   }
 
   .employee-layout {
@@ -1424,10 +1462,6 @@ footer {
   }
 
   .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .employee-layout {
     grid-template-columns: 1fr;
   }
 
