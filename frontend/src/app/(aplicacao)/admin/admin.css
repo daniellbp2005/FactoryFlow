@@ -868,6 +868,36 @@
   margin-left: 70%;
 }
 
+.admin-reports-page .report-search svg,
+.admin-reports-page .report-card-heading > span,
+.admin-reports-page .report-employee-meta span {
+  color: #6b7280;
+}
+
+.admin-reports-page .report-card {
+  border-color: #e7e7e7;
+}
+
+.admin-reports-page .report-type {
+  border-color: #b3ede5;
+  background: #e6f9f6;
+  color: #0c8276;
+}
+
+.admin-reports-page .report-card-content > p {
+  color: #4b5563;
+}
+
+.admin-reports-page .report-status.complete {
+  background: #dcfce7;
+  color: #0f766e;
+}
+
+.admin-reports-page .report-status.review {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 .machine-fleet {
   min-width: 0;
 }

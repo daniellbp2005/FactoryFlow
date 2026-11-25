@@ -16,7 +16,7 @@ export default function AdminReportsPage() {
   }, []);
 
   return (
-    <main className="admin-page">
+    <main className="admin-page admin-reports-page">
       <Sidebar />
       <Header usuario={usuario?.nome ?? "Usuário não logado"} />
       <section className="admin-content">

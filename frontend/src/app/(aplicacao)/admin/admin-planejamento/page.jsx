@@ -30,7 +30,6 @@ export default function AdminPlanningPage() {
         <div className="dashboard-grid">
           <ProductionSchedule />
           <aside className="dashboard-aside">
-            <AvailabilityPanel />
           </aside>
         </div>
 

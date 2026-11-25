@@ -36,7 +36,7 @@ a {
 }
 
 .bg-cinza {
-  background-color: #df0000;
+  background-color: #f2f4f8;
 }
 
 .bg-cinza:has(.app-layout) {
