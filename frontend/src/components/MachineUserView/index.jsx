@@ -144,6 +144,16 @@ export default function MachineUserView() {
                                     ? "Este equipamento está livre para alocação e operação."
                                     : "Este equipamento encontra-se indisponível no momento."}
                             </p>
+                            <form className="task-modal-form" onSubmit={(e) => {
+                                e.preventDefault();
+                                setModal(null);
+                                if (modal.estado === "Disponível") solicitar(modal.id);
+                            }}>
+                                <div className="d-flex justify-content-center align-itmes-center px-1 gap-2">
+                                    <input type="text" placeholder="Descrição da solicitação..." />
+                                    <input type="number" placeholder="Quantidade" />
+                                </div>
+                            </form>
                         </div>
                         <button className="button button-outline" onClick={() => {
                             setModal(null);
