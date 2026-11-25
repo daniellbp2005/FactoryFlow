@@ -15,15 +15,47 @@ const app = express();
 // Defesa em Profundidade: Helmet para headers HTTP seguros
 app.use(helmet());
 
-// CORS restrito ao Frontend
+// CORS configurável (aceita uma ou mais origens separadas por vírgula)
+const origensPermitidas = (process.env.FRONTEND_URL || "http://localhost:3000")
+  .split(",")
+  .map((origem) => origem.trim().replace(/\/$/, ""));
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      // Permite requisições server-to-server, health check ou ferramentas sem header Origin
+      if (!origin) return callback(null, true);
+      const originNormalizada = origin.replace(/\/$/, "");
+      if (origensPermitidas.includes("*") || origensPermitidas.includes(originNormalizada)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Bloqueado pelo CORS: ${origin}`));
+    },
+    credentials: true,
   }),
 );
 
 // Limite no body JSON para prevenir ataques de negação de serviço (DoS) por payload excessivo
-app.use(express.json({ limit: "100kb" }));
+// Custom body parser to tolerate malformed JSON (e.g., missing quotes)
+app.use((req, res, next) => {
+  const contentType = req.headers['content-type'] || '';
+  if (contentType.includes('application/json')) {
+    let raw = '';
+    req.on('data', chunk => { raw += chunk; });
+    req.on('end', () => {
+      if (!raw) return next();
+      try {
+        req.body = JSON.parse(raw);
+      } catch (e) {
+        // Fallback: treat raw string as is (e.g., "{email:...}")
+        req.body = raw;
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
 
 app.get("/", (request, response) => {
   response.json({

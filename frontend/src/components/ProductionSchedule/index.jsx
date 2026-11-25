@@ -271,12 +271,28 @@ export default function ProductionSchedule() {
         ))}
         {dadosFiltrados.length === 0 && <p className="empty-state">Nenhuma tarefa encontrada.</p>}
 
-        <div className="d-flex justify-content-end w-full align-itmes-center gap-2">
-          <div className="seta" onClick={dimimuirPagina}>
-            <ArrowLeft size={20} />
-          </div>
-          <div className="seta" onClick={aumentarPagina}>
-            <ArrowRight size={20} />
+        <div className="d-flex justify-content-between align-items-center w-full mt-3">
+          <span style={{ fontSize: "13px", color: "var(--muted)" }}>
+            Página {pagina} de {Math.max(totalPaginas, 1)}
+          </span>
+          <div className="d-flex align-items-center gap-2">
+            <div
+              className="seta"
+              onClick={dimimuirPagina}
+              style={{ cursor: pagina > 1 ? "pointer" : "not-allowed", opacity: pagina > 1 ? 1 : 0.4 }}
+            >
+              <ArrowLeft size={20} />
+            </div>
+            <div
+              className="seta"
+              onClick={aumentarPagina}
+              style={{
+                cursor: pagina < totalPaginas ? "pointer" : "not-allowed",
+                opacity: pagina < totalPaginas ? 1 : 0.4,
+              }}
+            >
+              <ArrowRight size={20} />
+            </div>
           </div>
         </div>
       </div>

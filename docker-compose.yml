@@ -1,56 +1,46 @@
 services:
-  database:
+  app:
     build:
-      context: ./database
-    restart: unless-stopped
+      context: .
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-api_flow}
-      MYSQL_USER: ${MYSQL_USER:-app_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app_password}
+      APP_ENV: "${APP_ENV:-production}"
+      DB_HOST: "${DB_HOST:-db}"
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_DATABASE: "${DB_DATABASE:-integrador}"
+      DB_USERNAME: "${DB_USERNAME:-integrador}"
+      DB_PASSWORD: "${DB_PASSWORD:?Informe DB_PASSWORD}"
+      SERVICE_URL_APP: "/"
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  db:
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    environment:
+      MYSQL_DATABASE: "${DB_DATABASE:-integrador}"
+      MYSQL_USER: "${DB_USERNAME:-integrador}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:?Informe DB_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:?Informe DB_ROOT_PASSWORD}"
+      LANG: C.UTF-8
     volumes:
-      - mysql-data:/var/lib/mysql
+      - db_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test:
+        - CMD-SHELL
+        - 'mysqladmin ping -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent'
       interval: 10s
       timeout: 5s
-      retries: 5
-    expose:
-      - "3306"
-
-  backend:
-    build:
-      context: ./backend
+      start_period: 60s
+      retries: 10
     restart: unless-stopped
-    depends_on:
-      database:
-        condition: service_healthy
-    environment:
-      PORT: ${BACKEND_PORT:-8080}
-      NODE_ENV: production
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
-      DB_HOST: ${DB_HOST:-database}
-      DB_PORT: ${DB_PORT:-3306}
-      DB_USER: ${DB_USER:-app_user}
-      DB_PASSWORD: ${DB_PASSWORD:-app_password}
-      DB_NAME: ${DB_NAME:-api_flow}
-    expose:
-      - "${BACKEND_PORT:-8080}"
-
-  frontend:
-    build:
-      context: ./frontend
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api}
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      NODE_ENV: production
-      PORT: ${FRONTEND_PORT:-3000}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api}
-    expose:
-      - "${FRONTEND_PORT:-3000}"
 
 volumes:
-  mysql-data:
+  db_data:

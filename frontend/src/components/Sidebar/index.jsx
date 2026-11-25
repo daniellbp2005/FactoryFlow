@@ -27,8 +27,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="app-sidebar">
-      <Link className="sidebar-brand" href="/" aria-label="FactoryFlow início">
+    <>
+    <aside className="mobile-sidebar">
+      <Link className="mobile-brand" href="/" aria-label="FactoryFlow início">
         <Image
           alt=""
           className="brand-logo"
@@ -38,9 +39,34 @@ export default function Sidebar() {
           width={70}
         />
         <span className="brand-copy">
-          <strong>FactoryFlow</strong>
+          <strong>Factory Flow</strong>
         </span>
       </Link>
+
+      <footer className="sidebar-footer">
+        <Link className="sidebar-logout" href="/" onClick={limparSessao} aria-label="Sair e voltar ao início">
+          <LogOut size={20} aria-hidden="true" />
+          <span>Sair</span>
+        </Link>
+      </footer>
+    </aside>
+
+    <aside className="app-sidebar">
+      <div className="desktop-sidebar">
+        <Link className="sidebar-brand" href="/" aria-label="FactoryFlow início">
+          <Image
+            alt=""
+            className="brand-logo"
+            height={70}
+            priority
+            src="/images/logotype/logotype.png"
+            width={70}
+          />
+          <span className="brand-copy">
+            <strong>Factory Flow</strong>
+          </span>
+        </Link>
+      </div>
 
       <nav className="sidebar-nav" aria-label="Navegação principal">
         {links.map(({ label, icon: Icon, href }) => {
@@ -58,13 +84,16 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
-      <footer className="sidebar-footer">
-        <Link className="sidebar-logout" href="/" onClick={limparSessao} aria-label="Sair e voltar ao início">
-          <LogOut size={20} aria-hidden="true" />
-          <span>Sair</span>
-        </Link>
-      </footer>
+      
+      <div className="desktop-footer">
+        <footer className="sidebar-footer">
+          <Link className="sidebar-logout" href="/" onClick={limparSessao} aria-label="Sair e voltar ao início">
+            <LogOut size={20} aria-hidden="true" />
+            <span>Sair</span>
+          </Link>
+        </footer>
+      </div>
     </aside>
+    </>
   );
 }

@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS tarefas (
     turno_prazo VARCHAR(20) NOT NULL DEFAULT 'Indefinido', -- NOVO: Dia, Tarde, Noite, Indefinido
     prazo DATETIME NULL,
     tempo_estimado DECIMAL(5,2) NOT NULL,                -- AJUSTADO: Em Horas (ex: 1.50 = 1h30)
-    iniciado_em DATETIME NOT NULL,                       -- NOVO: Data/hora real de início
-    finalizado_em DATETIME NOT NULL,                     -- NOVO: Data/hora real de conclusão
+    iniciado_em DATETIME NULL,                             -- Data/hora real de início (NULL = ainda não iniciou)
+    finalizado_em DATETIME NULL,                           -- Data/hora real de conclusão (NULL = ainda não concluiu)
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

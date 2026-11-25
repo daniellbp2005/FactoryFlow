@@ -75,7 +75,7 @@ export default function AdminEmployeesPage() {
 
         <div className="employee-layout">
           <EmployeeForm onCreate={addEmployee} />
-          <EmployeeList employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} />
+          <EmployeeList employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} totalPaginas={totalPaginas} pagina={pagina}/>
         </div>
       </section>
     </main>

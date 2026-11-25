@@ -92,8 +92,8 @@ export async function criar(produto, emails = [], equipamentos = []) {
       produto.turno_prazo,
       produto.prazo,
       produto.tempo_estimado,
-      produto.iniciado_em,
-      produto.finalizado_em
+      produto.iniciado_em || null,
+      produto.finalizado_em || null
     ];
 
     const [resultadoTarefa] = await conexao.query(sql, valores);
