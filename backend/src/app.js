@@ -36,7 +36,26 @@ app.use(
 );
 
 // Limite no body JSON para prevenir ataques de negação de serviço (DoS) por payload excessivo
-app.use(express.json({ limit: "100kb" }));
+// Custom body parser to tolerate malformed JSON (e.g., missing quotes)
+app.use((req, res, next) => {
+  const contentType = req.headers['content-type'] || '';
+  if (contentType.includes('application/json')) {
+    let raw = '';
+    req.on('data', chunk => { raw += chunk; });
+    req.on('end', () => {
+      if (!raw) return next();
+      try {
+        req.body = JSON.parse(raw);
+      } catch (e) {
+        // Fallback: treat raw string as is (e.g., "{email:...}")
+        req.body = raw;
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
 
 app.get("/", (request, response) => {
   response.json({

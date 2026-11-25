@@ -28,8 +28,36 @@ export async function registrar(req, res, next) {
 }
 
 export async function login(req, res, next) {
+  // Ensure request body is parsed as JSON; handle cases where body arrives as raw string
+  let payload = req.body;
+  console.log('Login payload raw:', payload);
+  if (payload && typeof payload !== 'object') {
+    console.log('Payload not object, attempting parse');
+  }
+  // Ensure email and senha are present
+  const email = payload?.email;
+  const senha = payload?.senha;
+  console.log('Login email:', email, 'senha:', senha);
+  if (typeof payload === 'string') {
+    try {
+      payload = JSON.parse(payload);
+    } catch {
+      // Fallback: parse simple key:value pairs separated by commas
+      const obj = {};
+      payload.split(',').forEach(pair => {
+        const [key, val] = pair.split(':');
+        if (key && val) {
+          obj[key.trim()] = val.trim();
+        }
+      });
+      payload = obj;
+    }
+  }
+  // At this point payload should be an object { email, senha }
   try {
-    const sessao = await AuthService.login(req.body);
+    // Log payload for debugging
+console.log('Login payload:', payload);
+const sessao = await AuthService.login({ email, senha });
     return res.status(200).json({ sucesso: true, dados: sessao });
   } catch (erro) {
     return responderErro(erro, res, next);
