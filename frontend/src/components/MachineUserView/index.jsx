@@ -39,12 +39,27 @@ export default function MachineUserView() {
 
     const solicitar = async (id) => {
         try {
-            const resp = await fetchComAuth(`/api/maquinas/${id}/atribuir`, { method: "POST" });
+            const resp = await fetchComAuth(`/api/maquinas/${id}/`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    estado: "Em Operação"
+                })
+            });
+
             if (!resp.ok) {
                 const err = await resp.json();
                 throw new Error(err.erro || `Falha ao solicitar máquina (${resp.status})`);
             }
-            setMachines((prev) => prev.filter((m) => m.id !== id));
+
+            // Atualiza o estado da máquina localmente após a requisição bem-sucedida
+            setMachines((prev) =>
+                prev.map((machine) =>
+                    machine.id === id ? { ...machine, estado: "Em Operação" } : machine
+                )
+            );
         } catch (e) {
             alert(e.message);
         }
@@ -144,23 +159,35 @@ export default function MachineUserView() {
                                     ? "Este equipamento está livre para alocação e operação."
                                     : "Este equipamento encontra-se indisponível no momento."}
                             </p>
-                            <form className="task-modal-form" onSubmit={(e) => {
+
+                            <form className="employee-form" onSubmit={(e) => {
                                 e.preventDefault();
                                 setModal(null);
                                 if (modal.estado === "Disponível") solicitar(modal.id);
                             }}>
-                                <div className="d-flex justify-content-center align-itmes-center px-1 gap-2">
-                                    <input type="text" placeholder="Descrição da solicitação..." />
+                                <label>
+                                    Solicite a Máquina para Uso
+                                    <input
+                                        type="text"
+                                        autoComplete="request"
+                                        maxLength={100}
+                                        name="request"
+                                        placeholder="Descrição da solicitação..."
+                                        required
+                                    />
+                                </label>
+                                <label>
                                     <input type="number" placeholder="Quantidade" />
-                                </div>
+                                </label>
+
+                                <button className="button button-outline" onClick={() => {
+                                    setModal(null);
+                                    if (modal.estado === "Disponível") solicitar(modal.id);
+                                }} type="button">
+                                    {modal.estado === "Disponível" ? "Solicitar" : "Fechar"}
+                                </button>
                             </form>
                         </div>
-                        <button className="button button-outline" onClick={() => {
-                            setModal(null);
-                            if (modal.estado === "Disponível") solicitar(modal.id);
-                        }} type="button">
-                            {modal.estado === "Disponível" ? "Solicitar" : "Fechar"}
-                        </button>
                     </div>
                 </div>
             )}
