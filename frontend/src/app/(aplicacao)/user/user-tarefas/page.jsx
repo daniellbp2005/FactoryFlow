@@ -11,9 +11,9 @@ export default function Tarefas(){
             <Header />
             <section className="user-content">
                 <PageHeading
-                    eyebrow="FACTORYFLOW / MÊS"
+                    eyebrow="FACTORYFLOW / TAREFAS"
                     title="Planejamento de Produção"
-                    description="Programação, equipamentos e produtividade em uma única visão."
+                    description="Organize as tarefas e acompanhe a disponibilidade dos equipamentos."
                 />
             </section>
         </main>

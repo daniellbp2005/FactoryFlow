@@ -32,12 +32,103 @@ export async function buscarPorId(id) {
   return hidratarMaquina(linhas[0]);
 }
 
-export async function criar(produto) {
-  const sql = 'INSERT INTO tarefas (codigo, titulo, descricao, setor, prioridade, status, periodo, turno_prazo, prazo, tempo_estimado, iniciado_em, finalizado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  const valores = [produto.codigo, produto.titulo, produto.descricao, produto.setor, produto.prioridade, produto.status, produto.periodo, produto.turno_prazo, produto.prazo, produto.tempo_estimado, produto.iniciado_em, produto.finalizado_em];
-  const [resultado] = await pool.query(sql, valores);
-  return { ...produto, id: resultado.insertId};
+
+export async function criar(produto, emails = [], equipamentos = []) {
+  const conexao = await pool.getConnection();
+
+  try {
+    await conexao.beginTransaction();
+
+    // 1. Localizar os funcionários pelos e-mails
+    let usuarios = [];
+
+    if (emails.length > 0) {
+      const [resultadoUsuarios] = await conexao.query(
+        'SELECT id, email FROM usuarios WHERE email IN (?) AND ativo = 1',
+        [emails]
+      );
+
+      if (resultadoUsuarios.length !== emails.length) {
+        throw new Error('Um ou mais funcionários não foram encontrados ou estão inativos.');
+      }
+
+      usuarios = resultadoUsuarios;
+    }
+
+    // 2. Verificar se os equipamentos existem
+    let equipamentosEncontrados = [];
+
+    if (equipamentos.length > 0) {
+      const [resultadoEquipamentos] = await conexao.query(
+        'SELECT id FROM equipamentos WHERE id IN (?)',
+        [equipamentos]
+      );
+
+      if (resultadoEquipamentos.length !== equipamentos.length) {
+        throw new Error('Um ou mais equipamentos não foram encontrados.');
+      }
+
+      equipamentosEncontrados = resultadoEquipamentos;
+    }
+
+    // 3. Criar a tarefa
+    const sql = `
+      INSERT INTO tarefas (
+        codigo, titulo, descricao, setor, prioridade,
+        status, periodo, turno_prazo, prazo,
+        tempo_estimado, iniciado_em, finalizado_em
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const valores = [
+      produto.codigo,
+      produto.titulo,
+      produto.descricao,
+      produto.setor,
+      produto.prioridade,
+      produto.status,
+      produto.periodo,
+      produto.turno_prazo,
+      produto.prazo,
+      produto.tempo_estimado,
+      produto.iniciado_em,
+      produto.finalizado_em
+    ];
+
+    const [resultadoTarefa] = await conexao.query(sql, valores);
+    const tarefaId = resultadoTarefa.insertId;
+
+    // 4. Vincular funcionários à tarefa
+    for (const usuario of usuarios) {
+      await conexao.query(
+        'INSERT INTO tarefas_usuarios (tarefa_id, usuario_id) VALUES (?, ?)',
+        [tarefaId, usuario.id]
+      );
+    }
+
+    // 5. Vincular equipamentos auxiliares à tarefa
+    for (const equipamento of equipamentosEncontrados) {
+      await conexao.query(
+        'INSERT INTO tarefas_equipamentos (tarefa_id, equipamento_id) VALUES (?, ?)',
+        [tarefaId, equipamento.id]
+      );
+    }
+
+    // 6. Confirmar todas as operações
+    await conexao.commit();
+
+    return { ...produto, id: tarefaId };
+
+  } catch (erro) {
+    await conexao.rollback();
+    throw erro;
+
+  } finally {
+    conexao.release();
+  }
 }
+
 
 export async function atualizar(id, produto) {
   const sql = 
