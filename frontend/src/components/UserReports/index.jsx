@@ -3,6 +3,13 @@ import { useMemo, useState, useEffect } from "react";
 import { ClipboardList, Search } from "lucide-react";
 import { fetchComAuth } from "@/utils/api";
 
+function getStatusClass(status) {
+  if (status === "Indisponível") return "unavailable";
+  if (status === "Em andamento") return "review";
+  if (status === "Pendente") return "pending";
+  return "complete";
+}
+
 export default function UserReports({ uid }) {
   const [visao, setVisao] = useState("Todos");
   const [query, setQuery] = useState("");
@@ -114,9 +121,8 @@ export default function UserReports({ uid }) {
                     <span>Código: {a.usuario?.codigo}</span>
                   </div>
                   <span
-                    className={`report-status ${a.status === "Concluído" ? "complete" : "review"}`}
-                  >
-                    {a.status}
+                    className={`report-status ${getStatusClass(a.status)}`}
+                  >{a.status}
                   </span>
                 </div>
               </div>
