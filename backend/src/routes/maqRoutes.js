@@ -12,3 +12,6 @@ maqRouter.get("/:id", maqController.buscarPorId);
 maqRouter.post("/", autorizarPerfis("administrador"), maqController.criar);
 maqRouter.put("/:id", maqController.atualizar);
 maqRouter.delete("/:id", autorizarPerfis("administrador"), maqController.excluir);
+
+// Operador solicita máquina – atribui máquina ao usuário autenticado
+maqRouter.post("/:id/atribuir", maqController.atribuir);

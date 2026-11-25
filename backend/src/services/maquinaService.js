@@ -59,6 +59,20 @@ export async function atualizar(idRecebido, dados) {
   return await MaquinaModel.buscarPorId(id);
 }
 
+export async function atribuir(idRecebido, usuarioId) {
+  const id = validarId(idRecebido);
+  const maquinaAtual = await MaquinaModel.buscarPorId(id);
+  if (!maquinaAtual) {
+    throw new Error(`Máquina ${id} não encontrada.`);
+  }
+  if (maquinaAtual.usuario_id) {
+    throw Object.assign(new Error('Máquina já está atribuída a um usuário.'), { status: 400 });
+  }
+  const dadosAtualizados = { ...maquinaAtual, usuario_id: usuarioId };
+  await MaquinaModel.atualizar(id, dadosAtualizados);
+  return await MaquinaModel.buscarPorId(id);
+}
+
 export async function excluir(idRecebido) {
   const id = validarId(idRecebido);
   const removeu = await MaquinaModel.excluir(id);
