@@ -141,6 +141,14 @@ export async function buscarPorId(idRecebido) {
   return usuario;
 }
 
+export async function excluir(idRecebido) {
+  const id = validarId(idRecebido);
+  const removeu = await UsuarioModel.excluir(id);
+  if (!removeu) {
+    throw new Error(`Usuário ${id} não encontrado.`);
+  }
+}
+
 function validarId(idRecebido) {
   const id = Number(idRecebido);
   if (!Number.isInteger(id) || id <= 0) {
