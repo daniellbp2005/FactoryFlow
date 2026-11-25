@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState, useEffect } from "react";
-import { ClipboardList, Search, ArrowLeft, ArrowRight } from "lucide-react";
+import { Eye, ClipboardList, Search, ArrowLeft, ArrowRight } from "lucide-react";
 import { fetchComAuth } from "@/utils/api";
 
 function getStatusClass(status) {
@@ -11,8 +11,9 @@ function getStatusClass(status) {
 }
 
 export default function UserReports({ uid }) {
-  const [visao, setVisao] = useState("Todos");
+  const [visao, setVisao] = useState("Apenas meu");
   const [query, setQuery] = useState("");
+  const [modal, setModal] = useState(null);
   const [data, setData] = useState([]);
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
@@ -97,22 +98,6 @@ export default function UserReports({ uid }) {
               value={query}
             />
           </label>
-          <div className="report-switch">
-            <button
-              onClick={() => setVisao("Todos")}
-              className={visao === "Todos" ? "selected" : ""}
-              type="button"
-            >
-              Todos
-            </button>
-            <button
-              onClick={() => setVisao("Apenas meu")}
-              className={visao === "Apenas meu" ? "selected" : ""}
-              type="button"
-            >
-              Apenas meu
-            </button>
-          </div>
         </div>
       </div>
 
@@ -136,11 +121,20 @@ export default function UserReports({ uid }) {
                   <div className="report-employee-meta">
                     <span>ID: {a?.id}</span>
                     <span>Código: {a.usuario?.codigo}</span>
+                    <span
+                      className={`report-status ${getStatusClass(a.status)}`}
+                    >
+                      {a.status}
+                    </span>
                   </div>
-                  <span
-                    className={`report-status ${getStatusClass(a.status)}`}
-                  >{a.status}
-                  </span>
+                  <button
+                    id="open-details"
+                    className="button seta task-details"
+                    onClick={(e) => setModal(a)}
+                    type="button"
+                  >
+                    <Eye size={16} aria-hidden="true" />
+                  </button>
                 </div>
               </div>
             </article>
@@ -174,6 +168,42 @@ export default function UserReports({ uid }) {
           </div>
         </div>
       </div>
+
+      {modal && (
+        <div
+          className="task-modal-overlay"
+          onClick={() => setModal(null)}
+        >
+          <div
+            aria-modal="true"
+            className="task-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <h2>Detalhes do Relatório</h2>
+
+            <p>OP: {modal.tarefa?.titulo}</p>
+            <p>Resultado: {modal.resultado ?? "Sem resultado"}</p>
+            <p>Status: {modal.status ?? "Sem status"}</p>
+            <p>Status da Tarefa: {modal.tarefa?.status ?? "Sem status"}</p>
+            <p>Finalidade: {modal.finalidade ?? "Sem finalidade"}</p>
+            <p>Motivo: {modal.motivo ?? "Sem motivo"}</p>
+            <p>Observações: {modal.observacoes ?? "Sem observações"}</p>
+            <p>Máquina: {modal.maquina?.nome}</p>
+            <p>Responsável: {modal.usuario?.nome}</p>
+            <p>Prazo: {converterData(modal.tarefa?.prazo)}</p>
+
+            <button
+              className="button button-outline"
+              onClick={() => setModal(null)}
+              type="button"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+        
+      )}
     </section>
   );
 }

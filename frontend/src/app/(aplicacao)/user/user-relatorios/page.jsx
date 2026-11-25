@@ -25,7 +25,7 @@ export default function Relatorios(){
                     description="Acompanhe os relatórios e comentários registrados para os operadores."
                 />
 
-                <UserReports/>
+                <UserReports uid={usuario?.id} />
                 <Footer />
             </section>
             

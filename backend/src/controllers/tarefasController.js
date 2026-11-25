@@ -23,6 +23,19 @@ export async function listar(req, res, next) {
     }
 }
 
+export async function listarParaRelatorio(req, res, next) {
+    try {
+        const resultado = await TarefasService.listarParaRelatorio(req.usuario.id, req.query);
+        return res.status(200).json({
+            sucesso: true,
+            dados: resultado.produtos,
+            paginacao: resultado.paginacao
+        });
+    } catch (erro) {
+        return responderErro(erro, res, next);
+    }
+}
+
 export async function buscarPorId(req, res, next) {
   try {
     const produto = await TarefasService.buscarPorId(req.params.id);

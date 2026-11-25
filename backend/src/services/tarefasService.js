@@ -27,6 +27,35 @@ export async function listar({ pagina = 1, limite = 10 } = {}) {
   };
 }
 
+export async function listarParaRelatorio(usuarioIdRecebido, { pagina = 1, limite = 10 } = {}) {
+  const usuarioId = validarId(usuarioIdRecebido);
+  const paginaNum = Number(pagina);
+  const limiteNum = Number(limite);
+
+  if (!Number.isInteger(paginaNum) || paginaNum <= 0) {
+    throw new TypeError('Página deve ser um número inteiro positivo.');
+  }
+  if (!Number.isInteger(limiteNum) || limiteNum < 1 || limiteNum > 100) {
+    throw new TypeError('Limite deve ser um inteiro entre 1 e 100.');
+  }
+
+  const offset = (paginaNum - 1) * limiteNum;
+  const { produtos, total } = await TarefasModel.listarParaRelatorio(usuarioId, {
+    limite: limiteNum,
+    offset,
+  });
+
+  return {
+    produtos,
+    paginacao: {
+      pagina: paginaNum,
+      limite: limiteNum,
+      total,
+      totalPaginas: Math.ceil(total / limiteNum),
+    },
+  };
+}
+
 export async function buscarPorId(idRecebido) {
   const id = validarId(idRecebido);
   const produto = await TarefasModel.buscarPorId(id);

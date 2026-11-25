@@ -26,6 +26,44 @@ export async function listar({ limite, offset }) {
   };
 }
 
+export async function listarParaRelatorio(usuarioId, { limite, offset }) {
+  const limiteNum = Number.parseInt(limite, 10);
+  const offsetNum = Number.parseInt(offset, 10);
+  const [linhas] = await pool.query(
+    `SELECT t.*
+     FROM tarefas t
+     INNER JOIN tarefas_usuarios tu ON tu.tarefa_id = t.id
+     WHERE tu.usuario_id = ?
+       AND t.status NOT IN ('Cancelada', 'Cancelado')
+       AND NOT EXISTS (
+         SELECT 1
+         FROM relatorios r
+         WHERE r.tarefa_id = t.id AND r.usuario_id = tu.usuario_id
+       )
+     ORDER BY t.id DESC
+     LIMIT ? OFFSET ?`,
+    [usuarioId, limiteNum, offsetNum]
+  );
+  const [[{ total }]] = await pool.query(
+    `SELECT COUNT(*) AS total
+     FROM tarefas t
+     INNER JOIN tarefas_usuarios tu ON tu.tarefa_id = t.id
+     WHERE tu.usuario_id = ?
+       AND t.status NOT IN ('Cancelada', 'Cancelado')
+       AND NOT EXISTS (
+         SELECT 1
+         FROM relatorios r
+         WHERE r.tarefa_id = t.id AND r.usuario_id = tu.usuario_id
+       )`,
+    [usuarioId]
+  );
+
+  return {
+    produtos: linhas.map(hidratarMaquina),
+    total: Number(total)
+  };
+}
+
 export async function buscarPorId(id) {
   const [linhas] = await pool.query('SELECT * FROM tarefas WHERE id = ?', [id]);
   if (linhas.length === 0) return null;

@@ -139,7 +139,7 @@ export default function MachineUserView() {
             {!loading && !error && (
                 <>
                     <div className="report-list">
-                        {machines.map((machine) => (
+                        {visibleMachines.map((machine) => (
                             <article className="report-card" key={machine.id}>
                                 <span className="report-icon" aria-hidden="true">
                                     <Factory size={17} aria-hidden="true" />

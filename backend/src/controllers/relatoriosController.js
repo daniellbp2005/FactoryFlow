@@ -1,6 +1,12 @@
 import * as relatoriosService from "../services/relatoriosService.js";
 
 function responderErro(erro, res, next) {
+  if (erro.code === 'ER_DUP_ENTRY') {
+    return res.status(409).json({
+      sucesso: false,
+      erro: 'Já existe um relatório registrado para esta tarefa por este usuário.',
+    });
+  }
   if (erro instanceof TypeError || erro instanceof RangeError) {
     return res.status(400).json({ sucesso: false, erro: erro.message });
   }
@@ -26,6 +32,19 @@ export async function listar(req, res, next) {
   }
 }
 
+export async function listarMeus(req, res, next) {
+  try {
+    const resultado = await relatoriosService.listarDoUsuario(req.usuario.id, req.query);
+    return res.status(200).json({
+      sucesso: true,
+      dados: resultado.relatorios,
+      paginacao: resultado.paginacao,
+    });
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}
+
 export async function buscarPorId(req, res, next) {
   try {
     const relatorio = await relatoriosService.buscarPorId(req.params.id);
@@ -37,7 +56,10 @@ export async function buscarPorId(req, res, next) {
 
 export async function criar(req, res, next) {
   try {
-    const relatorio = await relatoriosService.criar(req.body);
+    const relatorio = await relatoriosService.criar({
+      ...req.body,
+      usuario_id: req.usuario.id,
+    });
     return res.status(201).json({ sucesso: true, dados: relatorio });
   } catch (erro) {
     return responderErro(erro, res, next);

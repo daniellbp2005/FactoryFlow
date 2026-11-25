@@ -1,11 +1,14 @@
 import * as dbModule from '../config/database.js';
+import { randomUUID } from 'node:crypto';
 
 const pool = typeof dbModule.criarPool === 'function' ? dbModule.criarPool() : dbModule.pool;
 
 // 1. Listagem com paginação e JOIN de tarefas, usuários e máquinas
-export async function listar({ limite, offset }) {
+export async function listar({ limite, offset, usuarioId = null }) {
   const limiteNum = Number.parseInt(limite, 10);
   const offsetNum = Number.parseInt(offset, 10);
+  const filtroUsuario = usuarioId === null ? '' : 'WHERE r.usuario_id = ?';
+  const parametrosUsuario = usuarioId === null ? [] : [usuarioId];
 
   const [linhas] = await pool.query(
     `SELECT
@@ -46,12 +49,16 @@ export async function listar({ limite, offset }) {
     LEFT JOIN tarefas t ON r.tarefa_id = t.id
     LEFT JOIN usuarios u ON r.usuario_id = u.id
     LEFT JOIN maquinas m ON r.maquina_id = m.id
+    ${filtroUsuario}
     ORDER BY r.id DESC
     LIMIT ? OFFSET ?`,
-    [limiteNum, offsetNum]
+    [...parametrosUsuario, limiteNum, offsetNum]
   );
 
-  const [[{ total }]] = await pool.query('SELECT COUNT(*) AS total FROM relatorios');
+  const [[{ total }]] = await pool.query(
+    `SELECT COUNT(*) AS total FROM relatorios r ${filtroUsuario}`,
+    parametrosUsuario
+  );
 
   const relatorios = linhas.map((linha) => ({
     id: linha.id,
@@ -229,8 +236,7 @@ export async function buscarPorTarefaEUsuario(tarefaId, usuarioId) {
 }
 
 export async function criar(relatorio) {
-  // Gera código único caso não venha no objeto (ex: REL-2026-9876)
-  const codigo = relatorio.codigo || `REL-2026-${String(Date.now()).slice(-4)}`;
+  const codigo = relatorio.codigo || `REL-${new Date().getFullYear()}-${randomUUID().replace(/-/g, '').slice(0, 16).toUpperCase()}`;
   const categoria = relatorio.categoria || 'Manutenção';
   const status = relatorio.status || 'Concluído';
 

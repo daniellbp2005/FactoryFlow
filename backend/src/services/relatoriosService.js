@@ -1,7 +1,7 @@
 import Relatorio from '../models/Relatorios.js';
 import * as RelatoriosModel from '../models/RelatoriosModels.js';
 
-export async function listar({ pagina = 1, limite = 10 } = {}) {
+async function listarPaginado({ pagina = 1, limite = 10 } = {}, usuarioId = null) {
   const paginaNum = Number(pagina);
   const limiteNum = Number(limite);
 
@@ -13,7 +13,11 @@ export async function listar({ pagina = 1, limite = 10 } = {}) {
   }
 
   const offset = (paginaNum - 1) * limiteNum;
-  const { relatorios, total } = await RelatoriosModel.listar({ limite: limiteNum, offset });
+  const { relatorios, total } = await RelatoriosModel.listar({
+    limite: limiteNum,
+    offset,
+    usuarioId,
+  });
 
   return {
     relatorios,
@@ -24,6 +28,15 @@ export async function listar({ pagina = 1, limite = 10 } = {}) {
       totalPaginas: Math.ceil(total / limiteNum),
     },
   };
+}
+
+export async function listar(paginacao) {
+  return listarPaginado(paginacao);
+}
+
+export async function listarDoUsuario(usuarioIdRecebido, paginacao) {
+  const usuarioId = validarId(usuarioIdRecebido);
+  return listarPaginado(paginacao, usuarioId);
 }
 
 export async function buscarPorId(idRecebido) {

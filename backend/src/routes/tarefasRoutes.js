@@ -8,6 +8,7 @@ export const tarefasRouter = express.Router();
 tarefasRouter.use(autenticar);
 
 tarefasRouter.get("/", terefaController.listar);
+tarefasRouter.get("/para-relatorio", terefaController.listarParaRelatorio);
 tarefasRouter.get("/:id", terefaController.buscarPorId);
 tarefasRouter.post("/", autorizarPerfis("administrador"), terefaController.criar);
 tarefasRouter.put("/:id", terefaController.atualizar);

@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { fetchComAuth } from "@/utils/api";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye} from "lucide-react";
 
 export default function UserSchedule({ uid }) {
   const [visao, setVisao] = useState("Todos");
@@ -163,18 +163,18 @@ export default function UserSchedule({ uid }) {
         <div className="period-flex">
           <div className="period-switch" aria-label="Período da programação">
             <button
-              onClick={() => setVisao("Todos")}
-              className={visao === "Todos" ? "selected" : ""}
-              type="button"
-            >
-              Todos
-            </button>
-            <button
               onClick={() => setVisao("Apenas meu")}
               className={visao === "Apenas meu" ? "selected" : ""}
               type="button"
             >
               Apenas meu
+            </button>
+            <button
+              onClick={() => setVisao("Todos")}
+              className={visao === "Todos" ? "selected" : ""}
+              type="button"
+            >
+              Todos
             </button>
           </div>
           <div className="period-switch">
@@ -279,11 +279,11 @@ export default function UserSchedule({ uid }) {
 
             <button
               id="open-details"
-              className="button button-outline task-details"
+              className="button seta task-details"
               onClick={(e) => setModal(a)}
               type="button"
             >
-              Detalhes
+              <Eye size={16} aria-hidden="true" />
             </button>
           </article>
         ))}

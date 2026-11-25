@@ -50,7 +50,7 @@ function formatarData(data) {
     });
 }
 
-export default function Tarefas(){
+export default function Tarefas() {
     const [usuario, setUsuario] = useState(null);
     const [tarefas, setTarefas] = useState([]);
     const [maquinas, setMaquinas] = useState([]);
@@ -60,6 +60,8 @@ export default function Tarefas(){
     const [enviando, setEnviando] = useState(false);
     const [erro, setErro] = useState('');
     const [sucesso, setSucesso] = useState('');
+    const [modal, setModal] = useState(null);
+    const [tarefaSelecionadaModal, setTarefaSelecionadaModal] = useState(null);
 
     useEffect(() => {
         let ativo = true;
@@ -67,9 +69,9 @@ export default function Tarefas(){
         async function carregarPagina() {
             const usuarioAtual = getUsuarioLogado();
             const [tarefasResult, maquinasResult, relatoriosResult] = await Promise.allSettled([
-                carregarDados('/api/tarefas?pagina=1&limite=100'),
+                carregarDados('/api/tarefas/para-relatorio?pagina=1&limite=100'),
                 carregarDados('/api/maquinas?pagina=1&limite=100'),
-                carregarDados('/api/relatorios?pagina=1&limite=100'),
+                carregarDados('/api/relatorios/meus?pagina=1&limite=100'),
             ]);
 
             if (!ativo) return;
@@ -80,15 +82,22 @@ export default function Tarefas(){
             }
             if (maquinasResult.status === 'fulfilled') setMaquinas(maquinasResult.value);
             if (relatoriosResult.status === 'fulfilled') {
-                const relatoriosDoUsuario = relatoriosResult.value.filter(
-                    (relatorio) => Number(relatorio.usuario?.id) === Number(usuarioAtual?.id),
-                );
-                setRelatorios(relatoriosDoUsuario);
+                setRelatorios(relatoriosResult.value);
             }
 
-            const falhas = [tarefasResult, maquinasResult, relatoriosResult]
-                .filter((resultado) => resultado.status === 'rejected');
-            if (falhas.length) setErro('Algumas informações não puderam ser carregadas. Atualize a página e tente novamente.');
+            const falhas = [
+                ['tarefas', tarefasResult],
+                ['máquinas', maquinasResult],
+                ['relatórios', relatoriosResult],
+            ]
+                .filter(([, resultado]) => resultado.status === 'rejected')
+                .map(([recurso, resultado]) => {
+                    const detalhe = resultado.reason instanceof Error
+                        ? resultado.reason.message
+                        : String(resultado.reason);
+                    return `${recurso}: ${detalhe}`;
+                });
+            if (falhas.length) setErro(falhas.join(' '));
             setCarregando(false);
         }
 
@@ -107,11 +116,26 @@ export default function Tarefas(){
         () => [...relatorios].sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em)).slice(0, 5),
         [relatorios],
     );
+    const tarefaSelecionada = tarefas.find(
+        (tarefa) => Number(tarefa.id) === tarefaSelecionadaModal,
+    );
 
     function atualizarCampo(evento) {
         setFormulario((atual) => ({ ...atual, [evento.target.name]: evento.target.value }));
         setErro('');
         setSucesso('');
+    }
+
+    function abrirFormulario(tarefaId = null) {
+        const tarefaIdSelecionada = tarefaId ? Number(tarefaId) : null;
+        setTarefaSelecionadaModal(tarefaIdSelecionada);
+        setFormulario({
+            ...FORM_INICIAL,
+            tarefa_id: tarefaIdSelecionada ? String(tarefaIdSelecionada) : '',
+        });
+        setErro('');
+        setSucesso('');
+        setModal(true);
     }
 
     async function enviarRelatorio(evento) {
@@ -123,6 +147,10 @@ export default function Tarefas(){
             setErro('Não foi possível identificar seu usuário. Entre novamente no sistema.');
             return;
         }
+        if (!formulario.tarefa_id) {
+            setErro('Selecione uma tarefa vinculada antes de enviar o relatório.');
+            return;
+        }
 
         setEnviando(true);
         try {
@@ -131,18 +159,27 @@ export default function Tarefas(){
                 body: JSON.stringify({
                     ...formulario,
                     tarefa_id: Number(formulario.tarefa_id),
-                    usuario_id: Number(usuario.id),
                     maquina_id: formulario.maquina_id ? Number(formulario.maquina_id) : null,
                 }),
             });
             const resultado = await resposta.json();
 
             if (!resposta.ok) {
-                throw new Error(resultado.erro || 'Não foi possível enviar o relatório.');
+                throw new Error(resultado.erro || resultado.message || 'Não foi possível enviar o relatório.');
+            }
+            if (!resultado.dados?.id) {
+                throw new Error('O servidor não confirmou o registro do relatório.');
             }
 
+            const tarefaEnviadaId = Number(formulario.tarefa_id);
             setRelatorios((atuais) => [resultado.dados, ...atuais]);
-            setFormulario(FORM_INICIAL);
+            setTarefas((atuais) => atuais.filter((tarefa) => Number(tarefa.id) !== tarefaEnviadaId));
+            setFormulario({
+                ...FORM_INICIAL,
+                tarefa_id: '',
+            });
+            setTarefaSelecionadaModal(null);
+            setModal(null);
             setSucesso('Relatório enviado com sucesso.');
         } catch (erroEnvio) {
             setErro(erroEnvio.message || 'Não foi possível enviar o relatório.');
@@ -151,7 +188,7 @@ export default function Tarefas(){
         }
     }
 
-    return(
+    return (
         <main className='user-page user-tasks-page'>
             <SidebarUser />
             <Header usuario={usuario?.nome ?? "Usuário não logado"} />
@@ -195,23 +232,120 @@ export default function Tarefas(){
                             </div>
                         </div>
 
+                        {erro && !modal && <p className="user-task-feedback is-error" role="alert">{erro}</p>}
+                        {sucesso && !modal && <p className="user-task-feedback is-success" role="status">{sucesso}</p>}
+
+                        <div className="task-list">
+                            {tarefas.map((tarefa) => (
+                                <article className="task-row" key={tarefa.id}>
+                                    <div className="task-time">
+                                        <span>Prazo</span>
+                                        <strong>
+                                            {formatarData(tarefa.prazo)}
+                                        </strong>
+                                    </div>
+                                    <div className="task-info">
+                                        <div className="task-tags">
+                                            <strong>{tarefa.codigo || `Tarefa #${tarefa.id}`} · {tarefa.titulo}</strong>
+
+                                            <span className="tag">
+                                                {tarefa.prioridade ?? "Sem prioridade"}
+                                            </span>
+
+                                            <span className="tag-two">
+                                                {tarefa.status ?? "Sem status"}
+                                            </span>
+
+                                        </div>
+                                        <span>{tarefa.setor || 'Setor não informado'}</span>
+                                    </div>
+
+                                    <button
+                                        id="open-details"
+                                        className="button seta task-details"
+                                        onClick={() => abrirFormulario(tarefa.id)}
+                                        type="button"
+                                        aria-label={`Criar relatório para ${tarefa.codigo || `tarefa ${tarefa.id}`}`}
+                                    >
+                                        <ClipboardList size={16} aria-hidden="true" />
+                                    </button>
+                                </article>
+                            ))}
+                            {!carregando && tarefas.length === 0 && (
+                                <p className="empty-state">Nenhuma tarefa disponível para criar um relatório.</p>
+                            )}
+                        </div>
+                    </section>
+
+                    <aside className="user-task-panel user-task-history" aria-labelledby="user-task-history-title">
+                        <div className="user-task-panel-heading">
+                            <span className="user-task-section-icon"><Clock3 size={19} /></span>
+                            <div>
+                                <h2 id="user-task-history-title">Atividade recente</h2>
+                                <p>Seus últimos registros enviados.</p>
+                            </div>
+                        </div>
                         {carregando ? (
-                            <p className="user-task-empty">Carregando tarefas e equipamentos...</p>
+                            <p className="user-task-empty">Carregando histórico...</p>
+                        ) : relatoriosRecentes.length ? (
+                            <div className="user-task-activity-list">
+                                {relatoriosRecentes.map((relatorio) => (
+                                    <article className="user-task-activity" key={relatorio.id}>
+                                        <div className="user-task-activity-topline">
+                                            <strong>{relatorio.tarefa?.codigo || `Relatório #${relatorio.id}`}</strong>
+                                            <span>{formatarData(relatorio.criado_em)}</span>
+                                        </div>
+                                        <p>{relatorio.finalidade || relatorio.categoria}</p>
+                                        <div className="user-task-activity-meta">
+                                            <span>{relatorio.maquina?.nome || 'Sem máquina vinculada'}</span>
+                                            <span className={`user-task-status ${relatorio.status === 'Concluído' ? 'is-complete' : 'is-pending'}`}>
+                                                {relatorio.status}
+                                            </span>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
                         ) : (
-                            <form className="user-task-form" onSubmit={enviarRelatorio}>
+                            <p className="user-task-empty">Seus relatórios enviados aparecerão aqui.</p>
+                        )}
+
+                        {modal && (
+                            <div className="task-modal-overlay" onClick={() => setModal(null)} role="presentation">
+                            <form
+                                className="task-modal"
+                                onClick={(evento) => evento.stopPropagation()}
+                                onSubmit={enviarRelatorio}
+                            >
                                 <div className="user-task-form-grid">
-                                    <label className="user-task-field user-task-field-wide" htmlFor="tarefa_id">
-                                        Tarefa relacionada <span aria-hidden="true">*</span>
-                                        <select id="tarefa_id" name="tarefa_id" value={formulario.tarefa_id} onChange={atualizarCampo} required>
-                                            <option value="">Selecione uma tarefa</option>
-                                            {tarefas.map((tarefa) => (
-                                                <option key={tarefa.id} value={tarefa.id}>
-                                                    {tarefa.codigo} · {tarefa.titulo}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <small>Escolha uma tarefa vinculada ao seu usuário. O sistema valida essa associação ao enviar.</small>
-                                    </label>
+                                    {tarefaSelecionadaModal !== null ? (
+                                        <div className="user-task-field user-task-field-wide">
+                                            <span>Tarefa relacionada</span>
+                                            <strong>
+                                                {tarefaSelecionada
+                                                    ? `${tarefaSelecionada.codigo} · ${tarefaSelecionada.titulo}`
+                                                    : `Tarefa #${tarefaSelecionadaModal}`}
+                                            </strong>
+                                        </div>
+                                    ) : (
+                                        <label className="user-task-field user-task-field-wide" htmlFor="tarefa_id">
+                                            Tarefa relacionada <span aria-hidden="true">*</span>
+                                            <select
+                                                id="tarefa_id"
+                                                name="tarefa_id"
+                                                value={formulario.tarefa_id}
+                                                onChange={atualizarCampo}
+                                                required
+                                            >
+                                                <option value="">Selecione uma tarefa</option>
+                                                {tarefas.map((tarefa) => (
+                                                    <option key={tarefa.id} value={tarefa.id}>
+                                                        {tarefa.codigo} · {tarefa.titulo}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <small>Escolha uma tarefa vinculada ao seu usuário. O sistema valida essa associação ao enviar.</small>
+                                        </label>
+                                    )}
 
                                     <label className="user-task-field" htmlFor="maquina_id">
                                         Máquina
@@ -294,48 +428,22 @@ export default function Tarefas(){
 
                                 <div className="user-task-form-footer">
                                     <p><Factory size={16} /> Os dados serão registrados no histórico da operação.</p>
-                                    <button className="user-task-submit" type="submit" disabled={enviando || tarefas.length === 0}>
-                                        <Send size={16} />
+                                    <button className="user-task-submit" type="submit" disabled={enviando || Boolean(sucesso)}>
                                         {enviando ? 'Enviando...' : 'Enviar relatório'}
+                                    </button>
+                                    <button
+                                        className="button button-outline"
+                                        onClick={() => setModal(null)}
+                                        type="button"
+                                        >
+                                        Fechar
                                     </button>
                                 </div>
                                 {!carregando && tarefas.length === 0 && (
                                     <p className="user-task-feedback is-error" role="status">Nenhuma tarefa disponível para selecionar.</p>
                                 )}
                             </form>
-                        )}
-                    </section>
-
-                    <aside className="user-task-panel user-task-history" aria-labelledby="user-task-history-title">
-                        <div className="user-task-panel-heading">
-                            <span className="user-task-section-icon"><Clock3 size={19} /></span>
-                            <div>
-                                <h2 id="user-task-history-title">Atividade recente</h2>
-                                <p>Seus últimos registros enviados.</p>
                             </div>
-                        </div>
-                        {carregando ? (
-                            <p className="user-task-empty">Carregando histórico...</p>
-                        ) : relatoriosRecentes.length ? (
-                            <div className="user-task-activity-list">
-                                {relatoriosRecentes.map((relatorio) => (
-                                    <article className="user-task-activity" key={relatorio.id}>
-                                        <div className="user-task-activity-topline">
-                                            <strong>{relatorio.tarefa?.codigo || `Relatório #${relatorio.id}`}</strong>
-                                            <span>{formatarData(relatorio.criado_em)}</span>
-                                        </div>
-                                        <p>{relatorio.finalidade || relatorio.categoria}</p>
-                                        <div className="user-task-activity-meta">
-                                            <span>{relatorio.maquina?.nome || 'Sem máquina vinculada'}</span>
-                                            <span className={`user-task-status ${relatorio.status === 'Concluído' ? 'is-complete' : 'is-pending'}`}>
-                                                {relatorio.status}
-                                            </span>
-                                        </div>
-                                    </article>
-                                ))}
-                            </div>
-                        ) : (
-                            <p className="user-task-empty">Seus relatórios enviados aparecerão aqui.</p>
                         )}
                     </aside>
                 </div>
