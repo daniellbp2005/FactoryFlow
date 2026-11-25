@@ -1,9 +1,9 @@
 "use client";
 import { useMemo, useState } from "react";
 import { Search, UserRound } from "lucide-react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Trash2 } from "lucide-react";
 
-export default function EmployeeList({ employees, aumentarPagina, diminuirPagina, cadastroTodos, totalPaginas, pagina }) {
+export default function EmployeeList({ employees, remover, aumentarPagina, diminuirPagina, cadastroTodos, totalPaginas, pagina }) {
   const [query, setQuery] = useState("");
 
   const dadosFiltrados = useMemo(() => {
@@ -61,14 +61,22 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
                 <strong>{employee?.cargo}</strong>
                 <span>Turno: {employee?.turno}</span>
               </div>
-              <span
-                className={`employee-status ${employee?.ativo === 1 ? "status-disponivel" : "status-manutencao"}`}
-                style={{
-                  color: employee?.ativo === 1 ? "green" : "red",
-                }}
-              >
-                {receberBoleano(employee?.ativo)}
-              </span>
+              <div className="d-flex justify-content-center align-items-center gap-2">
+                <span
+                  className={`employee-status ${employee?.ativo === 1 ? "status-disponivel" : "status-manutencao"}`}
+                  style={{
+                    color: employee?.ativo === 1 ? "green" : "red",
+                  }}
+                >
+                  <span>{receberBoleano(employee?.ativo)}</span>
+                </span>
+                <button
+                  className="seta button task-details"
+                  type="button"
+                >
+                  <Trash2 size={16} aria-hidden="true" onClick={() => remover(employee.id)} />
+                </button>
+              </div>
             </article>
           ))}
         </div>

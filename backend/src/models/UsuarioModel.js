@@ -53,3 +53,37 @@ export async function buscarPorId(id) {
   if (linhas.length === 0) return null;
   return hidratar(linhas[0]);
 }
+
+export async function excluir(id) {
+  const conexao = await pool.getConnection();
+
+  try {
+    await conexao.beginTransaction();
+
+    await conexao.query(
+      'UPDATE maquinas SET usuario_id = NULL WHERE usuario_id = ?',
+      [id]
+    );
+    await conexao.query(
+      'DELETE FROM tarefas_usuarios WHERE usuario_id = ?',
+      [id]
+    );
+    await conexao.query(
+      'DELETE FROM relatorios WHERE usuario_id = ?',
+      [id]
+    );
+
+    const [resultado] = await conexao.query(
+      'DELETE FROM usuarios WHERE id = ?',
+      [id]
+    );
+
+    await conexao.commit();
+    return resultado.affectedRows > 0;
+  } catch (erro) {
+    await conexao.rollback();
+    throw erro;
+  } finally {
+    conexao.release();
+  }
+}

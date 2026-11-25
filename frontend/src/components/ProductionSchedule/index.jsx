@@ -6,7 +6,16 @@ Padronizar o status de tarefas, e de relatórios, fazer o css do status
 
 import { useMemo, useState, useEffect } from "react";
 import { fetchComAuth } from "@/utils/api";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CalendarClock,
+  ClipboardCheck,
+  Clock3,
+  Factory,
+  UserRound,
+  X,
+} from "lucide-react";
 
 export default function ProductionSchedule() {
   const [period, setPeriod] = useState("Semana");
@@ -299,38 +308,126 @@ export default function ProductionSchedule() {
 
       {modal && (
         <div
-          className="task-modal-overlay"
+          className="production-modal-overlay"
+          onClick={() => setModal(null)}
         >
           <div
-            className="task-modal"
-            onClick={(event) => event.stopPropagation()} // impede que o clique dentro do modal se propague para os elementos superiores
+            aria-labelledby="production-modal-title"
+            aria-modal="true"
+            className="production-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
           >
-            <h2>Detalhes da tarefa</h2>
+            <header className="production-modal-header">
+              <div className="production-modal-heading">
+                <span className="production-modal-icon" aria-hidden="true">
+                  <ClipboardCheck size={20} />
+                </span>
+                <div>
+                  <span className="production-modal-eyebrow">
+                    {modal.codigo || "RELATÓRIO"}
+                  </span>
+                  <h2 id="production-modal-title">Detalhes da tarefa</h2>
+                </div>
+              </div>
+              <button
+                className="production-modal-close"
+                onClick={() => setModal(null)}
+                type="button"
+                aria-label="Fechar detalhes da tarefa"
+              >
+                <X size={18} aria-hidden="true" />
+              </button>
+            </header>
 
-            <p>OP: {modal.tarefa?.titulo}</p>
-            <p>Resultado: {modal.resultado ?? "Sem resultado"}</p>
-            <p>Status: {modal.status ?? "Sem status"}</p>
-            <p>Status da Tarefa: {modal.tarefa?.status ?? "Sem status"}</p>
+            <div className="production-modal-body">
+              <div className="production-modal-status-row">
+                <span className={`tag-two ${classStatus[modal.status] ?? ""}`}>
+                  {modal.status || "Sem status"}
+                </span>
+                <span className={`tag ${classResultado[modal.resultado] ?? ""}`}>
+                  {modal.resultado || "Sem resultado"}
+                </span>
+                {modal.categoria && (
+                  <span className="production-modal-category">
+                    {modal.categoria}
+                  </span>
+                )}
+                <span className="production-modal-date">
+                  {converterData(modal.criado_em)} às {converterHoras(modal.criado_em)}
+                </span>
+              </div>
 
-            <p>
-              Início: {converterHoras(modal.tarefa?.iniciado_em)}
-            </p>
+              <section className="production-modal-section">
+                <h3>Ordem de produção</h3>
+                <div className="production-modal-grid">
+                  <div className="production-modal-field production-modal-field-wide">
+                    <span>OP</span>
+                    <strong>{modal.tarefa?.titulo || "Não informada"}</strong>
+                    <small>{modal.tarefa?.codigo || "Código não informado"}</small>
+                  </div>
+                  <div className="production-modal-field">
+                    <span><Factory size={14} /> Máquina</span>
+                    <strong>{modal.maquina?.nome || "Não informada"}</strong>
+                  </div>
+                  <div className="production-modal-field">
+                    <span><UserRound size={14} /> Responsável</span>
+                    <strong>{modal.usuario?.nome || "Não informado"}</strong>
+                    <small>{modal.usuario?.cargo || "Cargo não informado"} · {modal.usuario?.codigo || "Sem código"}</small>
+                  </div>
+                  <div className="production-modal-field">
+                    <span><CalendarClock size={14} /> Prazo</span>
+                    <strong>{converterData(modal.tarefa?.prazo)}</strong>
+                  </div>
+                  <div className="production-modal-field">
+                    <span><Clock3 size={14} /> Horário</span>
+                    <strong>
+                      {converterHoras(modal.tarefa?.iniciado_em)} - {converterHoras(modal.tarefa?.finalizado_em)}
+                    </strong>
+                  </div>
+                </div>
+              </section>
 
-            <p>
-              Finalização: {converterHoras(modal.tarefa?.finalizado_em)}
-            </p>
+              <section className="production-modal-section">
+                <h3>Informações da execução</h3>
+                <dl className="production-modal-details">
+                  <div>
+                    <dt>Status da tarefa</dt>
+                    <dd>{modal.tarefa?.status || "Não informado"}</dd>
+                  </div>
+                  <div>
+                    <dt>Prioridade</dt>
+                    <dd>{modal.tarefa?.prioridade || "Não informada"}</dd>
+                  </div>
+                  <div>
+                    <dt>Setor</dt>
+                    <dd>{modal.tarefa?.setor || "Não informado"}</dd>
+                  </div>
+                  <div>
+                    <dt>Finalidade</dt>
+                    <dd>{modal.finalidade || "Não informada"}</dd>
+                  </div>
+                  <div className="production-modal-detail-wide">
+                    <dt>Motivo</dt>
+                    <dd>{modal.motivo || "Não informado"}</dd>
+                  </div>
+                  <div className="production-modal-detail-wide">
+                    <dt>Observações</dt>
+                    <dd>{modal.observacoes || "Nenhuma observação registrada"}</dd>
+                  </div>
+                </dl>
+              </section>
+            </div>
 
-            <p>Máquina: {modal.maquina?.nome}</p>
-            <p>Responsável: {modal.usuario?.nome}</p>
-            <p>Prazo: {converterData(modal.tarefa?.prazo)}</p>
-
-            <button
-              className="button button-outline"
-              onClick={() => setModal(null)}
-              type="button"
-            >
-              Fechar
-            </button>
+            <footer className="production-modal-footer">
+              <button
+                className="button production-modal-close-button"
+                onClick={() => setModal(null)}
+                type="button"
+              >
+                Fechar
+              </button>
+            </footer>
           </div>
         </div>
       )}

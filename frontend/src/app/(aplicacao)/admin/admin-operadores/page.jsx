@@ -19,32 +19,52 @@ export default function AdminEmployeesPage() {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
   }
 
+  async function carregarOperadores() {
+    try {
+      const linkApiLimite = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
+      const data = await linkApiLimite.json();
+      const linkApiTodos = await fetchComAuth(`/usuarios/listar?limite=100`);
+      const cadastroTodos = await linkApiTodos.json();
+      setAux(cadastroTodos.dados || []);
+      setEmployees(data.dados || []);
+      if (data.paginacao?.totalPaginas) {
+        setTotalPaginas(data.paginacao.totalPaginas);
+      }
+    } catch (e) {
+      console.error("Erro ao consultar o backend");
+    }
+  }
+
+  async function removerUser(id) {
+    const confirmar = window.confirm("Deseja realmente remover este funcionário?");
+    if (!confirmar) return;
+
+    try {
+      const resposta = await fetchComAuth(`/usuarios/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!resposta.ok) {
+        throw new Error("Não foi possível remover o funcionário.");
+      }
+
+      setEmployees((atuais) =>
+        atuais.filter((usuario) => usuario.id !== id)
+      );
+
+      setAux((atuais) =>
+        atuais.filter((usuario) => usuario.id !== id)
+      );
+    } catch (erro) {
+      console.error(erro);
+    }
+  }
+
   useEffect(() => {
+    let ativo = true;
     const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
     setUsuario(usuarioLogado);
-    let ativo = true;
-
-    async function carregarOperadores() {
-      try {
-        const linkApiLimite = await fetchComAuth(`/usuarios/listar?pagina=${pagina}&limite=10`);
-        const data = await linkApiLimite.json();
-        const linkApiTodos = await fetchComAuth(`/usuarios/listar?limite=100`);
-        const cadastroTodos = await linkApiTodos.json();
-        setAux(cadastroTodos.dados || []);
-
-        if (ativo) {
-          setEmployees(data.dados || []);
-        }
-        if (data.paginacao?.totalPaginas) {
-          setTotalPaginas(data.paginacao.totalPaginas);
-        }
-      } catch (e) {
-        console.error("Erro ao consultar o backend");
-      }
-    }
-
     carregarOperadores();
-
     return () => {
       ativo = false;
     };
@@ -75,7 +95,7 @@ export default function AdminEmployeesPage() {
 
         <div className="employee-layout">
           <EmployeeForm onCreate={addEmployee} />
-          <EmployeeList employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} totalPaginas={totalPaginas} pagina={pagina}/>
+          <EmployeeList employees={employees} remover={removerUser} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} totalPaginas={totalPaginas} pagina={pagina} />
         </div>
       </section>
     </main>

@@ -30,6 +30,7 @@ usuariosRouter.post("/cadastro/", cadastroLimiter, autenticar, autorizarPerfis("
 usuariosRouter.get("/listar", autenticar, usuarioController.listar);
 usuariosRouter.get("/", autenticar, usuarioController.listar);
 usuariosRouter.get("/:id", autenticar, usuarioController.buscarPorId);
+usuariosRouter.delete("/:id", autenticar, autorizarPerfis("administrador"), usuarioController.excluir);
 
 // Rota protegida para consultar o próprio perfil logado
 usuariosRouter.get("/me", autenticar, usuarioController.obterPerfil);

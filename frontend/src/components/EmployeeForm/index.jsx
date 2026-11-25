@@ -121,7 +121,7 @@ export default function EmployeeForm({onCreate}) {
             <button
               type="button"
               onClick={alternarVisibilidadeSenha}
-              className="button button-primary w-25"
+              className="button button-primary w-25 m-0"
             >
               {senhaVisivel ? <Eye size={19} /> : <EyeOff size={19} />}
             </button>
