@@ -152,6 +152,26 @@ export async function atualizar(id, produto) {
 }
 
 export async function excluir(id) {
-  const [resultado] = await pool.query('DELETE FROM tarefas WHERE id = ?', [id]);
-  return resultado.affectedRows > 0;
+  const conexao = await pool.getConnection();
+
+  try {
+    await conexao.beginTransaction();
+
+    await conexao.query('DELETE FROM tarefas_usuarios WHERE tarefa_id = ?', [id]);
+    await conexao.query('DELETE FROM tarefas_equipamentos WHERE tarefa_id = ?', [id]);
+    await conexao.query('DELETE FROM relatorios WHERE tarefa_id = ?', [id]);
+
+    const [resultado] = await conexao.query(
+      'DELETE FROM tarefas WHERE id = ?',
+      [id]
+    );
+
+    await conexao.commit();
+    return resultado.affectedRows > 0;
+  } catch (erro) {
+    await conexao.rollback();
+    throw erro;
+  } finally {
+    conexao.release();
+  }
 }

@@ -113,6 +113,28 @@ export async function atualizar(id, produto) {
 }
 
 export async function excluir(id) {
-  const [resultado] = await pool.query('DELETE FROM maquinas WHERE id = ?', [id]);
-  return resultado.affectedRows > 0;
+  const conexao = await pool.getConnection();
+
+  try {
+    await conexao.beginTransaction();
+
+    // Preserva os relatórios históricos e remove apenas a referência à máquina excluída.
+    await conexao.query(
+      'UPDATE relatorios SET maquina_id = NULL WHERE maquina_id = ?',
+      [id]
+    );
+
+    const [resultado] = await conexao.query(
+      'DELETE FROM maquinas WHERE id = ?',
+      [id]
+    );
+
+    await conexao.commit();
+    return resultado.affectedRows > 0;
+  } catch (erro) {
+    await conexao.rollback();
+    throw erro;
+  } finally {
+    conexao.release();
+  }
 }

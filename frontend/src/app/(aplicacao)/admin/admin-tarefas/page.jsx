@@ -21,37 +21,52 @@ export default function Tarefas() {
   }
 
   useEffect(() => {
-    let ativo = true;
     const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
     setUsuario(usuarioLogado);
 
-    async function carregarOperadores() {
-      try {
-        const linkApiLimite = await fetchComAuth(`/api/tarefas?pagina=${pagina}&limite=10`);
-        const data = await linkApiLimite.json();
-        const linkApiTodos = await fetchComAuth(`/api/tarefas?limite=100`);
-        const cadastroTodos = await linkApiTodos.json();
-        setAux(cadastroTodos.dados || []);
-
-        if (ativo) {
-          setEmployees(data.dados || []);
-        }
-        if (data.paginacao?.totalPaginas) {
-          setTotalPaginas(data.paginacao.totalPaginas);
-        }
-      } catch (e) {
-        console.error("Erro ao consultar o backend");
-        console.log(e);
-
-      }
-    }
-
     carregarOperadores();
-
-    return () => {
-      ativo = false;
-    };
   }, [pagina]);
+
+  async function carregarOperadores() {
+    try {
+      const linkApiLimite = await fetchComAuth(`/api/tarefas?pagina=${pagina}&limite=10`);
+      const data = await linkApiLimite.json();
+      const linkApiTodos = await fetchComAuth(`/api/tarefas?limite=100`);
+      const cadastroTodos = await linkApiTodos.json();
+      setAux(cadastroTodos.dados || []);
+      setEmployees(data.dados || []);
+      if (data.paginacao?.totalPaginas) {
+        setTotalPaginas(data.paginacao.totalPaginas);
+      }
+    } catch (e) {
+      console.error("Erro ao consultar o backend:", e);
+    }
+  }
+
+  async function removerTarefa(id) {
+    const confirmar = window.confirm("Deseja realmente remover esta tarefa?");
+    if (!confirmar) return;
+
+    try {
+      const resposta = await fetchComAuth(`/api/tarefas/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!resposta.ok) {
+        throw new Error("Não foi possível remover a máquina.");
+      }
+
+      setEmployees((atuais) =>
+        atuais.filter((maquina) => maquina.id !== id)
+      );
+
+      setAux((atuais) =>
+        atuais.filter((maquina) => maquina.id !== id)
+      );
+    } catch (erro) {
+      console.error(erro);
+    }
+  }
 
   function aumentarPagina() {
     if (pagina < totalPaginas) {
@@ -78,7 +93,7 @@ export default function Tarefas() {
 
         <div className="employee-layout">
           <EmployeeFormTarefa onSuccess={addEmployee} />
-          <EmployeeListTarefa employees={employees} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} totalPaginas={totalPaginas} pagina={pagina} />
+          <EmployeeListTarefa employees={employees} remover={removerTarefa} aumentarPagina={aumentarPagina} diminuirPagina={diminuirPagina} cadastroTodos={aux} totalPaginas={totalPaginas} pagina={pagina} />
         </div>
       </section>
     </main>

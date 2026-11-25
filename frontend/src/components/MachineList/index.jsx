@@ -19,6 +19,7 @@ export default function MachineList({
   pagina,
   totalPaginas,
   loading = false,
+  remover,
 }) {
   const [query, setQuery] = useState("");
 
@@ -78,6 +79,12 @@ export default function MachineList({
                   <span className={`employee-status status-${statusSlug}`}>
                     {m.estado || "Disponível"}
                   </span>
+                  <button
+                    className="seta button task-details"
+                    type="button"
+                  >
+                    <Trash2 size={16} aria-hidden="true" onClick={() => remover(m.id)} />
+                  </button>
                 </div>
               </article>
             );

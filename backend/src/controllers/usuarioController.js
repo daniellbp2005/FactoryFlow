@@ -87,6 +87,15 @@ export async function listar(req, res, next) {
   }
 }
 
+export async function excluir(req, res, next) {
+  try {
+    await AuthService.excluir(req.params.id);
+    return res.status(204).send();
+  } catch (erro) {
+    return responderErro(erro, res, next);
+  }
+}
+
 export async function buscarPorId(req, res, next) {
   try {
     const usuario = await AuthService.buscarPorId(req.params.id);

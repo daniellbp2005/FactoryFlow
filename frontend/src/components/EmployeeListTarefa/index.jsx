@@ -1,7 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { Search, UserRound } from "lucide-react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Trash2 } from "lucide-react";
 
 function getStatusClass(status) {
   if (status === "Alta") return "status-inativa";
@@ -10,7 +10,7 @@ function getStatusClass(status) {
   return "status-naoinformado";
 }
 
-export default function EmployeeList({ employees, aumentarPagina, diminuirPagina, cadastroTodos, totalPaginas, pagina }) {
+export default function EmployeeList({ employees, remover, aumentarPagina, diminuirPagina, cadastroTodos, totalPaginas, pagina }) {
   const [query, setQuery] = useState("");
 
   const dadosFiltrados = useMemo(() => {
@@ -58,7 +58,15 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
                 <span>Prioridade: <strong> {employee?.prioridade ?? "Não informado"}</strong> </span>
                 <span>Setor: {employee?.setor ?? "Não informado"}</span>
               </div>
-              <span className={`employee-status ${getStatusClass(employee?.prioridade)}`}>{employee?.prioridade ?? "Não informado"}</span>
+              <div className="d-flex justify-content-center gap-2">
+                <button
+                  className="seta button task-details"
+                  type="button"
+                  onClick={() => remover(employee.id)}
+                >
+                  <Trash2 size={16} aria-hidden="true" />
+                </button>
+              </div>
             </article>
           ))}
         </div>
