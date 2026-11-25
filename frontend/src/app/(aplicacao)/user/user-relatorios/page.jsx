@@ -8,10 +8,11 @@ import { useState, useEffect } from "react";
 import Footer from '@/components/Footer';
 
 export default function Relatorios() {
+    const [usuario, setUsuario] = useState(null);
+
     useEffect(() => {
         const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
         setUsuario(usuarioLogado);
-        listarRelatorios();
     }, []);
     return (
         <main className='user-page'>
@@ -24,7 +25,7 @@ export default function Relatorios() {
                     description="Acompanhe os relatórios e comentários registrados para os operadores."
                 />
 
-                <UserReports uid={usuario?.id} />
+                <UserReports />
                 <Footer />
             </section>
         </main>

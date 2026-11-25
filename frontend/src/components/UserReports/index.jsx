@@ -10,8 +10,7 @@ function getStatusClass(status) {
   return "complete";
 }
 
-export default function UserReports({ uid }) {
-  const [visao, setVisao] = useState("Apenas meu");
+export default function UserReports() {
   const [query, setQuery] = useState("");
   const [modal, setModal] = useState(null);
   const [data, setData] = useState([]);
@@ -19,20 +18,34 @@ export default function UserReports({ uid }) {
   const [totalPaginas, setTotalPaginas] = useState(1);
 
   useEffect(() => {
+    let ativo = true;
+
     async function listarRelatorios() {
       try {
-        const linkApi = await fetchComAuth("/api/relatorios");
-        const data = await linkApi.json();
+        const resposta = await fetchComAuth(`/api/relatorios/meus?pagina=${pagina}&limite=10`);
+        if (!resposta.ok) {
+          const erro = await resposta.json().catch(() => null);
+          throw new Error(erro?.erro || erro?.message || `Erro HTTP ${resposta.status}`);
+        }
 
-        setData(data.dados || []);
-        setPagina(data.paginacao.pagina || 1)
-        setTotalPaginas(data.paginacao.totalPaginas || 1)
-      } catch (e) {
-        console.error("Erro ao consultar o backend");
+        const resultado = await resposta.json();
+        if (!ativo) return;
+
+        setData(resultado.dados || []);
+        setTotalPaginas(resultado.paginacao?.totalPaginas || 1);
+      } catch (erro) {
+        if (ativo) {
+          console.error("Erro ao consultar os relatórios do usuário:", erro);
+        }
       }
     }
+
     listarRelatorios();
-  }, [])
+
+    return () => {
+      ativo = false;
+    };
+  }, [pagina]);
 
   function aumentarPagina() {
     if (pagina < totalPaginas) {
@@ -46,20 +59,14 @@ export default function UserReports({ uid }) {
     }
   }
 
-  const usuarioLogadoId = uid;
   const filteredReports = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return data.filter((a) => {
-      const correspondeVisao =
-        visao === "Todos" || a.usuario?.id === usuarioLogadoId;
-
-      const correspondeBusca = `${a.usuario.nome} ${a.id} ${a.usuario.cargo} ${a.usuario.codigo}`
+    return data.filter((a) =>
+      `${a.usuario?.nome ?? ""} ${a.id ?? ""} ${a.usuario?.cargo ?? ""} ${a.usuario?.codigo ?? ""} ${a.finalidade ?? ""} ${a.status ?? ""}`
         .toLowerCase()
-        .includes(normalizedQuery);
-
-      return correspondeVisao && correspondeBusca;
-    });
-  }, [query, data, visao, usuarioLogadoId]);
+        .includes(normalizedQuery),
+    );
+  }, [query, data]);
   function converterHoras(data) {
     if (!data) return "-:-";
     const aux = data;
@@ -87,18 +94,16 @@ export default function UserReports({ uid }) {
             {filteredReports.length === 1 ? "registro" : "registros"}
           </p>
         </div>
-        <div className="period-flex">
-          <label className="report-search">
-            <Search size={15} aria-hidden="true" />
-            <span className="sr-only">Buscar relatório de operador</span>
-            <input
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar operador ou relatório"
-              type="search"
-              value={query}
-            />
-          </label>
-        </div>
+        <label className="report-search">
+          <Search size={15} aria-hidden="true" />
+          <span className="sr-only">Buscar relatório de operador</span>
+          <input
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Buscar operador ou relatório"
+            type="search"
+            value={query}
+          />
+        </label>
       </div>
 
       {filteredReports.length ? (
@@ -119,22 +124,23 @@ export default function UserReports({ uid }) {
                 <p>{a.finalidade}</p>
                 <div className="report-card-footer">
                   <div className="report-employee-meta">
-                    <span>ID: {a?.id}</span>
+                    <span>ID: {a.id}</span>
                     <span>Código: {a.usuario?.codigo}</span>
-                    <span
-                      className={`report-status ${getStatusClass(a.status)}`}
-                    >
+                  </div>
+                  <div className="d-flex justify-content-center align-items-center gap-2">
+                    <span className={`report-status ${getStatusClass(a.status)}`}>
                       {a.status}
                     </span>
+                    <button
+                      className="seta button task-details"
+                      onClick={() => setModal(a)}
+                      type="button"
+                      aria-label={`Abrir detalhes do relatório ${a.id}`}
+                      title="Ver detalhes do relatório"
+                    >
+                      <Eye size={16} aria-hidden="true" />
+                    </button>
                   </div>
-                  <button
-                    id="open-details"
-                    className="button seta task-details"
-                    onClick={(e) => setModal(a)}
-                    type="button"
-                  >
-                    <Eye size={16} aria-hidden="true" />
-                  </button>
                 </div>
               </div>
             </article>
