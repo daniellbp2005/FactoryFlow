@@ -1,6 +1,18 @@
 "use client";
 import { useMemo, useState, useEffect } from "react";
-import { Eye, ClipboardList, Search, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  Eye,
+  ClipboardList,
+  Search,
+  ArrowLeft,
+  ArrowRight,
+  ClipboardCheck,
+  X,
+  UserRound,
+  Factory,
+  CalendarClock,
+  Clock3,
+} from "lucide-react";
 import { fetchComAuth } from "@/utils/api";
 
 function getStatusClass(status) {
@@ -177,38 +189,117 @@ export default function UserReports() {
 
       {modal && (
         <div
-          className="task-modal-overlay"
+          className="report-modal-overlay"
           onClick={() => setModal(null)}
         >
           <div
             aria-modal="true"
-            className="task-modal"
+            aria-labelledby="report-modal-title"
+            className="report-modal"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
           >
-            <h2>Detalhes do Relatório</h2>
+            <header className="report-modal-header">
+              <div className="report-modal-heading">
+                <span className="report-modal-icon" aria-hidden="true">
+                  <ClipboardCheck size={20} />
+                </span>
+                <div>
+                  <span className="report-modal-eyebrow">
+                    RELATÓRIO {modal.codigo || `#${modal.id}`}
+                  </span>
+                  <h2 id="report-modal-title">Detalhes da prestação de conta</h2>
+                </div>
+              </div>
+              <button
+                className="report-modal-close"
+                onClick={() => setModal(null)}
+                type="button"
+                aria-label="Fechar detalhes do relatório"
+              >
+                <X size={18} aria-hidden="true" />
+              </button>
+            </header>
 
-            <p>OP: {modal.tarefa?.titulo}</p>
-            <p>Resultado: {modal.resultado ?? "Sem resultado"}</p>
-            <p>Status: {modal.status ?? "Sem status"}</p>
-            <p>Status da Tarefa: {modal.tarefa?.status ?? "Sem status"}</p>
-            <p>Finalidade: {modal.finalidade ?? "Sem finalidade"}</p>
-            <p>Motivo: {modal.motivo ?? "Sem motivo"}</p>
-            <p>Observações: {modal.observacoes ?? "Sem observações"}</p>
-            <p>Máquina: {modal.maquina?.nome}</p>
-            <p>Responsável: {modal.usuario?.nome}</p>
-            <p>Prazo: {converterData(modal.tarefa?.prazo)}</p>
+            <div className="report-modal-body">
+              <div className="report-modal-status-row">
+                <span className={`report-status ${getStatusClass(modal.status)}`}>
+                  {modal.status || "Sem status"}
+                </span>
+                <span className="report-modal-category">
+                  {modal.categoria || "Sem categoria"}
+                </span>
+                <span className="report-modal-date">
+                  {converterData(modal.criado_em)} às {converterHoras(modal.criado_em)}
+                </span>
+              </div>
 
-            <button
-              className="button button-outline"
-              onClick={() => setModal(null)}
-              type="button"
-            >
-              Fechar
-            </button>
+              <section className="report-modal-section">
+                <h3>Tarefa executada</h3>
+                <div className="report-modal-grid">
+                  <div className="report-modal-field report-modal-field-wide">
+                    <span>Ordem de produção</span>
+                    <strong>{modal.tarefa?.titulo || "Não informada"}</strong>
+                    <small>{modal.tarefa?.codigo || "Código não informado"}</small>
+                  </div>
+                  <div className="report-modal-field">
+                    <span><Factory size={14} /> Máquina</span>
+                    <strong>{modal.maquina?.nome || "Não informada"}</strong>
+                  </div>
+                  <div className="report-modal-field">
+                    <span><UserRound size={14} /> Responsável</span>
+                    <strong>{modal.usuario?.nome || "Não informado"}</strong>
+                    <small>
+                      {modal.usuario?.cargo || "Cargo não informado"} · {modal.usuario?.codigo || "Sem código"}
+                    </small>
+                  </div>
+                  <div className="report-modal-field">
+                    <span><CalendarClock size={14} /> Prazo</span>
+                    <strong>{converterData(modal.tarefa?.prazo)}</strong>
+                  </div>
+                  <div className="report-modal-field">
+                    <span><Clock3 size={14} /> Execução</span>
+                    <strong>
+                      {converterHoras(modal.tarefa?.iniciado_em)} - {converterHoras(modal.tarefa?.finalizado_em)}
+                    </strong>
+                  </div>
+                </div>
+              </section>
+
+              <section className="report-modal-section">
+                <h3>Informações do relatório</h3>
+                <dl className="report-modal-details">
+                  <div>
+                    <dt>Finalidade</dt>
+                    <dd>{modal.finalidade || "Não informada"}</dd>
+                  </div>
+                  <div>
+                    <dt>Resultado</dt>
+                    <dd>{modal.resultado || "Não informado"}</dd>
+                  </div>
+                  <div>
+                    <dt>Motivo</dt>
+                    <dd>{modal.motivo || "Não informado"}</dd>
+                  </div>
+                  <div>
+                    <dt>Observações</dt>
+                    <dd>{modal.observacoes || "Nenhuma observação registrada"}</dd>
+                  </div>
+                </dl>
+              </section>
+            </div>
+
+            <footer className="report-modal-footer">
+              <button
+                className="button report-modal-close-button"
+                onClick={() => setModal(null)}
+                type="button"
+              >
+                Fechar
+              </button>
+            </footer>
           </div>
         </div>
-        
       )}
     </section>
   );

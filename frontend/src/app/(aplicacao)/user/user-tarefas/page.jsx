@@ -13,6 +13,8 @@ import {
     Clock3,
     Factory,
     Send,
+    ClipboardCheck,
+    X,
 } from 'lucide-react';
 import { fetchComAuth, getUsuarioLogado } from '@/utils/api';
 
@@ -310,139 +312,167 @@ export default function Tarefas() {
                         )}
 
                         {modal && (
-                            <div className="task-modal-overlay" onClick={() => setModal(null)} role="presentation">
-                            <form
-                                className="task-modal"
-                                onClick={(evento) => evento.stopPropagation()}
-                                onSubmit={enviarRelatorio}
-                            >
-                                <div className="user-task-form-grid">
-                                    {tarefaSelecionadaModal !== null ? (
-                                        <div className="user-task-field user-task-field-wide">
-                                            <span>Tarefa relacionada</span>
-                                            <strong>
-                                                {tarefaSelecionada
-                                                    ? `${tarefaSelecionada.codigo} · ${tarefaSelecionada.titulo}`
-                                                    : `Tarefa #${tarefaSelecionadaModal}`}
-                                            </strong>
+                            <div className="report-modal-overlay" onClick={() => setModal(null)} role="presentation">
+                                <form
+                                    aria-labelledby="user-task-modal-title"
+                                    aria-modal="true"
+                                    className="report-modal"
+                                    onClick={(evento) => evento.stopPropagation()}
+                                    onSubmit={enviarRelatorio}
+                                    role="dialog"
+                                >
+                                    <header className="report-modal-header">
+                                        <div className="report-modal-heading">
+                                            <span className="report-modal-icon" aria-hidden="true">
+                                                <ClipboardCheck size={20} />
+                                            </span>
+                                            <div>
+                                                <span className="report-modal-eyebrow">FACTORYFLOW / OPERAÇÃO</span>
+                                                <h2 id="user-task-modal-title">Novo relatório operacional</h2>
+                                            </div>
                                         </div>
-                                    ) : (
-                                        <label className="user-task-field user-task-field-wide" htmlFor="tarefa_id">
-                                            Tarefa relacionada <span aria-hidden="true">*</span>
-                                            <select
-                                                id="tarefa_id"
-                                                name="tarefa_id"
-                                                value={formulario.tarefa_id}
-                                                onChange={atualizarCampo}
-                                                required
-                                            >
-                                                <option value="">Selecione uma tarefa</option>
-                                                {tarefas.map((tarefa) => (
-                                                    <option key={tarefa.id} value={tarefa.id}>
-                                                        {tarefa.codigo} · {tarefa.titulo}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <small>Escolha uma tarefa vinculada ao seu usuário. O sistema valida essa associação ao enviar.</small>
-                                        </label>
-                                    )}
-
-                                    <label className="user-task-field" htmlFor="maquina_id">
-                                        Máquina
-                                        <select id="maquina_id" name="maquina_id" value={formulario.maquina_id} onChange={atualizarCampo}>
-                                            <option value="">Sem máquina específica</option>
-                                            {maquinas.map((maquina) => (
-                                                <option key={maquina.id} value={maquina.id}>
-                                                    {maquina.nome}{maquina.codigo ? ` · ${maquina.codigo}` : ''}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </label>
-
-                                    <label className="user-task-field" htmlFor="categoria">
-                                        Categoria <span aria-hidden="true">*</span>
-                                        <select id="categoria" name="categoria" value={formulario.categoria} onChange={atualizarCampo} required>
-                                            <option value="">Selecione a categoria</option>
-                                            {CATEGORIAS.map((categoria) => <option key={categoria}>{categoria}</option>)}
-                                        </select>
-                                    </label>
-
-                                    <label className="user-task-field" htmlFor="status">
-                                        Status do relatório <span aria-hidden="true">*</span>
-                                        <select id="status" name="status" value={formulario.status} onChange={atualizarCampo} required>
-                                            <option value="">Selecione o status</option>
-                                            {STATUS_RELATORIO.map((status) => <option key={status}>{status}</option>)}
-                                        </select>
-                                    </label>
-
-                                    <label className="user-task-field" htmlFor="resultado">
-                                        Resultado do processo <span aria-hidden="true">*</span>
-                                        <select id="resultado" name="resultado" value={formulario.resultado} onChange={atualizarCampo} required>
-                                            <option value="">Selecione o resultado</option>
-                                            {RESULTADOS.map((resultado) => <option key={resultado}>{resultado}</option>)}
-                                        </select>
-                                    </label>
-
-                                    <label className="user-task-field user-task-field-wide" htmlFor="finalidade">
-                                        Objetivo da operação <span aria-hidden="true">*</span>
-                                        <input
-                                            id="finalidade"
-                                            name="finalidade"
-                                            value={formulario.finalidade}
-                                            onChange={atualizarCampo}
-                                            placeholder="Ex.: inspeção preventiva da linha de envase"
-                                            maxLength={255}
-                                            required
-                                        />
-                                        <small>{formulario.finalidade.length}/255 caracteres</small>
-                                    </label>
-
-                                    <label className="user-task-field user-task-field-wide" htmlFor="observacoes">
-                                        Descrição do processo <span aria-hidden="true">*</span>
-                                        <textarea
-                                            id="observacoes"
-                                            name="observacoes"
-                                            value={formulario.observacoes}
-                                            onChange={atualizarCampo}
-                                            placeholder="Descreva as etapas realizadas, condições observadas e resultado da operação."
-                                            rows={5}
-                                            required
-                                        />
-                                    </label>
-
-                                    <label className="user-task-field user-task-field-wide" htmlFor="motivo">
-                                        Ocorrência ou motivo de parada
-                                        <textarea
-                                            id="motivo"
-                                            name="motivo"
-                                            value={formulario.motivo}
-                                            onChange={atualizarCampo}
-                                            placeholder="Informe falhas, interrupções ou motivo da indisponibilidade, se houver."
-                                            rows={3}
-                                        />
-                                    </label>
-                                </div>
-
-                                {erro && <p className="user-task-feedback is-error" role="alert">{erro}</p>}
-                                {sucesso && <p className="user-task-feedback is-success" role="status">{sucesso}</p>}
-
-                                <div className="user-task-form-footer">
-                                    <p><Factory size={16} /> Os dados serão registrados no histórico da operação.</p>
-                                    <button className="user-task-submit" type="submit" disabled={enviando || Boolean(sucesso)}>
-                                        {enviando ? 'Enviando...' : 'Enviar relatório'}
-                                    </button>
-                                    <button
-                                        className="button button-outline"
-                                        onClick={() => setModal(null)}
-                                        type="button"
+                                        <button
+                                            aria-label="Fechar formulário de relatório"
+                                            className="report-modal-close"
+                                            onClick={() => setModal(null)}
+                                            type="button"
                                         >
-                                        Fechar
-                                    </button>
-                                </div>
-                                {!carregando && tarefas.length === 0 && (
-                                    <p className="user-task-feedback is-error" role="status">Nenhuma tarefa disponível para selecionar.</p>
-                                )}
-                            </form>
+                                            <X size={18} aria-hidden="true" />
+                                        </button>
+                                    </header>
+
+                                    <div className="report-modal-body">
+                                        <div className="user-task-form-grid">
+                                            {tarefaSelecionadaModal !== null ? (
+                                                <div className="user-task-field user-task-field-wide">
+                                                    <span>Tarefa relacionada</span>
+                                                    <strong>
+                                                        {tarefaSelecionada
+                                                            ? `${tarefaSelecionada.codigo} · ${tarefaSelecionada.titulo}`
+                                                            : `Tarefa #${tarefaSelecionadaModal}`}
+                                                    </strong>
+                                                </div>
+                                            ) : (
+                                                <label className="user-task-field user-task-field-wide" htmlFor="tarefa_id">
+                                                    Tarefa relacionada <span aria-hidden="true">*</span>
+                                                    <select
+                                                        id="tarefa_id"
+                                                        name="tarefa_id"
+                                                        value={formulario.tarefa_id}
+                                                        onChange={atualizarCampo}
+                                                        required
+                                                    >
+                                                        <option value="">Selecione uma tarefa</option>
+                                                        {tarefas.map((tarefa) => (
+                                                            <option key={tarefa.id} value={tarefa.id}>
+                                                                {tarefa.codigo} · {tarefa.titulo}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <small>Escolha uma tarefa vinculada ao seu usuário. O sistema valida essa associação ao enviar.</small>
+                                                </label>
+                                            )}
+
+                                            <label className="user-task-field" htmlFor="maquina_id">
+                                                Máquina
+                                                <select id="maquina_id" name="maquina_id" value={formulario.maquina_id} onChange={atualizarCampo}>
+                                                    <option value="">Sem máquina específica</option>
+                                                    {maquinas.map((maquina) => (
+                                                        <option key={maquina.id} value={maquina.id}>
+                                                            {maquina.nome}{maquina.codigo ? ` · ${maquina.codigo}` : ''}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </label>
+
+                                            <label className="user-task-field" htmlFor="categoria">
+                                                Categoria <span aria-hidden="true">*</span>
+                                                <select id="categoria" name="categoria" value={formulario.categoria} onChange={atualizarCampo} required>
+                                                    <option value="">Selecione a categoria</option>
+                                                    {CATEGORIAS.map((categoria) => <option key={categoria}>{categoria}</option>)}
+                                                </select>
+                                            </label>
+
+                                            <label className="user-task-field" htmlFor="status">
+                                                Status do relatório <span aria-hidden="true">*</span>
+                                                <select id="status" name="status" value={formulario.status} onChange={atualizarCampo} required>
+                                                    <option value="">Selecione o status</option>
+                                                    {STATUS_RELATORIO.map((status) => <option key={status}>{status}</option>)}
+                                                </select>
+                                            </label>
+
+                                            <label className="user-task-field" htmlFor="resultado">
+                                                Resultado do processo <span aria-hidden="true">*</span>
+                                                <select id="resultado" name="resultado" value={formulario.resultado} onChange={atualizarCampo} required>
+                                                    <option value="">Selecione o resultado</option>
+                                                    {RESULTADOS.map((resultado) => <option key={resultado}>{resultado}</option>)}
+                                                </select>
+                                            </label>
+
+                                            <label className="user-task-field user-task-field-wide" htmlFor="finalidade">
+                                                Objetivo da operação <span aria-hidden="true">*</span>
+                                                <input
+                                                    id="finalidade"
+                                                    name="finalidade"
+                                                    value={formulario.finalidade}
+                                                    onChange={atualizarCampo}
+                                                    placeholder="Ex.: inspeção preventiva da linha de envase"
+                                                    maxLength={255}
+                                                    required
+                                                />
+                                                <small>{formulario.finalidade.length}/255 caracteres</small>
+                                            </label>
+
+                                            <label className="user-task-field user-task-field-wide" htmlFor="observacoes">
+                                                Descrição do processo <span aria-hidden="true">*</span>
+                                                <textarea
+                                                    id="observacoes"
+                                                    name="observacoes"
+                                                    value={formulario.observacoes}
+                                                    onChange={atualizarCampo}
+                                                    placeholder="Descreva as etapas realizadas, condições observadas e resultado da operação."
+                                                    rows={5}
+                                                    required
+                                                />
+                                            </label>
+
+                                            <label className="user-task-field user-task-field-wide" htmlFor="motivo">
+                                                Ocorrência ou motivo de parada
+                                                <textarea
+                                                    id="motivo"
+                                                    name="motivo"
+                                                    value={formulario.motivo}
+                                                    onChange={atualizarCampo}
+                                                    placeholder="Informe falhas, interrupções ou motivo da indisponibilidade, se houver."
+                                                    rows={3}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        {erro && <p className="user-task-feedback is-error" role="alert">{erro}</p>}
+                                        {sucesso && <p className="user-task-feedback is-success" role="status">{sucesso}</p>}
+                                        {!carregando && tarefas.length === 0 && (
+                                            <p className="user-task-feedback is-error" role="status">Nenhuma tarefa disponível para selecionar.</p>
+                                        )}
+                                    </div>
+
+                                    <footer className="report-modal-footer user-task-modal-footer">
+                                        <p><Factory size={16} /> Os dados serão registrados no histórico da operação.</p>
+                                        <div className="user-task-modal-actions">
+                                            <button
+                                                className="button report-modal-close-button"
+                                                onClick={() => setModal(null)}
+                                                type="button"
+                                            >
+                                                Fechar
+                                            </button>
+                                            <button className="user-task-submit" type="submit" disabled={enviando || Boolean(sucesso)}>
+                                                <Send size={16} aria-hidden="true" />
+                                                {enviando ? 'Enviando...' : 'Enviar relatório'}
+                                            </button>
+                                        </div>
+                                    </footer>
+                                </form>
                             </div>
                         )}
                     </aside>
