@@ -1,8 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Factory } from "lucide-react";
+import { CalendarClock, Factory, X } from "lucide-react";
 import { fetchComAuth } from "../../utils/api";
+
+const SOLICITACAO_INICIAL = {
+    descricao: "",
+    quantidade: "1",
+    inicioUso: "",
+    fimUso: "",
+};
 
 function getStatusClass(status) {
     if (status === "Em Operação") return "running";
@@ -17,6 +24,9 @@ export default function MachineUserView() {
     const [error, setError] = useState(null);
     const [view, setView] = useState("Todos");
     const [modal, setModal] = useState(null);
+    const [solicitacao, setSolicitacao] = useState(SOLICITACAO_INICIAL);
+    const [erroSolicitacao, setErroSolicitacao] = useState("");
+    const [enviandoSolicitacao, setEnviandoSolicitacao] = useState(false);
 
     // Load machines on mount
     useEffect(() => {
@@ -41,13 +51,43 @@ export default function MachineUserView() {
         try {
             const resp = await fetchComAuth(`/api/maquinas/${id}/atribuir`, { method: "POST" });
             if (!resp.ok) {
-                const err = await resp.json();
+                const err = await resp.json().catch(() => ({}));
                 throw new Error(err.erro || `Falha ao solicitar máquina (${resp.status})`);
             }
             setMachines((prev) => prev.filter((m) => m.id !== id));
+            setModal(null);
+            setSolicitacao(SOLICITACAO_INICIAL);
+            return true;
         } catch (e) {
-            alert(e.message);
+            setErroSolicitacao(e.message);
+            return false;
         }
+    };
+
+    const enviarSolicitacao = async (event) => {
+        event.preventDefault();
+        setErroSolicitacao("");
+
+        if (new Date(solicitacao.fimUso) <= new Date(solicitacao.inicioUso)) {
+            setErroSolicitacao("O final do uso deve ser posterior ao início.");
+            return;
+        }
+
+        setEnviandoSolicitacao(true);
+        await solicitar(modal.id);
+        setEnviandoSolicitacao(false);
+    };
+
+    const abrirModal = (machine) => {
+        setSolicitacao(SOLICITACAO_INICIAL);
+        setErroSolicitacao("");
+        setModal(machine);
+    };
+
+    const fecharModal = () => {
+        if (enviandoSolicitacao) return;
+        setModal(null);
+        setErroSolicitacao("");
     };
 
     const visibleMachines = useMemo(() => {
@@ -108,7 +148,7 @@ export default function MachineUserView() {
                                         </div>
                                         <button
                                             id="open-details"
-                                            onClick={() => setModal(machine)}
+                                            onClick={() => abrirModal(machine)}
                                             className="button button-outline task-details"
                                             disabled={getStatusClass(machine.estado) !== "available"}
                                             type="button"
@@ -132,36 +172,92 @@ export default function MachineUserView() {
             )}
 
             {modal && (
-                <div className="task-modal-overlay" onClick={() => setModal(null)}>
-                    <div className="task-modal" aria-modal="true" role="dialog" onClick={(e) => e.stopPropagation()}>
-                        <h2>Detalhes da Máquina</h2>
-                        <div style={{ margin: "14px 0", display: "grid", gap: "8px" }}>
-                            <p><strong>Equipamento:</strong> {modal.nome}</p>
-                            <p><strong>Código:</strong> MAQ-{String(modal.id).padStart(3, "0")}</p>
-                            <p><strong>Estado:</strong> {modal.estado}</p>
-                            <p style={{ color: "var(--muted)", fontSize: "14px" }}>
-                                {modal.estado === "Disponível"
-                                    ? "Este equipamento está livre para alocação e operação."
-                                    : "Este equipamento encontra-se indisponível no momento."}
+                <div className="task-modal-overlay" onClick={fecharModal}>
+                    <section
+                        className="task-modal machine-request-modal"
+                        aria-modal="true"
+                        aria-labelledby="machine-modal-title"
+                        role="dialog"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <header className="machine-modal-header">
+                            <span className="machine-modal-icon"><Factory size={21} /></span>
+                            <div>
+                                <span className="machine-modal-eyebrow">Solicitação de equipamento</span>
+                                <h2 id="machine-modal-title">{modal.nome}</h2>
+                                <p>MAQ-{String(modal.id).padStart(3, "0")} <span>{modal.estado}</span></p>
+                            </div>
+                            <button className="machine-modal-close" onClick={fecharModal} type="button" aria-label="Fechar modal">
+                                <X size={19} />
+                            </button>
+                        </header>
+
+                        <form className="machine-request-form" onSubmit={enviarSolicitacao}>
+                            <label className="machine-modal-field machine-modal-description" htmlFor="machine-request-description">
+                                Descrição da solicitação <span aria-hidden="true">*</span>
+                                <textarea
+                                    id="machine-request-description"
+                                    value={solicitacao.descricao}
+                                    onChange={(event) => setSolicitacao((atual) => ({ ...atual, descricao: event.target.value }))}
+                                    placeholder="Descreva a atividade que será realizada com a máquina."
+                                    maxLength={300}
+                                    rows={3}
+                                    required
+                                />
+                            </label>
+
+                            <div className="machine-modal-fields-grid">
+                                <label className="machine-modal-field" htmlFor="machine-request-quantity">
+                                    Quantidade da carga do lote
+                                    <input
+                                        id="machine-request-quantity"
+                                        type="number"
+                                        min="1"
+                                        step="1"
+                                        value={solicitacao.quantidade}
+                                        onChange={(event) => setSolicitacao((atual) => ({ ...atual, quantidade: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                                <span className="machine-modal-period-label"><CalendarClock size={16} /> Período de uso</span>
+                                <label className="machine-modal-field" htmlFor="machine-use-start">
+                                    Início do uso <span aria-hidden="true">*</span>
+                                    <input
+                                        id="machine-use-start"
+                                        type="datetime-local"
+                                        value={solicitacao.inicioUso}
+                                        onChange={(event) => setSolicitacao((atual) => ({ ...atual, inicioUso: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                                <label className="machine-modal-field" htmlFor="machine-use-end">
+                                    Final do uso <span aria-hidden="true">*</span>
+                                    <input
+                                        id="machine-use-end"
+                                        type="datetime-local"
+                                        min={solicitacao.inicioUso || undefined}
+                                        value={solicitacao.fimUso}
+                                        onChange={(event) => setSolicitacao((atual) => ({ ...atual, fimUso: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                            </div>
+
+                            <p className="machine-modal-note">
+                                A descrição, quantidade e período servem para orientar esta solicitação. O serviço atual registra somente a atribuição da máquina.
                             </p>
-                            <form className="task-modal-form" onSubmit={(e) => {
-                                e.preventDefault();
-                                setModal(null);
-                                if (modal.estado === "Disponível") solicitar(modal.id);
-                            }}>
-                                <div className="d-flex justify-content-center align-itmes-center px-1 gap-2">
-                                    <input type="text" placeholder="Descrição da solicitação..." />
-                                    <input type="number" placeholder="Quantidade" />
-                                </div>
-                            </form>
-                        </div>
-                        <button className="button button-outline" onClick={() => {
-                            setModal(null);
-                            if (modal.estado === "Disponível") solicitar(modal.id);
-                        }} type="button">
-                            {modal.estado === "Disponível" ? "Solicitar" : "Fechar"}
-                        </button>
-                    </div>
+                            {erroSolicitacao && <p className="machine-modal-error" role="alert">{erroSolicitacao}</p>}
+
+                            <footer className="machine-modal-actions">
+                                <button className="machine-modal-cancel" onClick={fecharModal} type="button" disabled={enviandoSolicitacao}>
+                                    Cancelar
+                                </button>
+                                <button className="machine-modal-submit" type="submit" disabled={enviandoSolicitacao || modal.estado !== "Disponível"}>
+                                    {enviandoSolicitacao ? "Enviando..." : "Solicitar máquina"}
+                                </button>
+                            </footer>
+                        </form>
+                    </section>
                 </div>
             )}
         </section>

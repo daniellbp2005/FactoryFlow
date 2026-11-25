@@ -24,7 +24,7 @@ export default function AdminPage() {
 
         setData(data.dados || []);
       } catch (e) {
-        console.error("Erro ao consultar o backend");
+        console.error("Erro ao consultar o backend");x
       }
     }
 
