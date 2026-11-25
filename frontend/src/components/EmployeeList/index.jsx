@@ -61,7 +61,14 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
                 <strong>{employee?.cargo}</strong>
                 <span>Turno: {employee?.turno}</span>
               </div>
-              <span className="employee-status">{receberBoleano(employee?.ativo)}</span>
+              <span
+                className={`employee-status ${employee?.ativo === 1 ? "status-disponivel" : "status-manutencao"}`}
+                style={{
+                  color: employee?.ativo === 1 ? "green" : "red",
+                }}
+              >
+                {receberBoleano(employee?.ativo)}
+              </span>
             </article>
           ))}
         </div>

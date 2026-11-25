@@ -3,6 +3,13 @@ import { useMemo, useState } from "react";
 import { Search, UserRound } from "lucide-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+function getStatusClass(status) {
+  if (status === "Alta") return "status-inativa";
+  if (status === "Média") return "status-manutencao";
+  if (status === "Baixa") return "status-disponivel";
+  return "status-naoinformado";
+}
+
 export default function EmployeeList({ employees, aumentarPagina, diminuirPagina, cadastroTodos, totalPaginas, pagina }) {
   const [query, setQuery] = useState("");
 
@@ -51,7 +58,7 @@ export default function EmployeeList({ employees, aumentarPagina, diminuirPagina
                 <span>Prioridade: <strong> {employee?.prioridade ?? "Não informado"}</strong> </span>
                 <span>Setor: {employee?.setor ?? "Não informado"}</span>
               </div>
-              <span className="employee-status">{employee?.prioridade ?? "Não informado"}</span>
+              <span className={`employee-status ${getStatusClass(employee?.prioridade)}`}>{employee?.prioridade ?? "Não informado"}</span>
             </article>
           ))}
         </div>

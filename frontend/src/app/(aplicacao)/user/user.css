@@ -220,7 +220,7 @@
 .period-switch {
   display: flex;
   overflow: hidden;
-  flex-direction: column;
+  flex-direction: row;
   border: 1px solid var(--border);
   border-radius: 5px;
 }
@@ -691,7 +691,8 @@
 
 .report-switch {
   display: flex;
-  flex-direction: column;
+  align-self: center;
+  flex-direction: row;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 5px;
@@ -812,7 +813,7 @@
 
 .report-card-content>p {
   margin: 8px 0;
-  color: #d3dadd;
+  color: #757e7e;
   font-size: 15px;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -849,19 +850,27 @@
 }
 
 .report-status.complete {
-  background: #123a35;
-  color: #55d7bd;
+  background: #dcfce7;
+  color: #0f766e;
+  border: 1px solid #bbf7d0;
 }
 
 .report-status.review {
-  background: #4a3b22;
-  color: #f2c56f;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
 }
 
-.report-status.denied {
-  color: #ff6d6d;
-  background-color: #ff0c0c70;
-  margin-left: 70%;
+.report-status.pending {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.report-status.unavailable{
+  border: 1px solid #424a50;
+  background: #E2E8F0;
+  color: #334155;
 }
 
 .machine-fleet {
@@ -1377,13 +1386,19 @@
 }
 
 .machine-situation {
-  border: 1px solid #bbf7d0;
-  border-radius: 4px;
-  padding: 3px 6px;
+  border: 1px solid #394148;
+  background-color: #22292e;
+  color: #c6d0d5;
+  border-radius: 5px;
+  padding: 3px 5px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.machine-situation.available{
   background: #dcfce7;
   color: #0f766e;
-  font-size: 14px;
-  font-weight: 600;
+  border: 1px solid #bbf7d0;
 }
 
 .machine-situation.running {
@@ -1427,6 +1442,7 @@ footer {
 
   .period-switch{
     flex-direction: row;
+    align-self: flex-start;
   }
 
   .employee-layout {
