@@ -49,7 +49,16 @@ export default function MachineUserView() {
 
     const solicitar = async (id) => {
         try {
-            const resp = await fetchComAuth(`/api/maquinas/${id}/atribuir`, { method: "POST" });
+            const resp = await fetchComAuth(`/api/maquinas/${id}/`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    estado: "Em Operação"
+                })
+            });
+
             if (!resp.ok) {
                 const err = await resp.json().catch(() => ({}));
                 throw new Error(err.erro || `Falha ao solicitar máquina (${resp.status})`);
@@ -130,7 +139,7 @@ export default function MachineUserView() {
             {!loading && !error && (
                 <>
                     <div className="report-list">
-                        {visibleMachines.map((machine) => (
+                        {machines.map((machine) => (
                             <article className="report-card" key={machine.id}>
                                 <span className="report-icon" aria-hidden="true">
                                     <Factory size={17} aria-hidden="true" />

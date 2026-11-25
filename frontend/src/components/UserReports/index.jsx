@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState, useEffect } from "react";
-import { ClipboardList, Search } from "lucide-react";
+import { ClipboardList, Search, ArrowLeft, ArrowRight } from "lucide-react";
 import { fetchComAuth } from "@/utils/api";
 
 function getStatusClass(status) {
@@ -14,6 +14,8 @@ export default function UserReports({ uid }) {
   const [visao, setVisao] = useState("Todos");
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
+  const [pagina, setPagina] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
 
   useEffect(() => {
     async function listarRelatorios() {
@@ -22,23 +24,38 @@ export default function UserReports({ uid }) {
         const data = await linkApi.json();
 
         setData(data.dados || []);
+        setPagina(data.paginacao.pagina || 1)
+        setTotalPaginas(data.paginacao.totalPaginas || 1)
       } catch (e) {
         console.error("Erro ao consultar o backend");
       }
     }
     listarRelatorios();
   }, [])
+
+  function aumentarPagina() {
+    if (pagina < totalPaginas) {
+      setPagina((prev) => prev + 1);
+    }
+  }
+
+  function diminuirPagina() {
+    if (pagina > 1) {
+      setPagina((prev) => prev - 1);
+    }
+  }
+
   const usuarioLogadoId = uid;
   const filteredReports = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return data.filter((a) => {
       const correspondeVisao =
         visao === "Todos" || a.usuario?.id === usuarioLogadoId;
-  
+
       const correspondeBusca = `${a.usuario.nome} ${a.id} ${a.usuario.cargo} ${a.usuario.codigo}`
         .toLowerCase()
         .includes(normalizedQuery);
-  
+
       return correspondeVisao && correspondeBusca;
     });
   }, [query, data, visao, usuarioLogadoId]);
@@ -132,6 +149,31 @@ export default function UserReports({ uid }) {
       ) : (
         <p className="employee-empty">Nenhum relatório corresponde à busca.</p>
       )}
+
+      <div className="d-flex justify-content-between align-items-center w-full mt-3 px-2">
+        <span style={{ fontSize: "13px", color: "var(--muted)" }}>
+          Página {pagina} de {Math.max(totalPaginas, 1)}
+        </span>
+        <div className="d-flex align-items-center gap-2">
+          <div
+            className="seta"
+            onClick={diminuirPagina}
+            style={{ cursor: pagina > 1 ? "pointer" : "not-allowed", opacity: pagina > 1 ? 1 : 0.4 }}
+          >
+            <ArrowLeft size={20} />
+          </div>
+          <div
+            className="seta"
+            onClick={aumentarPagina}
+            style={{
+              cursor: pagina < totalPaginas ? "pointer" : "not-allowed",
+              opacity: pagina < totalPaginas ? 1 : 0.4,
+            }}
+          >
+            <ArrowRight size={20} />
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
