@@ -59,8 +59,6 @@ export default function AdminPage() {
 
         <div className="dashboard-grid">
           <ProductionSchedule />
-          <aside className="dashboard-aside">
-          </aside>
         </div>
 
         <Footer />
