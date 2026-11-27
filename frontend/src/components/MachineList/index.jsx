@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Factory, ArrowLeft, ArrowRight, Trash2, Check, X } from "lucide-react";
+import { Search, Factory, ArrowLeft, ArrowRight, Trash2, Check, X, Eye, ClipboardCheck, UserRound, CalendarClock, Clock3 } from "lucide-react";
 import { fetchComAuth } from "@/utils/api";
 
 function getStatusSlug(status) {
@@ -12,6 +12,20 @@ function getStatusSlug(status) {
   if (s.includes("inativa")) return "inativa";
   return "disponivel";
 }
+
+const classResultado = {
+  "Aprovado": "tag-aprovado",
+  "Reprovado": "tag-reprovado",
+  "Com Ressalvas": "tag-ressalvas",
+  "Sem resultado": "tag-sem-resultado",
+};
+
+const classStatus = {
+  "Em andamento": "tag-em-andamento",
+  "Pendente": "tag-pendente",
+  "Indisponível": "tag-indisponivel",
+  "Concluído": "tag-concluido"
+};
 
 export default function MachineList({
   machines = [],
@@ -24,20 +38,20 @@ export default function MachineList({
   loading = false,
   remover,
   onAtualizar,
+  relatorios
 }) {
   const [query, setQuery] = useState("");
-  const [aba, setAba] = useState("todas"); // 'todas' | 'solicitadas'
+  const [aba, setAba] = useState("todas"); 
   const [processandoId, setProcessandoId] = useState(null);
+  const [modal, setModal] = useState(null)
 
   const fonteTotal = todasMaquinas.length > 0 ? todasMaquinas : machines;
 
-  // Conta quantas máquinas têm solicitação pendente em toda a base
   const totalSolicitadas = useMemo(() => {
     return fonteTotal.filter((m) => m.estado === "Solicitada").length;
   }, [fonteTotal]);
 
   const dadosFiltrados = useMemo(() => {
-    // Se estiver na aba de solicitações, busca em todas as máquinas cadastradas!
     let lista = aba === "solicitadas" ? fonteTotal.filter((m) => m.estado === "Solicitada") : machines;
 
     const q = query.trim().toLowerCase();
@@ -50,7 +64,6 @@ export default function MachineList({
     );
   }, [query, machines, fonteTotal, aba]);
 
-  // Aceitar solicitação -> Muda estado para 'Em Operação'
   async function aceitarSolicitacao(maquina) {
     try {
       setProcessandoId(maquina.id);
@@ -71,13 +84,12 @@ export default function MachineList({
       onAtualizar?.();
     } catch (err) {
       console.error(err);
-      alert("Erro ao aceitar solicitação: " + err.message);
+      console.log("Erro ao aceitar solicitação: " + err.message);
     } finally {
       setProcessandoId(null);
     }
   }
 
-  // Recusar solicitação -> Volta estado para 'Disponível' e limpa usuario_id
   async function recusarSolicitacao(maquina) {
     try {
       setProcessandoId(maquina.id);
@@ -98,10 +110,40 @@ export default function MachineList({
       onAtualizar?.();
     } catch (err) {
       console.error(err);
-      alert("Erro ao recusar solicitação: " + err.message);
+      console.log("Erro ao recusar solicitação: " + err.message);
     } finally {
       setProcessandoId(null);
     }
+  }
+
+  function converterHoras(data) {
+    if (!data) return "-:-";
+    const aux = data;
+    const converter = new Date(aux.replace(" ", "T"))
+    const horas = String(converter.getHours()).padStart(2, "0");
+    const minutos = String(converter.getMinutes()).padStart(2, "0");
+    return `${horas}:${minutos}`
+  }
+
+  function converterData(data) {
+    if (!data) return "--/--/----";
+    const d = new Date(data);
+    if (Number.isNaN(d.getTime())) return "--/--/----";
+
+    return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+  }
+
+  function abrirDetalhes(maquina) {
+    // 1. Procura na lista de relatórios qual pertence a esta máquina:
+    const relatorioDaMaquina = relatorios.find(
+      (r) => r.maquina?.id === maquina.id || r.maquina_id === maquina.id
+    );
+
+    // 2. Guarda no modal a MÁQUINA e quem está USANDO ela juntos:
+    setModal({
+      maquina: maquina,
+      relatorio: relatorioDaMaquina || null
+    });
   }
 
   return (
@@ -204,14 +246,24 @@ export default function MachineList({
                       </button>
                     </div>
                   ) : (
-                    <button
-                      className="seta button task-details"
-                      type="button"
-                      title="Excluir máquina"
-                      onClick={() => remover?.(m.id)}
-                    >
-                      <Trash2 size={16} aria-hidden="true" />
-                    </button>
+                    <>
+                      <button
+                        className="seta button task-details"
+                        type="button"
+                        title="Excluir máquina"
+                        onClick={() => remover?.(m.id)}
+                      >
+                        <Trash2 size={16} aria-hidden="true" />
+                      </button>
+                      <button
+                        className="seta button task-details"
+                        type="button"
+                        title="Visualizar máquina"
+                        onClick={() => abrirDetalhes?.(m)}
+                      >
+                        <Eye size={16} aria-hidden="true" />
+                      </button>
+                    </>
                   )}
                 </div>
               </article>
@@ -223,8 +275,8 @@ export default function MachineList({
           {aba === "solicitadas"
             ? "Nenhuma solicitação de máquina pendente no momento."
             : machines.length === 0
-            ? "Nenhuma máquina cadastrada. Use o formulário para adicionar a primeira."
-            : "Nenhuma máquina encontrada para essa busca."}
+              ? "Nenhuma máquina cadastrada. Use o formulário para adicionar a primeira."
+              : "Nenhuma máquina encontrada para essa busca."}
         </p>
       )}
 
@@ -252,6 +304,144 @@ export default function MachineList({
           </div>
         </div>
       </div>
+
+      {modal && (
+        <div
+          className="production-modal-overlay"
+          onClick={() => setModal(null)}
+        >
+          <div
+            aria-labelledby="machine-modal-title"
+            aria-modal="true"
+            className="production-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <header className="production-modal-header">
+              <div className="production-modal-heading">
+                <span className="production-modal-icon" aria-hidden="true">
+                  <Factory size={20} />
+                </span>
+                <div>
+                  <span className="production-modal-eyebrow">
+                    MAQ-{String(modal.maquina.id).padStart(3, "0")}
+                  </span>
+                  <h2 id="machine-modal-title">{modal.maquina.nome}</h2>
+                </div>
+              </div>
+              <button
+                className="production-modal-close"
+                onClick={() => setModal(null)}
+                type="button"
+                aria-label="Fechar detalhes da máquina"
+              >
+                <X size={18} aria-hidden="true" />
+              </button>
+            </header>
+
+            <div className="production-modal-body">
+              <div className="production-modal-status-row">
+                <span className={`tag-two ${classStatus[modal.maquina.estado] ?? ""}`}>
+                  {modal.maquina.estado || "Disponível"}
+                </span>
+                <span className="production-modal-date">
+                  {modal.maquina.operador_nome
+                    ? `Operador: ${modal.maquina.operador_nome}`
+                    : "Sem operador atribuído"}
+                </span>
+              </div>
+
+              <section className="production-modal-section">
+                <h3>Informações da máquina</h3>
+                <div className="production-modal-grid">
+                  <div className="production-modal-field production-modal-field-wide">
+                    <span>Nome</span>
+                    <strong>{modal.maquina.nome}</strong>
+                    <small>Código: MAQ-{String(modal.maquina.id).padStart(3, "0")}</small>
+                  </div>
+                  <div className="production-modal-field">
+                    <span><UserRound size={14} /> Operador</span>
+                    <strong>{modal.maquina.operador_nome || "Não atribuído"}</strong>
+                    <small>{modal.maquina.operador_turno ? `Turno: ${modal.maquina.operador_turno}` : "Sem turno"}</small>
+                  </div>
+                  <div className="production-modal-field">
+                    <span><Factory size={14} /> Estado</span>
+                    <strong>{modal.maquina.estado || "Disponível"}</strong>
+                  </div>
+                </div>
+              </section>
+
+              {modal.relatorio ? (
+                <section className="production-modal-section">
+                  <h3>Relatório vinculado</h3>
+                  <div className="production-modal-grid">
+                    <div className="production-modal-field production-modal-field-wide">
+                      <span>Tarefa</span>
+                      <strong>{modal.relatorio.tarefa?.titulo || "Não informada"}</strong>
+                      <small>{modal.relatorio.tarefa?.codigo || "Sem código"}</small>
+                    </div>
+                    <div className="production-modal-field">
+                      <span><CalendarClock size={14} /> Prazo</span>
+                      <strong>{converterData(modal.relatorio.tarefa?.prazo)}</strong>
+                    </div>
+                    <div className="production-modal-field">
+                      <span><Clock3 size={14} /> Horário</span>
+                      <strong>
+                        {converterHoras(modal.relatorio.tarefa?.iniciado_em)} - {converterHoras(modal.relatorio.tarefa?.finalizado_em)}
+                      </strong>
+                    </div>
+                  </div>
+                  <dl className="production-modal-details" style={{ marginTop: "12px" }}>
+                    <div>
+                      <dt>Status do relatório</dt>
+                      <dd>{modal.relatorio.status || "Não informado"}</dd>
+                    </div>
+                    <div>
+                      <dt>Resultado</dt>
+                      <dd>{modal.relatorio.resultado || "Não informado"}</dd>
+                    </div>
+                    <div>
+                      <dt>Responsável</dt>
+                      <dd>{modal.relatorio.usuario?.nome || "Não informado"}</dd>
+                    </div>
+                    <div>
+                      <dt>Cargo</dt>
+                      <dd>{modal.relatorio.usuario?.cargo || "Não informado"}</dd>
+                    </div>
+                    <div className="production-modal-detail-wide">
+                      <dt>Observações</dt>
+                      <dd>{modal.relatorio.observacoes || "Nenhuma observação registrada"}</dd>
+                    </div>
+                  </dl>
+                </section>
+              ) : (
+                <section className="production-modal-section">
+                  <dl className="production-modal-details">
+                    <div className="production-modal-detail-wide">
+                      <dt>Situação</dt>
+                      <dd>
+                        {modal.maquina.estado === "Solicitada"
+                          ? `Solicitação pendente de aprovação pelo gerente. Operador: ${modal.maquina.operador_nome || "—"}`
+                          : "Nenhum relatório de produção registrado para esta máquina no momento."}
+                      </dd>
+                    </div>
+                  </dl>
+                </section>
+              )}
+            </div>
+
+            <footer className="production-modal-footer">
+              <button
+                className="button production-modal-close-button"
+                onClick={() => setModal(null)}
+                type="button"
+              >
+                Fechar
+              </button>
+            </footer>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

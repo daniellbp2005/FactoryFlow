@@ -16,6 +16,7 @@ export default function AdminMachinesPage() {
   let [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [usuario, setUsuario] = useState(null);
+  const [relatorios, setRelatorios] = useState([]);
 
   function addEmployee(employee) {
     setEmployees((currentEmployees) => [employee, ...currentEmployees]);
@@ -25,10 +26,17 @@ export default function AdminMachinesPage() {
     try {
       const linkApiLimite = await fetchComAuth(`/api/maquinas?pagina=${pagina}&limite=10`);
       const data = await linkApiLimite.json();
+      setEmployees(data.dados || []);
+
       const linkApiTodos = await fetchComAuth(`/api/maquinas?limite=100`);
       const cadastroTodos = await linkApiTodos.json();
       setAux(cadastroTodos.dados || []);
-      setEmployees(data.dados || []);
+
+      const relatoriosApi = await fetchComAuth("/api/relatorios?limite=100");
+      const relatoriosData = await relatoriosApi.json();
+      setRelatorios(relatoriosData.dados || []);console.log(relatoriosData.dados);
+      
+
       if (data.paginacao?.totalPaginas) {
         setTotalPaginas(data.paginacao.totalPaginas);
       }
@@ -107,6 +115,7 @@ export default function AdminMachinesPage() {
             pagina={pagina}
             remover={removerMaquina}
             onAtualizar={carregarOperadores}
+            relatorios={relatorios}
           />
         </div>
         <Footer />

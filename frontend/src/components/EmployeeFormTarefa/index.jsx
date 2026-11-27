@@ -389,6 +389,19 @@ export default function EmployeeFormTarefas({ onSuccess }) {
             "Cadastrar Tarefa"
           )}
         </button>
+        {sucesso && (
+          <div className="form-alert form-alert-success" style={{ marginTop: "12px" }}>
+            <CheckCircle2 size={16} />
+            <span>Máquina cadastrada com sucesso!</span>
+          </div>
+        )}
+
+        {erro && (
+          <div className="form-alert form-alert-error" style={{ marginTop: "12px" }}>
+            <AlertCircle size={16} />
+            <span>{erro}</span>
+          </div>
+        )}
       </form>
     </section>
   );
