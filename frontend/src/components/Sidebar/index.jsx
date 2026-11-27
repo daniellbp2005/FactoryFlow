@@ -16,7 +16,6 @@ import { limparSessao } from "@/utils/api";
 
 const links = [
   { label: "Painel" , icon: LayoutDashboard, href: "/admin" },
-  { label: "Planejamento", icon: ClipboardList, href: "/admin/admin-planejamento" },
   { label: "Tarefas", icon: ClipboardCheck  , href: "/admin/admin-tarefas" },
   { label: "Operadores", icon: UsersRound, href: "/admin/admin-operadores" },
   { label: "Máquinas", icon: Factory, href: "/admin/admin-maquinas" },
