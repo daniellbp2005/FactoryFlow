@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ClientBootstrap from "@/components/ClientBootstrap";
 
 export const metadata = {
-  title: "Projeto Base",
-  description: "Template base com Next.js, Express e MySQL",
+  title: "Factory Flow",
+  description: "Uma aplicação Tech System para gerenciar a sua empresa",
 };
 
 export default function RootLayout({ children }) {
