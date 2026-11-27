@@ -189,7 +189,7 @@
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2.2fr) minmax(245px, 0.75fr);
+  grid-template-columns: minmax(1fr) minmax(245px, 0.75fr);
   align-items: start;
   gap: 14px;
 }
@@ -1934,7 +1934,7 @@
   }
 
   .dashboard-grid {
-    grid-template-columns: minmax(0, 1.6fr) minmax(220px, 0.8fr);
+    grid-template-columns: minmax(1fr) minmax(245px, 0.75fr);
   }
 
   .machine-fleet-grid {
