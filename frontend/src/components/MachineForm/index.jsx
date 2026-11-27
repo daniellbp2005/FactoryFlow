@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { fetchComAuth } from "@/utils/api";
+import {CheckCircle2, AlertCircle } from 'lucide-react';
+
 
 export default function MachineForm({ onCreate }) {
   const [nome, setNome] = useState("");
   const [estado, setEstado] = useState("Disponível");
+  const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState("");
 
   async function onClickCriar(e) {
     e.preventDefault();
@@ -17,26 +21,34 @@ export default function MachineForm({ onCreate }) {
   }
 
   async function criarMaquina() {
-    fetchComAuth("/api/maquinas", {
-      method: "POST",
-      body: JSON.stringify({
-        nome,
-        estado,
-      }),
-    })
-      .then(async (res) => {
-        const resultado = await res.json();
+    try {
+      fetchComAuth("/api/maquinas", {
+        method: "POST",
+        body: JSON.stringify({
+          nome,
+          estado,
+        }),
+      })
+        .then(async (res) => {
+          const resultado = await res.json();
 
-        if (!res.ok) {
-          throw new Error(resultado.message || "Erro ao cadastrar máquina.");
-        }
+          if (!res.ok) {
+            throw new Error(resultado.message || "Erro ao cadastrar máquina.");
+          }
 
-        onCreate(resultado.dados);
+          onCreate(resultado.dados);
 
-        setNome("");
-        setEstado("Disponível");
-        alert("Sucesso");
-      });
+          setNome("");
+          setEstado("Disponível");
+          setSucesso(true);
+          setTimeout(() => {
+            setSucesso(false);
+          }, 3500);
+        });
+    } catch (e) {
+      console.error(e);
+      setErro(e.message || "Não foi possível cadastrar a máquina.");
+    }
   }
 
   return (
@@ -76,6 +88,19 @@ export default function MachineForm({ onCreate }) {
           Cadastrar máquina
         </button>
       </form>
+      {sucesso && (
+        <div className="form-alert form-alert-success" style={{ marginTop: "12px" }}>
+          <CheckCircle2 size={16} />
+          <span>Máquina cadastrada com sucesso!</span>
+        </div>
+      )}
+
+      {erro && (
+        <div className="form-alert form-alert-error" style={{ marginTop: "12px" }}>
+          <AlertCircle size={16} />
+          <span>{erro}</span>
+        </div>
+      )}
     </section>
   );
 }

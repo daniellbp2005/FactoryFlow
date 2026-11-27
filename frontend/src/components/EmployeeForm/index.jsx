@@ -1,9 +1,9 @@
 "use client";
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
 import { fetchComAuth } from "@/utils/api";
 
-export default function EmployeeForm({onCreate}) {
+export default function EmployeeForm({ onCreate }) {
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -13,6 +13,8 @@ export default function EmployeeForm({onCreate}) {
   const [cpf, setCPF] = useState("");
   const [turno, setTurno] = useState("");
   const [perfil, setPerfil] = useState("");
+  const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState("");
 
   function alternarVisibilidadeSenha() {
     setSenhaVisivel(!senhaVisivel);
@@ -32,39 +34,58 @@ export default function EmployeeForm({onCreate}) {
   }
 
   async function criarUser() {
-    fetchComAuth("/usuarios/cadastro/", {
-      method: "POST",
-      body: JSON.stringify({
+    setErro("");
+    setSucesso(false);
+
+    try {
+      const res = await fetchComAuth("/usuarios/cadastro/", {
+        method: "POST",
+        body: JSON.stringify({
+          nome,
+          email,
+          senha,
+          cargo,
+          cpf,
+          turno,
+          perfil
+        })
+      });
+
+      const resultado = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(resultado.erro || resultado.message || "Erro ao cadastrar funcionário.");
+      }
+
+      onCreate?.({
         nome,
         email,
         senha,
         cargo,
         cpf,
         turno,
-        perfil
-      })
-    })
-    .then(res => {
-      if(!res.ok) return;
-      onCreate({
-          "nome": nome,
-          "email": email,
-          "senha": senha,
-          "cargo": cargo,
-          "cpf": cpf,
-          "turno": turno,
-          "perfil": perfil,
-          "ativo": true
-      })
-    })
-    setNome("");
-    setEmail("");
-    setSenha("");
-    setCargo("");
-    setCPF("");
-    setTurno("");
-    setPerfil("");
-    alert("Sucesso")
+        perfil,
+        ativo: true
+      });
+
+      // Limpa os campos
+      setNome("");
+      setEmail("");
+      setSenha("");
+      setCargo("");
+      setCPF("");
+      setTurno("");
+      setPerfil("");
+
+      // Exibe sucesso por 3.5 segundos
+      setSucesso(true);
+      setTimeout(() => {
+        setSucesso(false);
+      }, 3500);
+    } catch (e) {
+      console.error(e);
+      setErro(e.message || "Não foi possível cadastrar.");
+    }
   }
   return (
     <section className="panel employee-form-panel" aria-labelledby="employee-form-title">
@@ -112,7 +133,7 @@ export default function EmployeeForm({onCreate}) {
               minLength={3}
               maxLength={25}
               value={senha}
-              onChange = {(e) => {
+              onChange={(e) => {
                 setSenha(e.target.value)
                 lerSenha
               }}
@@ -181,6 +202,19 @@ export default function EmployeeForm({onCreate}) {
           Cadastrar funcionário
         </button>
       </form>
+      {sucesso && (
+        <div className="form-alert form-alert-success" style={{ marginTop: "12px" }}>
+          <CheckCircle2 size={16} />
+          <span>Funcionário cadastrado com sucesso!</span>
+        </div>
+      )}
+
+      {erro && (
+        <div className="form-alert form-alert-error" style={{ marginTop: "12px" }}>
+          <AlertCircle size={16} />
+          <span>{erro}</span>
+        </div>
+      )}
     </section>
   );
 }
