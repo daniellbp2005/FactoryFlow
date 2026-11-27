@@ -1044,6 +1044,13 @@
   padding-left: 31px;
 }
 
+.machine-list-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
 .employee-list {
   display: grid;
   gap: 8px;
@@ -2090,6 +2097,10 @@
   }
 
   .employee-search {
+    width: 100%;
+  }
+
+  .machine-list-controls {
     width: 100%;
   }
 

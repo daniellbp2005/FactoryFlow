@@ -114,7 +114,18 @@ export default function MachineList({
           </p>
         </div>
 
-        <div className="d-flex align-items-center gap-2 flex-wrap">
+        <div className="machine-list-controls">
+          <label className="employee-search">
+            <Search size={15} aria-hidden="true" />
+            <span className="sr-only">Buscar máquina</span>
+            <input
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Buscar máquina ou operador"
+              type="search"
+              value={query}
+            />
+          </label>
+
           <div className="period-switch" style={{ display: "flex", flexDirection: "row" }}>
             <button
               type="button"
@@ -134,17 +145,6 @@ export default function MachineList({
               )}
             </button>
           </div>
-
-          <label className="employee-search">
-            <Search size={15} aria-hidden="true" />
-            <span className="sr-only">Buscar máquina</span>
-            <input
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar máquina ou operador"
-              type="search"
-              value={query}
-            />
-          </label>
         </div>
       </div>
 
