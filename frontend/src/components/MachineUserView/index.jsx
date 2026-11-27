@@ -281,18 +281,6 @@ export default function MachineUserView() {
                             </label>
 
                             <div className="machine-modal-fields-grid">
-                                <label className="machine-modal-field" htmlFor="machine-request-quantity">
-                                    Quantidade da carga do lote
-                                    <input
-                                        id="machine-request-quantity"
-                                        type="number"
-                                        min="1"
-                                        step="1"
-                                        value={solicitacao.quantidade}
-                                        onChange={(event) => setSolicitacao((atual) => ({ ...atual, quantidade: event.target.value }))}
-                                        required
-                                    />
-                                </label>
                                 <span className="machine-modal-period-label"><CalendarClock size={16} /> Período de uso</span>
                                 <label className="machine-modal-field" htmlFor="machine-use-start">
                                     Início do uso <span aria-hidden="true">*</span>
