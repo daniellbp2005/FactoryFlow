@@ -1934,6 +1934,12 @@
   color: #b91c1c;
 }
 
+.machine-situation.requested {
+  border: 1px solid #fed7aa;
+  background: #ffedd5;
+  color: #c2410c;
+}
+
 footer {
   margin-top: 28px;
   color: #7f8a91;

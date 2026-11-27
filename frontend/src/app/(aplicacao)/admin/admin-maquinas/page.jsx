@@ -99,12 +99,14 @@ export default function AdminMachinesPage() {
           <MachineForm onCreate={addEmployee} />
           <MachineList
             machines={employees}
+            todasMaquinas={aux}
             aumentarPagina={aumentarPagina}
             diminuirPagina={diminuirPagina}
             total={aux.length}
             totalPaginas={totalPaginas}
             pagina={pagina}
             remover={removerMaquina}
+            onAtualizar={carregarOperadores}
           />
         </div>
         <Footer />

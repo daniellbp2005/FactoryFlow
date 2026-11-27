@@ -51,7 +51,18 @@ export async function criar(dados) {
 
 export async function atualizar(idRecebido, dados) {
   const id = validarId(idRecebido);
-  const produtoDominio = new Maquinas({ id, ...dados });
+  const maquinaAtual = await MaquinaModel.buscarPorId(id);
+  if (!maquinaAtual) {
+    throw new Error(`Produto ${id} não encontrado.`);
+  }
+
+  const dadosCompletos = {
+    nome: dados.nome || maquinaAtual.nome,
+    estado: dados.estado || maquinaAtual.estado,
+    usuario_id: dados.usuario_id !== undefined ? dados.usuario_id : maquinaAtual.usuario_id,
+  };
+
+  const produtoDominio = new Maquinas({ id, ...dadosCompletos });
   const atualizou = await MaquinaModel.atualizar(id, produtoDominio);
   if (!atualizou) {
     throw new Error(`Produto ${id} não encontrado.`);

@@ -9,38 +9,13 @@ import { useState, useEffect } from 'react';
 import { fetchComAuth } from '@/utils/api';
 
 export default function Maquinas() {
-    const [machines, setMachines] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-    const [usuario,setUsuario] = useState(null);
+    const [usuario, setUsuario] = useState(null);
 
     useEffect(() => {
-        async function listarMaquinas() {
-            try {
-                setLoading(true);
-                setError("");
-
-                const resposta = await fetchComAuth("/api/maquinas?pagina=1&limite=100");
-                const data = await resposta.json();
-
-                if (!resposta.ok) {
-                    throw new Error(data.erro || "Não foi possível carregar as máquinas.");
-                }
-
-                setMachines(data.dados || []);
-            } catch (erro) {
-                console.error("Erro ao consultar máquinas", erro);
-                setError("Não foi possível carregar as máquinas cadastradas.");
-            } finally {
-                setLoading(false);
-            }
-        }
-
         const usuarioLogado = JSON.parse(localStorage.getItem("factoryflow_usuario"));
         setUsuario(usuarioLogado);
-
-        listarMaquinas();
     }, []);
+
     return (
         <main className='user-page'>
             <SidebarUser />
@@ -52,9 +27,9 @@ export default function Maquinas() {
                     description="Acompanhe a disponibilidade e o estado dos equipamentos."
                 />
 
-                <MachineUserView machines={machines} loading={loading} error={error} />
+                <MachineUserView />
                 <Footer />
             </section>
         </main>
-    )
+    );
 }
