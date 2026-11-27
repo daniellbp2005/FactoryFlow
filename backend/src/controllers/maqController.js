@@ -10,13 +10,13 @@ function responderErro(erro, res, next) {
     return next(erro);
 }
 
-// Listar máquinas. Operadores veem apenas as não associadas.
+// Listar máquinas. Operadores veem as disponíveis e as solicitadas/atribuídas a eles mesmos.
 export async function listar(req, res, next) {
     try {
         const resultado = await MaquinasService.listar(req.query);
         let produtos = resultado.produtos;
         if (req.usuario && req.usuario.perfil !== 'administrador') {
-            produtos = produtos.filter(p => !p.usuario_id);
+            produtos = produtos.filter(p => !p.usuario_id || p.usuario_id === req.usuario.id);
         }
         return res.status(200).json({
             sucesso: true,

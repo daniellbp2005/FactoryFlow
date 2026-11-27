@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CalendarClock, Factory, X } from "lucide-react";
+import { CalendarClock, Factory, X, ArrowLeft, ArrowRight } from "lucide-react";
 import { fetchComAuth } from "../../utils/api";
 
 const SOLICITACAO_INICIAL = {
@@ -12,6 +12,7 @@ const SOLICITACAO_INICIAL = {
 };
 
 function getStatusClass(status) {
+    if (status === "Solicitada") return "requested";
     if (status === "Em Operação") return "running";
     if (status === "Em Manutenção") return "maintenance";
     if (status === "Inativa") return "inactive";
@@ -27,15 +28,32 @@ export default function MachineUserView() {
     const [solicitacao, setSolicitacao] = useState(SOLICITACAO_INICIAL);
     const [erroSolicitacao, setErroSolicitacao] = useState("");
     const [enviandoSolicitacao, setEnviandoSolicitacao] = useState(false);
+    const [usuarioLogado, setUsuarioLogado] = useState(null);
+    const [pagina, setPagina] = useState(1);
+    const [totalPaginas, setTotalPaginas] = useState(1);
 
-    // Load machines on mount
+    // Carregar usuário logado
+    useEffect(() => {
+        try {
+            const u = JSON.parse(localStorage.getItem("factoryflow_usuario"));
+            setUsuarioLogado(u);
+        } catch (e) {
+            console.error("Erro ao ler usuário do localStorage", e);
+        }
+    }, []);
+
+    // Carregar máquinas da página atual
     useEffect(() => {
         const load = async () => {
             try {
-                const resp = await fetchComAuth('/api/maquinas');
+                setLoading(true);
+                const resp = await fetchComAuth(`/api/maquinas?pagina=${pagina}&limite=10`);
                 if (!resp.ok) throw new Error(`Erro ao buscar máquinas (${resp.status})`);
                 const data = await resp.json();
                 setMachines(data.dados || []);
+                if (data.paginacao?.totalPaginas) {
+                    setTotalPaginas(data.paginacao.totalPaginas);
+                }
                 setError(null);
             } catch (e) {
                 setError(e.message);
@@ -45,17 +63,33 @@ export default function MachineUserView() {
             }
         };
         load();
-    }, []);
+    }, [pagina]);
 
-    const solicitar = async (id) => {
+    function aumentarPagina() {
+        if (pagina < totalPaginas) {
+            setPagina((prev) => prev + 1);
+        }
+    }
+
+    function diminuirPagina() {
+        if (pagina > 1) {
+            setPagina((prev) => prev - 1);
+        }
+    }
+
+    const solicitar = async (machine) => {
         try {
-            const resp = await fetchComAuth(`/api/maquinas/${id}/`, {
+            const userLocal = usuarioLogado || (typeof window !== "undefined" ? JSON.parse(localStorage.getItem("factoryflow_usuario") || "null") : null);
+
+            const resp = await fetchComAuth(`/api/maquinas/${machine.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    estado: "Em Operação"
+                    nome: machine.nome,
+                    estado: "Solicitada",
+                    usuario_id: userLocal?.id || null
                 })
             });
 
@@ -63,9 +97,11 @@ export default function MachineUserView() {
                 const err = await resp.json().catch(() => ({}));
                 throw new Error(err.erro || `Falha ao solicitar máquina (${resp.status})`);
             }
-            setMachines((prev) => prev.filter((m) => m.id !== id));
+            // Atualiza a máquina localmente com o novo status
+            setMachines((prev) => prev.map((m) => m.id === machine.id ? { ...m, estado: "Solicitada", usuario_id: userLocal?.id, operador_nome: userLocal?.nome } : m));
             setModal(null);
             setSolicitacao(SOLICITACAO_INICIAL);
+            alert("Solicitação enviada com sucesso! Aguarde a aprovação do gerente.");
             return true;
         } catch (e) {
             setErroSolicitacao(e.message);
@@ -83,7 +119,7 @@ export default function MachineUserView() {
         }
 
         setEnviandoSolicitacao(true);
-        await solicitar(modal.id);
+        await solicitar(modal);
         setEnviandoSolicitacao(false);
     };
 
@@ -159,10 +195,14 @@ export default function MachineUserView() {
                                             id="open-details"
                                             onClick={() => abrirModal(machine)}
                                             className="button button-outline task-details"
-                                            disabled={getStatusClass(machine.estado) !== "available"}
+                                            disabled={machine.estado !== "Disponível"}
                                             type="button"
                                         >
-                                            {getStatusClass(machine.estado) === "available" ? "Solicitar" : "Indisponível"}
+                                            {machine.estado === "Disponível"
+                                                ? "Solicitar"
+                                                : machine.estado === "Solicitada"
+                                                ? "Aguardando Aprovação"
+                                                : "Indisponível"}
                                         </button>
                                     </div>
                                 </div>
@@ -177,6 +217,31 @@ export default function MachineUserView() {
                                 : "Nenhuma máquina cadastrada."}
                         </p>
                     )}
+
+                    <div className="d-flex justify-content-between align-items-center w-full mt-3">
+                        <span style={{ fontSize: "13px", color: "var(--muted)" }}>
+                            Página {pagina} de {Math.max(totalPaginas, 1)}
+                        </span>
+                        <div className="d-flex align-items-center gap-2">
+                            <div
+                                className="seta"
+                                onClick={diminuirPagina}
+                                style={{ cursor: pagina > 1 ? "pointer" : "not-allowed", opacity: pagina > 1 ? 1 : 0.4 }}
+                            >
+                                <ArrowLeft size={20} />
+                            </div>
+                            <div
+                                className="seta"
+                                onClick={aumentarPagina}
+                                style={{
+                                    cursor: pagina < totalPaginas ? "pointer" : "not-allowed",
+                                    opacity: pagina < totalPaginas ? 1 : 0.4,
+                                }}
+                            >
+                                <ArrowRight size={20} />
+                            </div>
+                        </div>
+                    </div>
                 </>
             )}
 

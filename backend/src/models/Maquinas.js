@@ -1,5 +1,6 @@
 export const ESTADOS_MAQUINA = Object.freeze({
   DISPONIVEL: 'Disponível',
+  SOLICITADA: 'Solicitada',
   EM_OPERACAO: 'Em Operação',
   EM_MANUTENCAO: 'Em Manutenção',
   INATIVA: 'Inativa',
